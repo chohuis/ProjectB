@@ -211,7 +211,10 @@ export interface TeamRef {
   traits?: { philosophy?: string; resource?: string; status?: string };
   colorLabel?: string;
   profile?: TeamProfile;
-  proTeamProfile?: ProTeamProfile;
+  // 🔴 `proTeamProfile` 칸은 여기 없다(2026-09-22). ABL 32팀에만 손수 적혀 있던
+  //    12항목을 지우고 **예산 지수 + 성향 파생 하나**로 통일했다
+  //    (`game.ts profilesFromMaster` · 사용자 확정 ⓐ). 타입에 남겨 두면
+  //    "데이터에 적을 수 있다"가 되어 정본이 다시 둘이 된다.
   history?: TeamHistory;
 }
 

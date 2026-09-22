@@ -114,3 +114,60 @@ describe("구단 성향 저장", () => {
     expect(src, "toSaveGame이 성향을 안 싣는다").toContain("proTeamProfiles: s.proTeamProfiles");
   });
 });
+
+/**
+ * **옛 세이브를 어떻게 읽나 — 정책 하나** (2026-09-22 · 2단계 ③).
+ *
+ * `refs.json`의 손수 `proTeamProfile` 16팀(+2군 16)을 지우고 파생으로 통일하면서
+ * 물음이 하나 남았다: **이미 저장된 세이브에 그 손수 값이 들어 있으면 읽는 쪽이
+ * 파생으로 덮나, 그대로 두나.**
+ *
+ * 🔴 **그대로 둔다** — 세이브가 이긴다. 시즌마다 `updateProTeamProfiles`가
+ *   성적으로 갱신하므로 저장된 값은 "파생 시작점 + 여러 시즌의 갱신"이다.
+ *   덮으면 구단 개성이 로드할 때마다 초기화된다. 손수 값이냐 파생 값이냐는
+ *   저장된 뒤에는 **구분할 수도 없고 구분할 필요도 없다.**
+ *
+ *   세이브에 **없는 팀만** 파생으로 채운다. 한 문장이 두 경우를 다 덮는다.
+ *
+ * ⚠ 실측(2026-09-22): 테스터 원본 `saves/slot3_slot_1.db`(09-05)는 블롭에
+ *   `proTeamProfiles` 칸 **자체가 없다** — 저장 기능보다 오래된 세이브다.
+ *   그래서 "손수 값이 남은 세이브"는 이 저장소에 실물이 없고, 규칙만 못 박는다.
+ */
+describe("옛 세이브의 성향 — 세이브가 이긴다", () => {
+  const src = readFileSync(join(__dirname, "../game.ts"), "utf8");
+
+  it("빈 자리만 파생으로 채운다 — 있는 값은 안 덮는다", () => {
+    expect(src, "`?? {}` 로 떨어지면 옛 세이브가 전 팀 50이 된다").toContain(
+      "proTeamProfiles:  mergeSavedProfiles(saved.proTeamProfiles),",
+    );
+    expect(src, "덮지 않는 규칙(`!out[id]`)이 없다").toContain(
+      "for (const [id, p] of Object.entries(profilesFromMaster())) if (!out[id]) out[id] = p;",
+    );
+  });
+
+  it("`initProTeamProfiles`도 같은 규칙이다 — 두 자리가 어긋나면 안 된다", () => {
+    expect(src).toContain("for (const [id, p] of Object.entries(profilesFromMaster())) {");
+    expect(src).toContain("if (!map[id]) map[id] = p;");
+  });
+
+  /**
+   * 🔴 **정본이 하나인지**를 여기서 못 박는다. 마스터(`refs.json`)에 성향
+   *   12항목을 다시 적으면 잣대가 둘이 되고, 그러면 파생 규칙을 고쳐도
+   *   그 팀만 안 따라온다 — 2026-09-22 전에 ABL 이 그랬다.
+   */
+  it("마스터에 12항목을 다시 적지 않았다", () => {
+    const refs = JSON.parse(
+      readFileSync(
+        join(__dirname, "../../../../../../resource/data/master/entities/refs.json"),
+        "utf8",
+      ),
+    ) as { teams: { id: string; proTeamProfile?: unknown }[] };
+    const back = refs.teams.filter((t) => t.proTeamProfile).map((t) => t.id);
+    expect(back, `손수 성향이 되살아난 팀: ${back.slice(0, 8).join(" ")}`).toEqual([]);
+  });
+
+  it("타입에도 칸이 없다 — 있으면 '적어도 된다'가 된다", () => {
+    const master = readFileSync(join(__dirname, "../master.ts"), "utf8");
+    expect(master).not.toContain("  proTeamProfile?: ProTeamProfile;");
+  });
+});

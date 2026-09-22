@@ -368,9 +368,11 @@ async function updateProTeamProfiles(): Promise<void> {
 
     for (let i = 0; i < sorted.length; i++) {
       const teamId = sorted[i].teamId;
-      const cur = g.proTeamProfiles[teamId]
-        ?? m.teams.find((t) => t.id === teamId)?.proTeamProfile
-        ?? DEFAULT_TEAM_PROFILE;
+      // ⚠ 예전엔 가운데에 `m.teams.find(...)?.proTeamProfile` 갈래가 있었다 —
+      //   마스터에 손수 적힌 성향을 보던 자리다. 2026-09-22 에 그 데이터를
+      //   지웠으므로(정본 하나 · 파생) 갈래도 지운다. 스토어를 채우는 것은
+      //   `profilesFromMaster`·`initProTeamProfiles` 둘뿐이다.
+      const cur = g.proTeamProfiles[teamId] ?? DEFAULT_TEAM_PROFILE;
       // 이번 시즌 결과로 연속 기록을 갱신한다. **압박에 넘기기 전에** 센다 —
       // 올해 실패면 올해 것까지 세어야 그 압박이 반영된다
       const prev = g.teamStreaks[teamId] ?? { missedPlayoffs: 0, titles: 0 };

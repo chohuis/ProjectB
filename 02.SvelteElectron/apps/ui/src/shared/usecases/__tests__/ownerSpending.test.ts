@@ -58,8 +58,9 @@ describe("구단주 성향 배선", () => {
    *   연수와 연봉이 서로 다른 팀의 성향을 볼 수 있다.
    */
   it("연수와 같은 프로필을 쓴다", () => {
+    // ⚠ 2026-09-22 에 `m` 인자가 빠졌다 — 마스터 손수 성향을 지워 갈래가 죽었다
     expect(M).toContain(
-      "const profile = getTeamProfile(npc.currentTeam, g, m) ?? DEFAULT_TEAM_PROFILE;",
+      "const profile = getTeamProfile(npc.currentTeam, g) ?? DEFAULT_TEAM_PROFILE;",
     );
     // ⚠ 띄어쓰기를 눌러서 본다(`flattenSrc`) — prettier 가 접어도 안 깨진다 (A-6)
     expect(flattenSrc(M)).toContain("developmentFocus: profile.developmentFocus,");

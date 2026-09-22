@@ -1549,7 +1549,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
           const offeredSalary = await calcOfferedSalaryForProtagonist(gOff.protagonist, myStats, offSeasonBudgetMod());
           if (contract.teamOptionYears > 0) {
             const seasonRating = await calcSeasonRating(myStats);
-            const profile = getTeamProfile(gOff.protagonist.teamId, gOff, m) ?? DEFAULT_TEAM_PROFILE;
+            const profile = getTeamProfile(gOff.protagonist.teamId, gOff) ?? DEFAULT_TEAM_PROFILE;
             // winNowPressure: 0→기준75, 50→63, 100→50 (공격적 팀은 낮은 기준에도 행사)
             const threshold = 75 - Math.round((profile.winNowPressure / 100) * 25);
             const exercised = seasonRating >= threshold;
@@ -1792,7 +1792,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       for (const n of gNow.npcs ?? []) {
         const tid = n.currentTeam ?? "";
         if (!tid) continue;
-        const inv = getTeamProfile(tid, gNow, mNow)?.farmInvestment ?? 50;
+        const inv = getTeamProfile(tid, gNow)?.farmInvestment ?? 50;
         // ⚠ 식은 `clubEffects` 한 곳에 — 팀 상세가 같은 함수를 쓴다
         campBonus[n.npcId] = campConditionBonus(inv, camp.conditionBonus);
       }

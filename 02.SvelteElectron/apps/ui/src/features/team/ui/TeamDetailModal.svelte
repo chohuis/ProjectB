@@ -162,7 +162,7 @@
   } = {};
   loadRosterRules().then((r) => { clubRules = r as typeof clubRules; }).catch(() => {});
 
-  $: profileOf = getTeamProfile(teamId, $gameStore, $masterStore) ?? null;
+  $: profileOf = getTeamProfile(teamId, $gameStore) ?? null;
   /** 부상 회복이 평균 대비 몇 % 빠른가 — 음수면 느리다 */
   $: medicalPct = (() => {
     const span = clubRules.medicalRules?.recoverySpan;

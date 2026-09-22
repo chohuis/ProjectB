@@ -138,7 +138,7 @@ export async function boot(opts: { slotId: string; worldSeed: number; seasonYear
     (fn) => gameStore.subscribe((s) => fn({ npcs: s.npcs })),
     npcLiveStatsStore.subscribe,
   );
-  gameStore.initProTeamProfiles(get(masterStore).teams ?? []);
+  gameStore.initProTeamProfiles();
 
   // 팀은 refs에서 고른다 — 하드코딩하면 refs 교체 때 조용히 어긋난다
   const hsTeams = get(masterStore).teams.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL");
@@ -251,7 +251,7 @@ export async function bootContinue(slotId: string): Promise<boolean> {
     (fn) => gameStore.subscribe((s) => fn({ npcs: s.npcs })),
     npcLiveStatsStore.subscribe,
   );
-  gameStore.initProTeamProfiles(get(masterStore).teams ?? []);
+  gameStore.initProTeamProfiles();
   return loadGameV3(slotId);
 }
 
@@ -2279,9 +2279,9 @@ export function tradeSourceProbe(): Record<string, unknown> {
     // ⚠ 프로필은 `owner` 엔티티가 아니라 `gameStore.proTeamProfiles`에 있다.
     // 엉뚱한 데서 읽어 항상 `?? 50`으로 떨어졌고, 그러면 buyer 조건
     // (`> 60`)을 영원히 못 넘어 **수정 전후가 똑같이 buyer 0으로 보였다.**
-    // `getTeamProfile`과 같은 순서로 읽는다.
-    const prof = (g.proTeamProfiles[t.id]
-      ?? m.teams.find((mt) => mt.id === t.id)?.proTeamProfile)?.winNowPressure;
+    // `getTeamProfile`과 같은 자리를 읽는다 — 마스터 갈래는 2026-09-22 에
+    // 데이터와 함께 지웠다(정본 하나).
+    const prof = g.proTeamProfiles[t.id]?.winNowPressure;
     const mode = rankPct > 0.70 ? "seller"
       : (rankPct <= 0.30 && (prof ?? 50) > 60) ? "buyer" : "-";
     return {
@@ -2825,7 +2825,8 @@ export function overseasClubBaseline(): Record<string, unknown> {
         팀: t.id.replace("TEAM_", ""),
         전력: t.power ?? 0,
         예산억: Math.round((t.history?.budget ?? 0) / 1e8),
-        성향출처: t.proTeamProfile ? "손수" : prof ? "예산파생" : "없음",
+        // 손수 값은 2026-09-22 에 지웠다 — 이제 파생 아니면 없는 것이다
+        성향출처: prof ? "예산파생" : "없음",
         성향있나: !!t.traits,
         구장문자열: t.stadium ?? "",
         // 🔴 구장 표에서 찾았나 — 못 찾으면 `NEUTRAL_DIMS` 다(전 팀이 같은 구장)
@@ -5637,16 +5638,23 @@ export function salarySpread(): Record<string, unknown> {
   };
 }
 
-/** 구단 성향이 마스터에서 실리는가 — 첫 오프시즌에 비어 있었다 */
+/**
+ * 구단 성향이 스토어에 실리는가 — 첫 오프시즌에 비어 있었다.
+ *
+ * ⚠ 예전엔 "마스터에 `proTeamProfile` 이 적힌 팀"을 셌다. 그 데이터는
+ *   2026-09-22 에 지웠으므로(정본 하나 · 파생) 이제 셀 것은 **성향
+ *   두 칸(철학·자원)이 있는 팀**과 **스토어에 실제로 실린 팀**이다.
+ */
 export function teamProfileProbe(): Record<string, unknown> {
   const m = get(masterStore); const g = get(gameStore);
   const teams = m.teams ?? [];
-  const withProf = teams.filter((t) => (t as { proTeamProfile?: unknown }).proTeamProfile).length;
-  const pro = teams.filter((t) => t.leagueId === "LEAGUE_KBL");
-  const proWith = pro.filter((t) => (t as { proTeamProfile?: unknown }).proTeamProfile).length;
+  const PRO = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
+  const pro = teams.filter((t) => PRO.has(t.leagueId));
+  const withTraits = pro.filter((t) => t.traits?.philosophy && t.traits?.resource).length;
+  const kbl = teams.filter((t) => t.leagueId === "LEAGUE_KBL");
   return {
-    마스터팀: teams.length, 성향있는팀: withProf,
-    KBL팀: pro.length, KBL성향: proWith,
+    마스터팀: teams.length, 프로팀: pro.length, 성향두칸있는팀: withTraits,
+    KBL팀: kbl.length,
     게임스토어: Object.keys(g.proTeamProfiles).length,
   };
 }

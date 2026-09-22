@@ -104,7 +104,7 @@ export async function evalRetirementPressure(
   const g = get(gameStore);
   const p = target ?? g.protagonist;
   const m = get(masterStore);
-  const profile = getTeamProfile(p.teamId, g, m) ?? DEFAULT_TEAM_PROFILE;
+  const profile = getTeamProfile(p.teamId, g) ?? DEFAULT_TEAM_PROFILE;
   const ovr = p.pitching?.ovr ?? p.batting?.ovr ?? 50;
 
   // 같은 포지션 유망주 — 내 자리를 위협하는 최고 OVR

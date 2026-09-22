@@ -262,7 +262,7 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
       for (const occ of result.occurred) {
         const tid = teamOf.get(occ.playerId) ?? "";
         if (!tid) continue;
-        const q = getTeamProfile(tid, g, m)?.medicalQuality ?? 50;
+        const q = getTeamProfile(tid, g)?.medicalQuality ?? 50;
         // ⚠ **식은 `clubEffects` 한 곳에만 둔다.** 팀 상세도 같은 함수를
         //   써서 화면과 실제가 안 갈린다.
         occ.recoveryWeeks = medicalRecoveryWeeks(occ.recoveryWeeks, q, span, minW);

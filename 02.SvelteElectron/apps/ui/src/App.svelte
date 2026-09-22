@@ -65,7 +65,7 @@
       (fn) => gameStore.subscribe((s) => fn({ npcs: s.npcs })),
       npcLiveStatsStore.subscribe,
     );
-    gameStore.initProTeamProfiles(get(masterStore).teams ?? []);
+    gameStore.initProTeamProfiles();
 
     try {
       // v3 슬롯만 목록 (클린 브레이크 — 구 세이브는 새 구조에서 미지원)

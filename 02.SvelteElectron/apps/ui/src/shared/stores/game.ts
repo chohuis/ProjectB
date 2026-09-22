@@ -296,7 +296,12 @@ const DEFAULT_MAILBOX: MessageItem[] = [];
 
 // ── 헬퍼: ProtagonistSave → player 호환 객체 ──────────────────
 /**
- * 마스터에 적힌 구단 성향을 꺼낸다 — 새 게임의 시작값이다.
+ * 구단 성향을 **예산 지수 + 성향에서 유도한다** — 새 게임의 시작값이다.
+ *
+ * 🔴 **정본이 하나다**(2026-09-22 · 2단계 ③ · 사용자 확정 ⓐ). 예전엔 ABL 32팀만
+ *   `refs.json` 에 12항목이 손수 적혀 있었고 나머지는 파생이라, 같은 값이 두
+ *   잣대로 만들어졌다 — 리그끼리 비교가 안 됐고 파생 규칙을 고쳐도 ABL 만
+ *   안 따라왔다. 손수 값은 지웠다(성향 ①을 고를 때 근거로 이미 다 썼다).
  *
  * ⚠ 마스터가 아직 안 실렸으면 빈 객체다 — 그때는 `initProTeamProfiles`가
  *   뒤달아 채운다. 둘 다 `!map[id]` 규칙이라 순서가 바뀜도 안전하다.
@@ -464,10 +469,12 @@ function profilesFromMaster(): Record<string, import("./master").ProTeamProfile>
   const teams = get(masterStore).teams ?? [];
   const out: Record<string, import("./master").ProTeamProfile> = {};
 
-  // ① 데이터에 적힌 성향이 있으면 그걸 쓴다 (현재 ABL 32팀)
-  for (const t of teams) if (t.proTeamProfile) out[t.id] = { ...t.proTeamProfile };
-
-  // ② 없는 팀은 **예산 지수에서 유도한다** (사용자 확정 2026-08-23).
+  // **예산 지수에서 유도한다** (사용자 확정 2026-08-23).
+  //
+  // 🔴 여기 위에 "데이터에 적힌 성향이 있으면 그걸 쓴다"는 갈래가 있었다 —
+  //    ABL 32팀만 탔고 2026-09-22 에 그 데이터를 지웠다(정본 하나). 갈래도
+  //    같이 지운다. 남겨 두면 "아무도 안 타는 우선 경로"가 되어, 다음 사람이
+  //    파생을 고칠 때 "ABL 은 손수값이라 다를 수 있다"를 또 의심하게 된다.
   //
   // 🔴 KBL 20팀은 성향 데이터가 아예 없다. `teams/pro_korea/*.json`에
   //    손수 만든 값이 있지만 **구 데이터**다 — seeds로 국내 팀을 통째
@@ -481,7 +488,6 @@ function profilesFromMaster(): Record<string, import("./master").ProTeamProfile>
   //   `updateProTeamProfiles`가 덮이는 데 여러 시즌이 걸린다.
   const byLeague = new Map<string, typeof teams>();
   for (const t of teams) {
-    if (out[t.id]) continue;
     // ⚠ **프로 리그만.** 구단 성향은 프로용이고 세이브에 저장된다 —
     //   예산이 있는 팀 전부에 붙이면 고교·대학까지 203개가 쌀인다.
     if (!PRO_LEAGUES.has(t.leagueId)) continue;
@@ -795,6 +801,31 @@ function applyTags(cur: string[], add?: string[], remove?: string[]): string[] {
   for (const r of remove ?? []) out.delete(r);
   return [...out];
 }
+/**
+ * 세이브의 구단 성향 + 파생 — **정책 하나**(2026-09-22 · 2단계 ③).
+ *
+ *   세이브에 있는 팀은 **세이브가 이긴다.** 시즌마다
+ *   `updateProTeamProfiles`가 성적으로 갱신한 값이라 파생은 시작점일 뿐이다.
+ *   파생으로 덮으면 여러 시즌을 거친 구단 개성이 로드할 때마다 사라진다.
+ *   옛 세이브에 남은 ABL 손수 값도 같은 규칙으로 **안 덮는다.**
+ *
+ *   세이브에 **없는 팀만** 파생으로 채운다.
+ *
+ * 🔴 예전엔 `saved.proTeamProfiles ?? {}` 뿐이었다. `proTeamProfiles`를
+ *   저장하기 전에 만든 세이브(실측 2026-09-22: 테스터 `slot3_slot_1.db` ·
+ *   09-05 · 블롭에 칸 자체가 없다)를 열면 **전 팀이 `DEFAULT_TEAM_PROFILE`
+ *   (전 항목 50)** 로 떨어졌다 — `App.svelte`가 부트에 부른
+ *   `initProTeamProfiles`를 이 자리가 덮었기 때문이다. 압박·승강 임계값·
+ *   방출·FA 입찰이 통째로 중립이 된다.
+ *
+ * ⚠ 마스터가 아직 안 실렸으면 파생이 빈 객체다 — 세이브 값만 남는다(예전 동작).
+ */
+function mergeSavedProfiles(saved?: Record<string, unknown>): GameStoreState["proTeamProfiles"] {
+  const out = { ...(saved ?? {}) } as GameStoreState["proTeamProfiles"];
+  for (const [id, p] of Object.entries(profilesFromMaster())) if (!out[id]) out[id] = p;
+  return out;
+}
+
 function fromSaveGame(saved: SaveGame): GameStoreState {
   const p = migrateProtagonist(saved.protagonist);
   const metrics = { ...DEFAULT_ACHIEVEMENT_METRICS, ...(saved.achievementMetrics ?? {}) };
@@ -825,7 +856,7 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     lastTop10Batter:  null,
     // ⚠ **되살린다.** 저장만 하고 안 읽으면 아무 일도 안 일어난다 —
     // 이 프로젝트에서 반복된 형태다(가드를 저장했는데 fromSaveGame이 안 읽음)
-    proTeamProfiles:  (saved.proTeamProfiles ?? {}) as GameStoreState["proTeamProfiles"],
+    proTeamProfiles:  mergeSavedProfiles(saved.proTeamProfiles),
     // ⚠ 안 되살리면 앱을 껐다 켤 때 예산이 정적값으로 돌아간다
     clubBudgets:      (saved.clubBudgets ?? {}) as GameStoreState["clubBudgets"],
     demotionWeek:     (saved.demotionWeek ?? {}) as GameStoreState["demotionWeek"],
@@ -1833,7 +1864,7 @@ function createGameStore() {
     },
 
     /**
-     * 마스터의 구단 성향을 스토어로 옮긴다.
+     * 마스터에서 유도한 구단 성향을 스토어에 **빈 자리만** 채운다.
      *
      * 🔴 **예전엔 불러도 날아갔다.** `App.svelte`가 마스터 로드 직후에
      * 불렀는데, 그 뒤 새 게임이 `proTeamProfiles: {}`로 초기화해 덮었다 —
@@ -1841,14 +1872,23 @@ function createGameStore() {
      * 그래서 오프시즌이 전 팀을 `DEFAULT_TEAM_PROFILE`로 봤고, 압박이
      * 전 팀 정확히 50이었다.
      *
-     * ⚠ **기존 값을 안 덮는다**(`!map[t.id]`) — 세이브에 쌓인 성향이
-     *   마스터 초기값으로 되돌아가면 시즌을 거친 개성이 사라진다.
+     * 🔴 **예전엔 `t.proTeamProfile`(손수 값)만 옮겼다.** 그 데이터를 지운
+     *   2026-09-22 부터는 그게 **아무 일도 안 하는 함수**가 된다 — 호출부는
+     *   둘인데 조용히 빈다. 그래서 `profilesFromMaster()` 로 바꿨다: 같은
+     *   파생을 쓰니 새 게임 경로와 잣대가 하나고, KBL·JBL 도 이제 여기서
+     *   채워진다(예전엔 ABL 만 탔다).
+     *
+     * ⚠ **기존 값을 안 덮는다**(`!map[id]`) — 세이브에 쌓인 성향이
+     *   초기값으로 되돌아가면 시즌을 거친 개성이 사라진다. **옛 세이브에
+     *   남은 손수 값도 그대로 둔다**(정책 · `proTeamProfilePersist.test`).
      */
-    initProTeamProfiles(teams: import("../stores/master").TeamRef[]) {
+    initProTeamProfiles() {
       update((s) => {
-        const map: Record<string, import("../stores/master").ProTeamProfile> = { ...s.proTeamProfiles };
-        for (const t of teams) {
-          if (t.proTeamProfile && !map[t.id]) map[t.id] = { ...t.proTeamProfile };
+        const map: Record<string, import("../stores/master").ProTeamProfile> = {
+          ...s.proTeamProfiles,
+        };
+        for (const [id, p] of Object.entries(profilesFromMaster())) {
+          if (!map[id]) map[id] = p;
         }
         return { ...s, proTeamProfiles: map };
       });

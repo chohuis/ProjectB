@@ -153,12 +153,17 @@ function buildRosterRef(
   return ref;
 }
 
+/**
+ * ⚠ 예전엔 `m`(마스터)도 받아 `m.teams.find(...)?.proTeamProfile` 을 봤다.
+ *   마스터에 손수 적힌 성향을 보던 자리인데, 2026-09-22 에 그 데이터를
+ *   지웠다(정본 하나 · 파생). 갈래와 함께 인자도 지운다 — 남겨 두면 "마스터도
+ *   본다"는 거짓말이 서명에 남는다.
+ */
 function getTeamProfile(
   teamId: string,
   g: import("../../stores/game").GameStoreState,
-  m: import("../../stores/master").MasterState,
 ): ProTeamProfile | null {
-  return g.proTeamProfiles[teamId] ?? m.teams.find((t) => t.id === teamId)?.proTeamProfile ?? null;
+  return g.proTeamProfiles[teamId] ?? null;
 }
 
 /** 프로필이 없는 팀의 기본값 — **정본은 여기 하나다.**
@@ -405,7 +410,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
 
     const expiringContractIds = roster.filter((n) => n.contractYears <= 1).map((n) => n.npcId);
 
-    const profile = getTeamProfile(team.id, g, m) ?? DEFAULT_TEAM_PROFILE;
+    const profile = getTeamProfile(team.id, g) ?? DEFAULT_TEAM_PROFILE;
     const currentPayroll = npcRows
       .filter((n) => n.currentTeam === team.id)
       .reduce((sum, n) => sum + n.currentSalary, 0);
@@ -557,7 +562,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
     const requestedAsset = allAssets.find((a) => a.playerId === requestedId);
     if (!offeredAsset || !requestedAsset) continue;
 
-    const receivingProfile = getTeamProfile(proposal.receivingTeamId, g, m) ?? DEFAULT_TEAM_PROFILE;
+    const receivingProfile = getTeamProfile(proposal.receivingTeamId, g) ?? DEFAULT_TEAM_PROFILE;
 
     // STEP A: 수신 팀 가치 평가
     const tradeEval = JSON.parse(
@@ -720,7 +725,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
             careerInjuryCount: receivedAsset.careerInjuryCount,
             hasSteroidHistory: receivedAsset.hasSteroidHistory,
             receivingTeamMedicalQuality:
-              getTeamProfile(g.protagonist.teamId, g, m)?.medicalQuality ?? 50,
+              getTeamProfile(g.protagonist.teamId, g)?.medicalQuality ?? 50,
             seed: seedOf(
               s.worldSeed ?? 0,
               s.seasonYear,
@@ -1160,7 +1165,7 @@ export async function processProTeamCallupCalldown(
     const maxRosterSize = rosterMaxOf(team.leagueId);
     const minRosterSize = rosterMinOf(team.leagueId);
     const teamId2 = teamId1.replace(/_1$/, "_2");
-    const profile = getTeamProfile(teamId1, g, m) ?? DEFAULT_TEAM_PROFILE;
+    const profile = getTeamProfile(teamId1, g) ?? DEFAULT_TEAM_PROFILE;
 
     // ── 부상자 명단(IL) ─────────────────────────────────────
     //
@@ -1472,7 +1477,7 @@ export async function processWinNowPressureUpdate(weekNum: number): Promise<void
   const proTeams = m.teams.filter((t) => proLeagues.includes(t.leagueId) && t.id.endsWith("_1"));
 
   for (const team of proTeams) {
-    const profile = getTeamProfile(team.id, g, m) ?? DEFAULT_TEAM_PROFILE;
+    const profile = getTeamProfile(team.id, g) ?? DEFAULT_TEAM_PROFILE;
 
     // 각 팀의 소속 리그 순위 조회 (주인공 리그가 아닐 수 있으므로 leagueState 우선)
     const leagueStandings = s.leagueState[team.leagueId]?.standings ?? s.standings;
@@ -1558,7 +1563,7 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
     const entity = m.entities.find((e) => e.id === npc.npcId);
     if (!entity) continue;
     const liveOvr = npcOvr(entity, get(npcLiveStatsStore));
-    const profile = getTeamProfile(npc.currentTeam, g, m) ?? DEFAULT_TEAM_PROFILE;
+    const profile = getTeamProfile(npc.currentTeam, g) ?? DEFAULT_TEAM_PROFILE;
 
     // 은퇴 제안
     const retSuggest = JSON.parse(
@@ -1772,7 +1777,7 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
 
       if (newContractYrs <= 0) {
         // 계약 만료 → 실제 성적 반영 자동 갱신
-        const profile = getTeamProfile(npc.currentTeam, g, m) ?? DEFAULT_TEAM_PROFILE;
+        const profile = getTeamProfile(npc.currentTeam, g) ?? DEFAULT_TEAM_PROFILE;
         const [salaryRaw, yearsRaw] = await Promise.all([
           window.projectB!.calcNpcRenewalSalaryNative(
             JSON.stringify({
@@ -1979,7 +1984,7 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
       };
 
       const faTeams = proFirstTeams.map((t) => {
-        const profile = getTeamProfile(t.id, g, m) ?? DEFAULT_TEAM_PROFILE;
+        const profile = getTeamProfile(t.id, g) ?? DEFAULT_TEAM_PROFILE;
         const avgBudget = avgBudgetOf(t.leagueId);
         return {
           teamId: t.id,
@@ -2352,7 +2357,7 @@ export async function processScoutingImprovement(): Promise<void> {
   const proTeams = m.teams.filter((t) => proLeagues.includes(t.leagueId) && t.id.endsWith("_1"));
 
   for (const team of proTeams) {
-    const profile = getTeamProfile(team.id, g, m) ?? DEFAULT_TEAM_PROFILE;
+    const profile = getTeamProfile(team.id, g) ?? DEFAULT_TEAM_PROFILE;
 
     const res = JSON.parse(
       await window.projectB!.calcScoutingImprovementNative(
