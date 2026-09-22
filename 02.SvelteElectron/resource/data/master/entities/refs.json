@@ -953,6 +953,342 @@
   ],
   "stadiums": [
     {
+      "id": "STADIUM_ABL_EMPIRE",
+      "name": "엠파이어 스타디움",
+      "parkFactor": "타자친화",
+      "capacity": 52000,
+      "dist": {
+        "lf": 96,
+        "cf": 120,
+        "rf": 94,
+        "fence": 2.6
+      }
+    },
+    {
+      "id": "STADIUM_ABL_HARBORHAWKS",
+      "name": "하버 볼파크",
+      "parkFactor": "타자친화",
+      "capacity": 37755,
+      "dist": {
+        "lf": 94,
+        "cf": 120,
+        "rf": 97,
+        "fence": 3.2
+      }
+    },
+    {
+      "id": "STADIUM_ABL_LAKESPIRITS",
+      "name": "레이크 필드",
+      "parkFactor": "중립",
+      "capacity": 34788,
+      "dist": {
+        "lf": 98,
+        "cf": 122,
+        "rf": 99,
+        "fence": 2.9
+      }
+    },
+    {
+      "id": "STADIUM_ABL_LONESTARS",
+      "name": "론스타 볼파크",
+      "parkFactor": "타자친화",
+      "capacity": 49115,
+      "dist": {
+        "lf": 96,
+        "cf": 120,
+        "rf": 96,
+        "fence": 2.5
+      }
+    },
+    {
+      "id": "STADIUM_ABL_MOTORWOLVES",
+      "name": "모터시티 파크",
+      "parkFactor": "중립",
+      "capacity": 41083,
+      "dist": {
+        "lf": 97,
+        "cf": 123,
+        "rf": 98,
+        "fence": 3
+      }
+    },
+    {
+      "id": "STADIUM_ABL_WAVERIDERS",
+      "name": "오션뷰 파크",
+      "parkFactor": "투수친화",
+      "capacity": 36742,
+      "dist": {
+        "lf": 102,
+        "cf": 125,
+        "rf": 102,
+        "fence": 3.8
+      }
+    },
+    {
+      "id": "STADIUM_ABL_RAINARROWS",
+      "name": "레인포레스트 파크",
+      "parkFactor": "투수친화",
+      "capacity": 47929,
+      "dist": {
+        "lf": 103,
+        "cf": 126,
+        "rf": 102,
+        "fence": 4
+      }
+    },
+    {
+      "id": "STADIUM_ABL_WINDBEARS",
+      "name": "레이크사이드 필드",
+      "parkFactor": "타자친화",
+      "capacity": 41268,
+      "dist": {
+        "lf": 95,
+        "cf": 120,
+        "rf": 97,
+        "fence": 2.2
+      }
+    },
+    {
+      "id": "STADIUM_ABL_MOUNTAINPEAKS",
+      "name": "마운틴 에어 파크",
+      "parkFactor": "타자친화",
+      "capacity": 46897,
+      "dist": {
+        "lf": 97,
+        "cf": 120,
+        "rf": 97,
+        "fence": 2
+      }
+    },
+    {
+      "id": "STADIUM_ABL_SPACECOMETS",
+      "name": "스페이스 스타디움",
+      "parkFactor": "중립",
+      "capacity": 41168,
+      "dist": {
+        "lf": 98,
+        "cf": 122,
+        "rf": 97,
+        "fence": 3.2
+      }
+    },
+    {
+      "id": "STADIUM_ABL_SUNDRAGONS",
+      "name": "선라이즈 스타디움",
+      "parkFactor": "투수친화",
+      "capacity": 56000,
+      "dist": {
+        "lf": 103,
+        "cf": 124,
+        "rf": 103,
+        "fence": 3.6
+      }
+    },
+    {
+      "id": "STADIUM_ABL_DESERTSERPENTS",
+      "name": "데저트 파크",
+      "parkFactor": "타자친화",
+      "capacity": 48519,
+      "dist": {
+        "lf": 96,
+        "cf": 119,
+        "rf": 95,
+        "fence": 2.6
+      }
+    },
+    {
+      "id": "STADIUM_ABL_COASTALRAYS",
+      "name": "코스털 파크",
+      "parkFactor": "투수친화",
+      "capacity": 40162,
+      "dist": {
+        "lf": 102,
+        "cf": 127,
+        "rf": 103,
+        "fence": 4.2
+      }
+    },
+    {
+      "id": "STADIUM_ABL_BAYSEALS",
+      "name": "베이뷰 파크",
+      "parkFactor": "투수친화",
+      "capacity": 41915,
+      "dist": {
+        "lf": 102,
+        "cf": 126,
+        "rf": 103,
+        "fence": 4.4
+      }
+    },
+    {
+      "id": "STADIUM_ABL_RIVERCARDINALS",
+      "name": "리버프론트 파크",
+      "parkFactor": "중립",
+      "capacity": 45494,
+      "dist": {
+        "lf": 99,
+        "cf": 124,
+        "rf": 97,
+        "fence": 3.4
+      }
+    },
+    {
+      "id": "STADIUM_ABL_PEACHTREEFALCONS",
+      "name": "피치트리 스타디움",
+      "parkFactor": "중립",
+      "capacity": 41084,
+      "dist": {
+        "lf": 98,
+        "cf": 121,
+        "rf": 100,
+        "fence": 2.8
+      }
+    },
+    {
+      "id": "STADIUM_JBL_NEONCRANES",
+      "name": "도쿄 네온 돔",
+      "parkFactor": "타자친화",
+      "capacity": 55000,
+      "dist": {
+        "lf": 96,
+        "cf": 120,
+        "rf": 96,
+        "fence": 2.4
+      }
+    },
+    {
+      "id": "STADIUM_JBL_TEMPOSTINGS",
+      "name": "오사카 템포 돔",
+      "parkFactor": "투수친화",
+      "capacity": 48000,
+      "dist": {
+        "lf": 102,
+        "cf": 124,
+        "rf": 102,
+        "fence": 4
+      }
+    },
+    {
+      "id": "STADIUM_JBL_IRONDRAKES",
+      "name": "나고야 아이언 돔",
+      "parkFactor": "투수친화",
+      "capacity": 40500,
+      "dist": {
+        "lf": 103,
+        "cf": 127,
+        "rf": 103,
+        "fence": 4.5
+      }
+    },
+    {
+      "id": "STADIUM_JBL_TIDERAVES",
+      "name": "요코하마 마리나 스타디움",
+      "parkFactor": "타자친화",
+      "capacity": 34046,
+      "dist": {
+        "lf": 94,
+        "cf": 117,
+        "rf": 94,
+        "fence": 2.6
+      }
+    },
+    {
+      "id": "STADIUM_JBL_SILVERWOLVES",
+      "name": "고베 실버 볼파크",
+      "parkFactor": "중립",
+      "capacity": 35000,
+      "dist": {
+        "lf": 98,
+        "cf": 122,
+        "rf": 99,
+        "fence": 3
+      }
+    },
+    {
+      "id": "STADIUM_JBL_IRONSTORMS",
+      "name": "히로시마 마츠다 스타디움",
+      "parkFactor": "타자친화",
+      "capacity": 33000,
+      "dist": {
+        "lf": 97,
+        "cf": 120,
+        "rf": 95,
+        "fence": 2.2
+      }
+    },
+    {
+      "id": "STADIUM_JBL_THUNDERFALCONS",
+      "name": "후쿠오카 페이페이 돔",
+      "parkFactor": "투수친화",
+      "capacity": 38000,
+      "dist": {
+        "lf": 102,
+        "cf": 123,
+        "rf": 102,
+        "fence": 3.5
+      }
+    },
+    {
+      "id": "STADIUM_JBL_POLARBEARS",
+      "name": "삿포로 돔",
+      "parkFactor": "투수친화",
+      "capacity": 41484,
+      "dist": {
+        "lf": 103,
+        "cf": 125,
+        "rf": 102,
+        "fence": 3.9
+      }
+    },
+    {
+      "id": "STADIUM_JBL_SPIRITBUFFALOS",
+      "name": "센다이 미야기 스타디움",
+      "parkFactor": "중립",
+      "capacity": 30508,
+      "dist": {
+        "lf": 97,
+        "cf": 121,
+        "rf": 100,
+        "fence": 2.9
+      }
+    },
+    {
+      "id": "STADIUM_JBL_MARINESOLDIERS",
+      "name": "나가사키 마린 스타디움",
+      "parkFactor": "중립",
+      "capacity": 30000,
+      "dist": {
+        "lf": 99,
+        "cf": 124,
+        "rf": 99,
+        "fence": 3.6
+      }
+    },
+    {
+      "id": "STADIUM_JBL_SEAGULLS",
+      "name": "니가타 씨걸 스타디움",
+      "parkFactor": "중립",
+      "capacity": 25000,
+      "dist": {
+        "lf": 99,
+        "cf": 123,
+        "rf": 98,
+        "fence": 3.3
+      }
+    },
+    {
+      "id": "STADIUM_JBL_SUNS",
+      "name": "오키나와 셀룰러 스타디움",
+      "parkFactor": "타자친화",
+      "capacity": 30000,
+      "dist": {
+        "lf": 95,
+        "cf": 118,
+        "rf": 97,
+        "fence": 2.8
+      }
+    },
+    {
       "id": "STADIUM_BUSAN_WAVES",
       "name": "웨이브스타디움",
       "parkFactor": "타자친화",
@@ -11808,13 +12144,18 @@
       "clubId": "CLUB_ABL_EMPIRE",
       "tier": "메이저",
       "city": "뉴욕",
-      "stadium": "엠파이어 스타디움",
+      "stadium": "STADIUM_ABL_EMPIRE",
       "colors": [
         "#003087",
         "#e8312a"
       ],
       "capacity": 52000,
+      "traits": {
+        "philosophy": "베테랑우대",
+        "resource": "부유"
+      },
       "profile": {
+        "style": "베테랑우대",
         "prestige": "S",
         "fanBase": "메가",
         "facilityLevel": 5,
@@ -11900,13 +12241,18 @@
       "clubId": "CLUB_ABL_EMPIRE",
       "tier": "마이너",
       "city": "뉴욕",
-      "stadium": "엠파이어 팜 파크",
+      "stadium": "STADIUM_ABL_EMPIRE",
       "colors": [
         "#003087",
         "#e8312a"
       ],
       "capacity": 4000,
+      "traits": {
+        "philosophy": "베테랑우대",
+        "resource": "부유"
+      },
       "profile": {
+        "style": "베테랑우대",
         "prestige": "B",
         "fanBase": "소규모",
         "facilityLevel": 4,
@@ -11977,13 +12323,18 @@
       "clubId": "CLUB_ABL_HARBORHAWKS",
       "tier": "메이저",
       "city": "보스턴",
-      "stadium": "하버 볼파크",
+      "stadium": "STADIUM_ABL_HARBORHAWKS",
       "colors": [
         "#bd3039",
         "#0d2b56"
       ],
       "capacity": 37755,
+      "traits": {
+        "philosophy": "전통/정통",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "전통/정통",
         "prestige": "S",
         "fanBase": "전국",
         "facilityLevel": 5,
@@ -12067,13 +12418,18 @@
       "clubId": "CLUB_ABL_HARBORHAWKS",
       "tier": "마이너",
       "city": "보스턴",
-      "stadium": "하버 팜 필드",
+      "stadium": "STADIUM_ABL_HARBORHAWKS",
       "colors": [
         "#bd3039",
         "#0d2b56"
       ],
       "capacity": 3500,
+      "traits": {
+        "philosophy": "전통/정통",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "전통/정통",
         "prestige": "B",
         "fanBase": "소규모",
         "facilityLevel": 4,
@@ -12144,13 +12500,18 @@
       "clubId": "CLUB_ABL_LAKESPIRITS",
       "tier": "메이저",
       "city": "클리블랜드",
-      "stadium": "레이크 필드",
+      "stadium": "STADIUM_ABL_LAKESPIRITS",
       "colors": [
         "#003366",
         "#cc0000"
       ],
       "capacity": 34788,
+      "traits": {
+        "philosophy": "육성중심",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "육성중심",
         "prestige": "B",
         "fanBase": "지역",
         "facilityLevel": 3,
@@ -12227,13 +12588,18 @@
       "clubId": "CLUB_ABL_LAKESPIRITS",
       "tier": "마이너",
       "city": "클리블랜드",
-      "stadium": "레이크 팜 구장",
+      "stadium": "STADIUM_ABL_LAKESPIRITS",
       "colors": [
         "#003366",
         "#cc0000"
       ],
       "capacity": 3000,
+      "traits": {
+        "philosophy": "육성중심",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "육성중심",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 2,
@@ -12304,13 +12670,18 @@
       "clubId": "CLUB_ABL_LONESTARS",
       "tier": "메이저",
       "city": "댈러스",
-      "stadium": "론스타 볼파크",
+      "stadium": "STADIUM_ABL_LONESTARS",
       "colors": [
         "#003087",
         "#c0111f"
       ],
       "capacity": 49115,
+      "traits": {
+        "philosophy": "공격야구(화력)",
+        "resource": "부유"
+      },
       "profile": {
+        "style": "공격야구(화력)",
         "prestige": "A",
         "fanBase": "광역",
         "facilityLevel": 5,
@@ -12390,13 +12761,18 @@
       "clubId": "CLUB_ABL_LONESTARS",
       "tier": "마이너",
       "city": "댈러스",
-      "stadium": "론스타 팜 필드",
+      "stadium": "STADIUM_ABL_LONESTARS",
       "colors": [
         "#003087",
         "#c0111f"
       ],
       "capacity": 4500,
+      "traits": {
+        "philosophy": "공격야구(화력)",
+        "resource": "부유"
+      },
       "profile": {
+        "style": "공격야구(화력)",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 4,
@@ -12467,13 +12843,18 @@
       "clubId": "CLUB_ABL_MOTORWOLVES",
       "tier": "메이저",
       "city": "디트로이트",
-      "stadium": "모터시티 파크",
+      "stadium": "STADIUM_ABL_MOTORWOLVES",
       "colors": [
         "#0c2340",
         "#fa4616"
       ],
       "capacity": 41083,
+      "traits": {
+        "philosophy": "근성/언더독",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "근성/언더독",
         "prestige": "B",
         "fanBase": "지역",
         "facilityLevel": 3,
@@ -12552,13 +12933,18 @@
       "clubId": "CLUB_ABL_MOTORWOLVES",
       "tier": "마이너",
       "city": "디트로이트",
-      "stadium": "모터울브즈 팜 구장",
+      "stadium": "STADIUM_ABL_MOTORWOLVES",
       "colors": [
         "#0c2340",
         "#fa4616"
       ],
       "capacity": 3500,
+      "traits": {
+        "philosophy": "근성/언더독",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "근성/언더독",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 2,
@@ -12629,13 +13015,18 @@
       "clubId": "CLUB_ABL_WAVERIDERS",
       "tier": "메이저",
       "city": "마이애미",
-      "stadium": "오션뷰 파크",
+      "stadium": "STADIUM_ABL_WAVERIDERS",
       "colors": [
         "#00a3e0",
         "#ef3340"
       ],
       "capacity": 36742,
+      "traits": {
+        "philosophy": "젊은피(세대교체)",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "젊은피(세대교체)",
         "prestige": "B",
         "fanBase": "지역",
         "facilityLevel": 4,
@@ -12712,13 +13103,18 @@
       "clubId": "CLUB_ABL_WAVERIDERS",
       "tier": "마이너",
       "city": "마이애미",
-      "stadium": "웨이브라이더스 팜 필드",
+      "stadium": "STADIUM_ABL_WAVERIDERS",
       "colors": [
         "#00a3e0",
         "#ef3340"
       ],
       "capacity": 3000,
+      "traits": {
+        "philosophy": "젊은피(세대교체)",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "젊은피(세대교체)",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 3,
@@ -12789,13 +13185,18 @@
       "clubId": "CLUB_ABL_RAINARROWS",
       "tier": "메이저",
       "city": "시애틀",
-      "stadium": "레인포레스트 파크",
+      "stadium": "STADIUM_ABL_RAINARROWS",
       "colors": [
         "#0c2c56",
         "#005c5c"
       ],
       "capacity": 47929,
+      "traits": {
+        "philosophy": "투수왕국",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "투수왕국",
         "prestige": "A",
         "fanBase": "광역",
         "facilityLevel": 4,
@@ -12871,13 +13272,18 @@
       "clubId": "CLUB_ABL_RAINARROWS",
       "tier": "마이너",
       "city": "시애틀",
-      "stadium": "레인애로우스 팜 구장",
+      "stadium": "STADIUM_ABL_RAINARROWS",
       "colors": [
         "#0c2c56",
         "#005c5c"
       ],
       "capacity": 4000,
+      "traits": {
+        "philosophy": "투수왕국",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "투수왕국",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 3,
@@ -12948,13 +13354,18 @@
       "clubId": "CLUB_ABL_WINDBEARS",
       "tier": "메이저",
       "city": "시카고",
-      "stadium": "레이크사이드 필드",
+      "stadium": "STADIUM_ABL_WINDBEARS",
       "colors": [
         "#002244",
         "#cc0000"
       ],
       "capacity": 41268,
+      "traits": {
+        "philosophy": "전통/정통",
+        "resource": "궁핍"
+      },
       "profile": {
+        "style": "전통/정통",
         "prestige": "A",
         "fanBase": "전국",
         "facilityLevel": 4,
@@ -13035,13 +13446,18 @@
       "clubId": "CLUB_ABL_WINDBEARS",
       "tier": "마이너",
       "city": "시카고",
-      "stadium": "윈드베어스 팜 파크",
+      "stadium": "STADIUM_ABL_WINDBEARS",
       "colors": [
         "#002244",
         "#cc0000"
       ],
       "capacity": 4000,
+      "traits": {
+        "philosophy": "전통/정통",
+        "resource": "궁핍"
+      },
       "profile": {
+        "style": "전통/정통",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 3,
@@ -13112,13 +13528,18 @@
       "clubId": "CLUB_ABL_MOUNTAINPEAKS",
       "tier": "메이저",
       "city": "덴버",
-      "stadium": "마운틴 에어 파크",
+      "stadium": "STADIUM_ABL_MOUNTAINPEAKS",
       "colors": [
         "#33006f",
         "#c4ced4"
       ],
       "capacity": 46897,
+      "traits": {
+        "philosophy": "데이터중심",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "데이터중심",
         "prestige": "A",
         "fanBase": "지역",
         "facilityLevel": 4,
@@ -13194,13 +13615,18 @@
       "clubId": "CLUB_ABL_MOUNTAINPEAKS",
       "tier": "마이너",
       "city": "덴버",
-      "stadium": "마운틴픽스 팜 필드",
+      "stadium": "STADIUM_ABL_MOUNTAINPEAKS",
       "colors": [
         "#33006f",
         "#c4ced4"
       ],
       "capacity": 3500,
+      "traits": {
+        "philosophy": "데이터중심",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "데이터중심",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 3,
@@ -13271,13 +13697,18 @@
       "clubId": "CLUB_ABL_SPACECOMETS",
       "tier": "메이저",
       "city": "휴스턴",
-      "stadium": "스페이스 스타디움",
+      "stadium": "STADIUM_ABL_SPACECOMETS",
       "colors": [
         "#eb6e1f",
         "#002d62"
       ],
       "capacity": 41168,
+      "traits": {
+        "philosophy": "데이터중심",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "데이터중심",
         "prestige": "A",
         "fanBase": "광역",
         "facilityLevel": 5,
@@ -13355,13 +13786,18 @@
       "clubId": "CLUB_ABL_SPACECOMETS",
       "tier": "마이너",
       "city": "휴스턴",
-      "stadium": "스페이스코밋츠 팜 구장",
+      "stadium": "STADIUM_ABL_SPACECOMETS",
       "colors": [
         "#eb6e1f",
         "#002d62"
       ],
       "capacity": 4000,
+      "traits": {
+        "philosophy": "데이터중심",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "데이터중심",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 4,
@@ -13432,13 +13868,18 @@
       "clubId": "CLUB_ABL_SUNDRAGONS",
       "tier": "메이저",
       "city": "로스앤젤레스",
-      "stadium": "선라이즈 스타디움",
+      "stadium": "STADIUM_ABL_SUNDRAGONS",
       "colors": [
         "#003da5",
         "#ef3e42"
       ],
       "capacity": 56000,
+      "traits": {
+        "philosophy": "투수왕국",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "투수왕국",
         "prestige": "S",
         "fanBase": "메가",
         "facilityLevel": 5,
@@ -13520,13 +13961,18 @@
       "clubId": "CLUB_ABL_SUNDRAGONS",
       "tier": "마이너",
       "city": "로스앤젤레스",
-      "stadium": "선드래곤스 팜 구장",
+      "stadium": "STADIUM_ABL_SUNDRAGONS",
       "colors": [
         "#003da5",
         "#ef3e42"
       ],
       "capacity": 5000,
+      "traits": {
+        "philosophy": "투수왕국",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "투수왕국",
         "prestige": "B",
         "fanBase": "소규모",
         "facilityLevel": 4,
@@ -13597,13 +14043,18 @@
       "clubId": "CLUB_ABL_DESERTSERPENTS",
       "tier": "메이저",
       "city": "피닉스",
-      "stadium": "데저트 파크",
+      "stadium": "STADIUM_ABL_DESERTSERPENTS",
       "colors": [
         "#a71930",
         "#e3d4ad"
       ],
       "capacity": 48519,
+      "traits": {
+        "philosophy": "공격야구(화력)",
+        "resource": "부유"
+      },
       "profile": {
+        "style": "공격야구(화력)",
         "prestige": "B",
         "fanBase": "광역",
         "facilityLevel": 4,
@@ -13679,13 +14130,18 @@
       "clubId": "CLUB_ABL_DESERTSERPENTS",
       "tier": "마이너",
       "city": "피닉스",
-      "stadium": "데저트서펀츠 팜 필드",
+      "stadium": "STADIUM_ABL_DESERTSERPENTS",
       "colors": [
         "#a71930",
         "#e3d4ad"
       ],
       "capacity": 4000,
+      "traits": {
+        "philosophy": "공격야구(화력)",
+        "resource": "부유"
+      },
       "profile": {
+        "style": "공격야구(화력)",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 3,
@@ -13756,13 +14212,18 @@
       "clubId": "CLUB_ABL_COASTALRAYS",
       "tier": "메이저",
       "city": "샌디에이고",
-      "stadium": "코스털 파크",
+      "stadium": "STADIUM_ABL_COASTALRAYS",
       "colors": [
         "#002d62",
         "#ffc425"
       ],
       "capacity": 40162,
+      "traits": {
+        "philosophy": "육성중심",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "육성중심",
         "prestige": "B",
         "fanBase": "지역",
         "facilityLevel": 3,
@@ -13836,13 +14297,18 @@
       "clubId": "CLUB_ABL_COASTALRAYS",
       "tier": "마이너",
       "city": "샌디에이고",
-      "stadium": "코스털레이스 팜 구장",
+      "stadium": "STADIUM_ABL_COASTALRAYS",
       "colors": [
         "#002d62",
         "#ffc425"
       ],
       "capacity": 3500,
+      "traits": {
+        "philosophy": "육성중심",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "육성중심",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 2,
@@ -13913,13 +14379,18 @@
       "clubId": "CLUB_ABL_BAYSEALS",
       "tier": "메이저",
       "city": "샌프란시스코",
-      "stadium": "베이뷰 파크",
+      "stadium": "STADIUM_ABL_BAYSEALS",
       "colors": [
         "#fd5a1e",
         "#27251f"
       ],
       "capacity": 41915,
+      "traits": {
+        "philosophy": "수비/짜임새",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "수비/짜임새",
         "prestige": "A",
         "fanBase": "광역",
         "facilityLevel": 4,
@@ -13999,13 +14470,18 @@
       "clubId": "CLUB_ABL_BAYSEALS",
       "tier": "마이너",
       "city": "샌프란시스코",
-      "stadium": "베이씰스 팜 필드",
+      "stadium": "STADIUM_ABL_BAYSEALS",
       "colors": [
         "#fd5a1e",
         "#27251f"
       ],
       "capacity": 4000,
+      "traits": {
+        "philosophy": "수비/짜임새",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "수비/짜임새",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 3,
@@ -14076,13 +14552,18 @@
       "clubId": "CLUB_ABL_RIVERCARDINALS",
       "tier": "메이저",
       "city": "세인트루이스",
-      "stadium": "리버프론트 파크",
+      "stadium": "STADIUM_ABL_RIVERCARDINALS",
       "colors": [
         "#c41e3a",
         "#0c2340"
       ],
       "capacity": 45494,
+      "traits": {
+        "philosophy": "스몰볼",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "스몰볼",
         "prestige": "A",
         "fanBase": "전국",
         "facilityLevel": 4,
@@ -14168,13 +14649,18 @@
       "clubId": "CLUB_ABL_RIVERCARDINALS",
       "tier": "마이너",
       "city": "세인트루이스",
-      "stadium": "리버카디널스 팜 구장",
+      "stadium": "STADIUM_ABL_RIVERCARDINALS",
       "colors": [
         "#c41e3a",
         "#0c2340"
       ],
       "capacity": 4000,
+      "traits": {
+        "philosophy": "스몰볼",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "스몰볼",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 3,
@@ -14245,13 +14731,18 @@
       "clubId": "CLUB_ABL_PEACHTREEFALCONS",
       "tier": "메이저",
       "city": "애틀랜타",
-      "stadium": "피치트리 스타디움",
+      "stadium": "STADIUM_ABL_PEACHTREEFALCONS",
       "colors": [
         "#ce1141",
         "#002d62"
       ],
       "capacity": 41084,
+      "traits": {
+        "philosophy": "스파르타(혹독훈련)",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "스파르타(혹독훈련)",
         "prestige": "A",
         "fanBase": "광역",
         "facilityLevel": 4,
@@ -14328,13 +14819,18 @@
       "clubId": "CLUB_ABL_PEACHTREEFALCONS",
       "tier": "마이너",
       "city": "애틀랜타",
-      "stadium": "피치트리팰컨스 팜 필드",
+      "stadium": "STADIUM_ABL_PEACHTREEFALCONS",
       "colors": [
         "#ce1141",
         "#002d62"
       ],
       "capacity": 3500,
+      "traits": {
+        "philosophy": "스파르타(혹독훈련)",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "스파르타(혹독훈련)",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 3,
@@ -14405,13 +14901,18 @@
       "clubId": "CLUB_JBL_CL_NEONCRANES",
       "tier": "1군",
       "city": "도쿄",
-      "stadium": "도쿄 네온 돔",
+      "stadium": "STADIUM_JBL_NEONCRANES",
       "colors": [
         "#003087",
         "#c8a822"
       ],
       "capacity": 55000,
+      "traits": {
+        "philosophy": "베테랑우대",
+        "resource": "부유"
+      },
       "profile": {
+        "style": "베테랑우대",
         "prestige": "S",
         "fanBase": "메가",
         "facilityLevel": 5,
@@ -14494,13 +14995,18 @@
       "clubId": "CLUB_JBL_CL_NEONCRANES",
       "tier": "2군",
       "city": "도쿄",
-      "stadium": "크레인즈 팜 필드",
+      "stadium": "STADIUM_JBL_NEONCRANES",
       "colors": [
         "#003087",
         "#c8a822"
       ],
       "capacity": 4500,
+      "traits": {
+        "philosophy": "베테랑우대",
+        "resource": "부유"
+      },
       "profile": {
+        "style": "베테랑우대",
         "prestige": "B",
         "fanBase": "소규모",
         "facilityLevel": 4,
@@ -14557,13 +15063,18 @@
       "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
       "tier": "1군",
       "city": "오사카",
-      "stadium": "오사카 템포 돔",
+      "stadium": "STADIUM_JBL_TEMPOSTINGS",
       "colors": [
         "#002b5c",
         "#d00000"
       ],
       "capacity": 48000,
+      "traits": {
+        "philosophy": "공격야구(화력)",
+        "resource": "부유"
+      },
       "profile": {
+        "style": "공격야구(화력)",
         "prestige": "S",
         "fanBase": "메가",
         "facilityLevel": 5,
@@ -14630,13 +15141,18 @@
       "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
       "tier": "2군",
       "city": "오사카",
-      "stadium": "스팅스 팜 구장",
+      "stadium": "STADIUM_JBL_TEMPOSTINGS",
       "colors": [
         "#002b5c",
         "#d00000"
       ],
       "capacity": 4000,
+      "traits": {
+        "philosophy": "공격야구(화력)",
+        "resource": "부유"
+      },
       "profile": {
+        "style": "공격야구(화력)",
         "prestige": "B",
         "fanBase": "소규모",
         "facilityLevel": 4,
@@ -14693,13 +15209,18 @@
       "clubId": "CLUB_JBL_CL_IRONDRAKES",
       "tier": "1군",
       "city": "나고야",
-      "stadium": "나고야 아이언 돔",
+      "stadium": "STADIUM_JBL_IRONDRAKES",
       "colors": [
         "#003da5",
         "#d40000"
       ],
       "capacity": 40500,
+      "traits": {
+        "philosophy": "수비/짜임새",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "수비/짜임새",
         "prestige": "A",
         "fanBase": "광역",
         "facilityLevel": 4,
@@ -14762,13 +15283,18 @@
       "clubId": "CLUB_JBL_CL_IRONDRAKES",
       "tier": "2군",
       "city": "나고야",
-      "stadium": "드레이크스 팜 파크",
+      "stadium": "STADIUM_JBL_IRONDRAKES",
       "colors": [
         "#003da5",
         "#d40000"
       ],
       "capacity": 3500,
+      "traits": {
+        "philosophy": "수비/짜임새",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "수비/짜임새",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 3,
@@ -14825,13 +15351,18 @@
       "clubId": "CLUB_JBL_CL_TIDERAVES",
       "tier": "1군",
       "city": "요코하마",
-      "stadium": "요코하마 마리나 스타디움",
+      "stadium": "STADIUM_JBL_TIDERAVES",
       "colors": [
         "#003087",
         "#d70000"
       ],
       "capacity": 34046,
+      "traits": {
+        "philosophy": "공격야구(화력)",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "공격야구(화력)",
         "prestige": "B",
         "fanBase": "광역",
         "facilityLevel": 3,
@@ -14895,13 +15426,18 @@
       "clubId": "CLUB_JBL_CL_TIDERAVES",
       "tier": "2군",
       "city": "요코하마",
-      "stadium": "레이브스 팜 구장",
+      "stadium": "STADIUM_JBL_TIDERAVES",
       "colors": [
         "#003087",
         "#d70000"
       ],
       "capacity": 3000,
+      "traits": {
+        "philosophy": "공격야구(화력)",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "공격야구(화력)",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 2,
@@ -14958,13 +15494,18 @@
       "clubId": "CLUB_JBL_CL_SILVERWOLVES",
       "tier": "1군",
       "city": "고베",
-      "stadium": "고베 실버 볼파크",
+      "stadium": "STADIUM_JBL_SILVERWOLVES",
       "colors": [
         "#005bac",
         "#c8a400"
       ],
       "capacity": 35000,
+      "traits": {
+        "philosophy": "전통/정통",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "전통/정통",
         "prestige": "B",
         "fanBase": "지역",
         "facilityLevel": 3,
@@ -15026,13 +15567,18 @@
       "clubId": "CLUB_JBL_CL_SILVERWOLVES",
       "tier": "2군",
       "city": "고베",
-      "stadium": "울브스 팜 필드",
+      "stadium": "STADIUM_JBL_SILVERWOLVES",
       "colors": [
         "#005bac",
         "#c8a400"
       ],
       "capacity": 3000,
+      "traits": {
+        "philosophy": "전통/정통",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "전통/정통",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 2,
@@ -15089,13 +15635,18 @@
       "clubId": "CLUB_JBL_CL_IRONSTORMS",
       "tier": "1군",
       "city": "히로시마",
-      "stadium": "히로시마 마츠다 스타디움",
+      "stadium": "STADIUM_JBL_IRONSTORMS",
       "colors": [
         "#bf0000",
         "#000000"
       ],
       "capacity": 33000,
+      "traits": {
+        "philosophy": "육성중심",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "육성중심",
         "prestige": "B",
         "fanBase": "지역",
         "facilityLevel": 3,
@@ -15159,13 +15710,18 @@
       "clubId": "CLUB_JBL_CL_IRONSTORMS",
       "tier": "2군",
       "city": "히로시마",
-      "stadium": "스톰즈 팜 구장",
+      "stadium": "STADIUM_JBL_IRONSTORMS",
       "colors": [
         "#bf0000",
         "#000000"
       ],
       "capacity": 2800,
+      "traits": {
+        "philosophy": "육성중심",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "육성중심",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 2,
@@ -15222,13 +15778,18 @@
       "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
       "tier": "1군",
       "city": "후쿠오카",
-      "stadium": "후쿠오카 페이페이 돔",
+      "stadium": "STADIUM_JBL_THUNDERFALCONS",
       "colors": [
         "#002d62",
         "#fdbb30"
       ],
       "capacity": 38000,
+      "traits": {
+        "philosophy": "스파르타(혹독훈련)",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "스파르타(혹독훈련)",
         "prestige": "S",
         "fanBase": "전국",
         "facilityLevel": 5,
@@ -15297,13 +15858,18 @@
       "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
       "tier": "2군",
       "city": "후쿠오카",
-      "stadium": "팰컨즈 팜 파크",
+      "stadium": "STADIUM_JBL_THUNDERFALCONS",
       "colors": [
         "#002d62",
         "#fdbb30"
       ],
       "capacity": 3500,
+      "traits": {
+        "philosophy": "스파르타(혹독훈련)",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "스파르타(혹독훈련)",
         "prestige": "B",
         "fanBase": "소규모",
         "facilityLevel": 4,
@@ -15360,13 +15926,18 @@
       "clubId": "CLUB_JBL_PL_POLARBEARS",
       "tier": "1군",
       "city": "삿포로",
-      "stadium": "삿포로 돔",
+      "stadium": "STADIUM_JBL_POLARBEARS",
       "colors": [
         "#002060",
         "#c8102e"
       ],
       "capacity": 41484,
+      "traits": {
+        "philosophy": "젊은피(세대교체)",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "젊은피(세대교체)",
         "prestige": "A",
         "fanBase": "광역",
         "facilityLevel": 4,
@@ -15429,13 +16000,18 @@
       "clubId": "CLUB_JBL_PL_POLARBEARS",
       "tier": "2군",
       "city": "삿포로",
-      "stadium": "폴라베어스 팜 필드",
+      "stadium": "STADIUM_JBL_POLARBEARS",
       "colors": [
         "#002060",
         "#c8102e"
       ],
       "capacity": 4000,
+      "traits": {
+        "philosophy": "젊은피(세대교체)",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "젊은피(세대교체)",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 3,
@@ -15492,13 +16068,18 @@
       "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
       "tier": "1군",
       "city": "센다이",
-      "stadium": "센다이 미야기 스타디움",
+      "stadium": "STADIUM_JBL_SPIRITBUFFALOS",
       "colors": [
         "#003da5",
         "#e8002d"
       ],
       "capacity": 30508,
+      "traits": {
+        "philosophy": "근성/언더독",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "근성/언더독",
         "prestige": "B",
         "fanBase": "지역",
         "facilityLevel": 3,
@@ -15560,13 +16141,18 @@
       "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
       "tier": "2군",
       "city": "센다이",
-      "stadium": "버팔로스 팜 구장",
+      "stadium": "STADIUM_JBL_SPIRITBUFFALOS",
       "colors": [
         "#003da5",
         "#e8002d"
       ],
       "capacity": 2800,
+      "traits": {
+        "philosophy": "근성/언더독",
+        "resource": "알뜰"
+      },
       "profile": {
+        "style": "근성/언더독",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 2,
@@ -15623,13 +16209,18 @@
       "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
       "tier": "1군",
       "city": "나가사키",
-      "stadium": "나가사키 마린 스타디움",
+      "stadium": "STADIUM_JBL_MARINESOLDIERS",
       "colors": [
         "#00205b",
         "#cf152d"
       ],
       "capacity": 30000,
+      "traits": {
+        "philosophy": "투수왕국",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "투수왕국",
         "prestige": "B",
         "fanBase": "지역",
         "facilityLevel": 3,
@@ -15692,13 +16283,18 @@
       "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
       "tier": "2군",
       "city": "나가사키",
-      "stadium": "솔저스 팜 필드",
+      "stadium": "STADIUM_JBL_MARINESOLDIERS",
       "colors": [
         "#00205b",
         "#cf152d"
       ],
       "capacity": 2500,
+      "traits": {
+        "philosophy": "투수왕국",
+        "resource": "안정"
+      },
       "profile": {
+        "style": "투수왕국",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 2,
@@ -15755,13 +16351,18 @@
       "clubId": "CLUB_JBL_PL_SEAGULLS",
       "tier": "1군",
       "city": "니가타",
-      "stadium": "니가타 씨걸 스타디움",
+      "stadium": "STADIUM_JBL_SEAGULLS",
       "colors": [
         "#005aab",
         "#ffffff"
       ],
       "capacity": 25000,
+      "traits": {
+        "philosophy": "스몰볼",
+        "resource": "궁핍"
+      },
       "profile": {
+        "style": "스몰볼",
         "prestige": "C",
         "fanBase": "지역",
         "facilityLevel": 2,
@@ -15821,13 +16422,18 @@
       "clubId": "CLUB_JBL_PL_SEAGULLS",
       "tier": "2군",
       "city": "니가타",
-      "stadium": "씨걸스 팜 파크",
+      "stadium": "STADIUM_JBL_SEAGULLS",
       "colors": [
         "#005aab",
         "#ffffff"
       ],
       "capacity": 2200,
+      "traits": {
+        "philosophy": "스몰볼",
+        "resource": "궁핍"
+      },
       "profile": {
+        "style": "스몰볼",
         "prestige": "D",
         "fanBase": "소규모",
         "facilityLevel": 1,
@@ -15884,13 +16490,18 @@
       "clubId": "CLUB_JBL_PL_SUNS",
       "tier": "1군",
       "city": "오키나와",
-      "stadium": "오키나와 셀룰러 스타디움",
+      "stadium": "STADIUM_JBL_SUNS",
       "colors": [
         "#0077b6",
         "#f4a300"
       ],
       "capacity": 30000,
+      "traits": {
+        "philosophy": "부상방지/재활특화",
+        "resource": "궁핍"
+      },
       "profile": {
+        "style": "부상방지/재활특화",
         "prestige": "C",
         "fanBase": "지역",
         "facilityLevel": 2,
@@ -15950,13 +16561,18 @@
       "clubId": "CLUB_JBL_PL_SUNS",
       "tier": "2군",
       "city": "오키나와",
-      "stadium": "선즈 팜 구장",
+      "stadium": "STADIUM_JBL_SUNS",
       "colors": [
         "#0077b6",
         "#f4a300"
       ],
       "capacity": 2500,
+      "traits": {
+        "philosophy": "부상방지/재활특화",
+        "resource": "궁핍"
+      },
       "profile": {
+        "style": "부상방지/재활특화",
         "prestige": "D",
         "fanBase": "소규모",
         "facilityLevel": 1,
