@@ -33,12 +33,15 @@ function foldByTeam(snapshots) {
   for (const snap of snapshots) {
     for (const r of snap.팀) {
       if (r.경기 === 0) continue;   // 아직 안 돈 시즌은 안 센다
-      const a = acc.get(r.팀) ?? { 견본: 0, 행: r, 홈런경기: 0, ERA: 0, 승률: 0, FA: 0 };
+      const a = acc.get(r.팀) ?? { 견본: 0, 행: r, 홈런경기: 0, ERA: 0, 승률: 0, FA: 0, 관중: 0, 관중견본: 0 };
       a.견본 += 1;
       a.홈런경기 += r["홈런/경기"];
       a.ERA += r.ERA;
       a.승률 += r.승률;
       a.FA += r.FA영입;
+      // ⚠ 관중은 **시즌 종료 정산을 지난 시즌만** 값이 있다 — 0 을 평균에
+      //   섞으면 정산 안 지난 시즌 수만큼 값이 내려간다. 따로 센다
+      if (r["관중/경기"] > 0) { a.관중 += r["관중/경기"]; a.관중견본 += 1; }
       a.행 = r;   // 성향·구장은 시즌마다 안 바뀌니 마지막 것을 둔다
       acc.set(r.팀, a);
     }
@@ -50,6 +53,7 @@ function foldByTeam(snapshots) {
     ERA: a.ERA / a.견본,
     승률: a.승률 / a.견본,
     FA영입: a.FA / a.견본,
+    "관중/경기": a.관중견본 > 0 ? a.관중 / a.관중견본 : 0,
   }));
 }
 
@@ -73,7 +77,8 @@ function foldByTeam(snapshots) {
         const a = first.팀[i], b = after.팀[i];
         for (const k of Object.keys(a)) {
           if (k === "경기" || k === "승률" || k === "홈런" || k === "홈런/경기"
-            || k === "ERA" || k === "FA영입" || k === "FA평균OVR") continue;
+            || k === "ERA" || k === "FA영입" || k === "FA평균OVR"
+            || k === "관중/경기" || k === "관중정산시즌") continue;
           if (JSON.stringify(a[k]) !== JSON.stringify(b[k])) drift.push(`${a.팀}.${k}`);
         }
       }
@@ -128,8 +133,9 @@ function foldByTeam(snapshots) {
   const merged = new Map();
   for (const run of all) {
     for (const r of run.팀) {
-      const a = merged.get(r.팀) ?? { n: 0, 행: r, hrg: 0, era: 0, wp: 0, fa: 0 };
+      const a = merged.get(r.팀) ?? { n: 0, 행: r, hrg: 0, era: 0, wp: 0, fa: 0, att: 0, attN: 0 };
       a.n += 1; a.hrg += r["홈런/경기"]; a.era += r.ERA; a.wp += r.승률; a.fa += r.FA영입;
+      if (r["관중/경기"] > 0) { a.att += r["관중/경기"]; a.attN += 1; }
       a.행 = r;
       merged.set(r.팀, a);
     }
@@ -137,6 +143,7 @@ function foldByTeam(snapshots) {
   const rows = [...merged.values()].map((a) => ({
     ...a.행, 씨앗수: a.n,
     "홈런/경기": a.hrg / a.n, ERA: a.era / a.n, 승률: a.wp / a.n, FA영입: a.fa / a.n,
+    "관중/경기": a.attN > 0 ? a.att / a.attN : 0,
   }));
   fs.writeFileSync(path.join(OUT_DIR, "merged.json"), JSON.stringify(rows, null, 1), "utf8");
 
@@ -144,7 +151,7 @@ function foldByTeam(snapshots) {
     const rs = rows.filter((r) => r.리그 === lg).sort((a, b) => b.승률 - a.승률);
     if (rs.length === 0) continue;
     console.log(`\n### ${lg} — 씨앗 ${SEEDS.length} × ${YEARS}시즌 평균`);
-    console.log("팀".padEnd(26) + "★ 성향출처 구장표 lf/cf/rf/fence   승률    HR/G   ERA   FA  수용");
+    console.log("팀".padEnd(26) + "★ 성향출처 구장표 lf/cf/rf/fence   승률    HR/G   ERA   FA  수용  관중/경기");
     for (const r of rs) {
       console.log(
         r.팀.padEnd(26)
@@ -156,13 +163,21 @@ function foldByTeam(snapshots) {
         + n2(r["홈런/경기"]).padStart(5) + "  "
         + n2(r.ERA).padStart(5) + "  "
         + n2(r.FA영입).padStart(4) + "  "
-        + String(r.수용인원).padStart(6));
+        + String(r.수용인원).padStart(6) + "  "
+        // 0 이면 정산을 한 번도 안 지났다는 뜻이다 — 지어내지 않고 그대로 적는다
+        + (r["관중/경기"] > 0 ? String(Math.round(r["관중/경기"])) : "-").padStart(8));
     }
     const spread = (k) => {
       const v = rs.map((r) => r[k]).sort((a, b) => a - b);
       return `${n2(v[0])} ~ ${n2(v[v.length - 1])}`;
     };
-    console.log(`  퍼짐: HR/G ${spread("홈런/경기")} · ERA ${spread("ERA")}`);
+    const attRows = rs.filter((r) => r["관중/경기"] > 0);
+    console.log(`  퍼짐: HR/G ${spread("홈런/경기")} · ERA ${spread("ERA")}`
+      + (attRows.length
+        ? ` · 관중/경기 ${Math.round(Math.min(...attRows.map((r) => r["관중/경기"])))}`
+          + ` ~ ${Math.round(Math.max(...attRows.map((r) => r["관중/경기"])))}`
+          + ` (${attRows.length}/${rs.length}팀 정산)`
+        : " · 관중 정산 0팀"));
   }
   console.log(`\n원자료 ${OUT_DIR}`);
 })();

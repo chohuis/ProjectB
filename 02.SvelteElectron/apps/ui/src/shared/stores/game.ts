@@ -301,17 +301,102 @@ const DEFAULT_MAILBOX: MessageItem[] = [];
  * ⚠ 마스터가 아직 안 실렸으면 빈 객체다 — 그때는 `initProTeamProfiles`가
  *   뒤달아 채운다. 둘 다 `!map[id]` 규칙이라 순서가 바뀜도 안전하다.
  */
+/** 기질 세 축 — 예산으로는 못 정하는 것들 */
+interface Temperament {
+  stability: number;
+  discipline: number;
+  clubhouseCulture: number;
+}
+
 /**
- * 예산 지수 → 구단 성향. **순수 함수다** — 검사가 직접 부른다.
+ * 철학 → 기질 세 축의 **더할 값** (제안값 · 2026-09-22 · A).
  *
- * 지수 1.0(리그 평균)이면 전 항목 50으로 기본값과 같다. 거기서 벌린다.
- * 폭은 ±25 안퍼이다 — 더 벌리면 예산이 성향을 지배해서 성적으로
- * 갱신하는 `updateProTeamProfiles`가 덮이는 데 여러 시즌이 걸린다.
+ * 🔴 왜 이게 필요한가. 파생은 **예산 지수 한 축의 1차식**이라 `stability`·
+ *   `discipline`·`clubhouseCulture` 를 늘 50 으로 뒀다. 그래서 Rust 의
+ *   갈래 여섯이 죽어 있었다 — `team_engine.rs` 의 `stability > 70`·`< 35`·
+ *   `discipline > 70` 과 `player_engine.rs` 의 `stability` 둘. **`discipline > 70`
+ *   은 지금 0팀**이다(실측 2026-09-22). 예산으로는 이 셋을 못 정한다 —
+ *   돈이 많다고 규율이 서지 않는다. 정할 수 있는 것은 **철학과 자원**이다.
+ *
+ * ⚠ **밸런스 값이다 — 제안이다.** 동결 규칙대로 `docs/BALANCE_BACKLOG.md`
+ *   「구단 기질 세 축」 절에 근거와 함께 적었다. 넣을지는 사용자가 정한다.
+ * ⚠ 범위는 손수 적힌 ABL 값의 분포 안에 둔다(`30 ~ 72`). 밖으로 나가면
+ *   손수값과 파생값이 **다른 잣대**가 되어 리그끼리 못 비교한다.
+ * ⚠ 철학 이름은 **있는 12값 그대로**다. 새 값을 만들지 않는다 —
+ *   `QUALITY_BY_PHILOSOPHY`(`repo/newGameV3.ts`)가 같은 12값을 쓴다.
+ */
+const TEMPERAMENT_BY_PHILOSOPHY: Record<string, Temperament> = {
+  // 오래 하던 방식을 지킨다 — 감독·프런트를 자주 안 바꾼다
+  "전통/정통":         { stability: 18, discipline: 10, clubhouseCulture:   4 },
+  // 고참을 오래 데리고 간다 · 선참 문화가 선다
+  베테랑우대:          { stability: 16, discipline:  2, clubhouseCulture:   8 },
+  // 몸을 아끼는 운영이라 선수가 오래 남는다
+  "부상방지/재활특화": { stability: 10, discipline:  8, clubhouseCulture:  10 },
+  // 실수를 안 하는 야구 — 반복 훈련과 약속 플레이가 많다
+  "수비/짜임새":       { stability:  8, discipline: 14, clubhouseCulture:   2 },
+  // 투수 운용 규칙(등판 간격·구수)이 엄하다
+  투수왕국:            { stability:  6, discipline:  8, clubhouseCulture:  -2 },
+  // 판단 기준이 숫자라 사람이 바뀌어도 안 흔들린다
+  데이터중심:          { stability:  6, discipline: 12, clubhouseCulture:   0 },
+  // 작전 야구 — 약속이 많고 개인 재량이 적다
+  스몰볼:              { stability:  4, discipline: 10, clubhouseCulture:   2 },
+  // 🔴 **규율이 곧 정체성이다.** `discipline > 70` 을 넘기는 유일한 철학이다
+  "스파르타(혹독훈련)": { stability:  2, discipline: 22, clubhouseCulture: -14 },
+  // 치는 것이 답이라 세부 규율이 느슨하다
+  "공격야구(화력)":    { stability: -2, discipline: -10, clubhouseCulture:  4 },
+  // 뭉치는 힘으로 버틴다 — 분위기가 자산이다
+  "근성/언더독":       { stability: -4, discipline:  6, clubhouseCulture:  10 },
+  // 어린 선수를 계속 갈아 끼운다 — 자리가 안 고정된다
+  육성중심:            { stability: -6, discipline:  4, clubhouseCulture:  12 },
+  // 판을 자주 엎는다 — 가장 안 안정적이다
+  "젊은피(세대교체)":  { stability: -18, discipline: -4, clubhouseCulture:  8 },
+};
+
+/**
+ * 자원 → 기질 세 축의 **더할 값** (제안값 · 2026-09-22 · A).
+ *
+ * 철학보다 폭이 좁다 — 자원은 이미 예산 지수로 아홉 항목에 들어가 있다.
+ * 여기서 또 크게 밀면 **같은 축을 두 번 곱하는 셈**이 된다.
+ */
+const TEMPERAMENT_BY_RESOURCE: Record<string, Temperament> = {
+  // 돈이 있으면 한 해 못했다고 급히 안 바꾼다
+  부유: { stability:   8, discipline:  0, clubhouseCulture:   6 },
+  // 이름 그대로 중간
+  안정: { stability:   2, discipline:  2, clubhouseCulture:   2 },
+  // 살림을 쪼개 쓰느라 사람을 자주 바꾼다 · 대신 관리가 빡빡하다
+  알뜰: { stability:  -6, discipline:  4, clubhouseCulture:  -2 },
+  // 매년 살림이 흔들린다 — 남는 사람이 없다
+  궁핍: { stability: -16, discipline: -4, clubhouseCulture: -10 },
+};
+
+/** 기질의 아래·위 — 손수 적힌 ABL 값의 분포와 같은 칸에 둔다 */
+const TEMPERAMENT_MIN = 30;
+const TEMPERAMENT_MAX = 72;
+
+/**
+ * 예산 지수 + 성향 → 구단 성향. **순수 함수다** — 검사가 직접 부른다.
+ *
+ * 지수 1.0(리그 평균)이면 예산이 정하는 아홉 항목이 50으로 기본값과 같다.
+ * 거기서 벌린다. 폭은 ±25 안퍼이다 — 더 벌리면 예산이 성향을 지배해서
+ * 성적으로 갱신하는 `updateProTeamProfiles`가 덮이는 데 여러 시즌이 걸린다.
+ *
+ * ⚠ **`traits` 를 안 넘기면 기질 셋이 50이다** — 예전 그대로다. 성향이 없는
+ *   팀(해외 28 · B 가 채우는 중)은 지금처럼 중간값을 받는다.
  */
 export function deriveProfileFromBudgetIndex(
   idx: number,
+  traits?: { philosophy?: string; resource?: string },
 ): import("./master").ProTeamProfile {
   const at = (span: number) => Math.round(Math.max(5, Math.min(95, 50 + (idx - 1) * span)));
+  const phi = traits?.philosophy ? TEMPERAMENT_BY_PHILOSOPHY[traits.philosophy] : undefined;
+  const res = traits?.resource ? TEMPERAMENT_BY_RESOURCE[traits.resource] : undefined;
+  // ⚠ 둘 다 없으면 **손대지 않는다.** 0 을 더해도 같지만, "없으면 50"을
+  //   글로 남겨 둬야 성향이 안 들어온 리그를 표에서 가려 낼 수 있다
+  const temp = (k: keyof Temperament) =>
+    phi || res
+      ? Math.round(Math.max(TEMPERAMENT_MIN, Math.min(TEMPERAMENT_MAX,
+          50 + (phi?.[k] ?? 0) + (res?.[k] ?? 0))))
+      : 50;
   return {
         // 돈 쓰는 성향은 예산을 따라간다
         ownerSpendingWillingness: at(50),
@@ -325,8 +410,11 @@ export function deriveProfileFromBudgetIndex(
         // 부자 구단은 지금 이기라는 압박이 크고 인내가 짧다
         winNowPressure:           at(30),
         ownerPatience:            at(-30),
-        // 나머지는 예산과 상관이 없다 — 기본값을 둔다
-        stability: 50, discipline: 50, clubhouseCulture: 50,
+        // 🔴 기질 셋은 **예산이 아니라 철학·자원**이 정한다(위 두 표).
+        //   예전엔 셋 다 50 고정이라 Rust 갈래 여섯이 죽어 있었다.
+        stability:        temp("stability"),
+        discipline:       temp("discipline"),
+        clubhouseCulture: temp("clubhouseCulture"),
   };
 }
 
@@ -407,7 +495,9 @@ function profilesFromMaster(): Record<string, import("./master").ProTeamProfile>
     const avg = budgets.reduce((x, y) => x + y, 0) / budgets.length;
     if (avg <= 0) continue;
     for (const t of list) {
-      out[t.id] = deriveProfileFromBudgetIndex((t.history?.budget ?? 0) / avg);
+      // 🔴 **성향을 같이 넘긴다.** 안 넘기면 기질 셋이 50 으로 굳는다 —
+      //   값도 표도 있는데 잇는 선이 없는 그 형태다
+      out[t.id] = deriveProfileFromBudgetIndex((t.history?.budget ?? 0) / avg, t.traits);
     }
   }
   // 2군은 1군 성향을 물려받는다 — **같은 구단이다.**

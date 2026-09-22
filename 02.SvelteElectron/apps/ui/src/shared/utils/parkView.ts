@@ -10,7 +10,7 @@
  */
 import {
   PARK_COORDS,
-  PARK_TIER_OF,
+  parkTierOf,
   PARK_IMAGES,
   type ParkTier,
   type ParkCoords,
@@ -46,12 +46,13 @@ export function defaultParkView(): ParkView {
 /**
  * 구장 ID로 화면 정보를 만든다.
  *
- * 해외(ABL·JBL) 팀은 구장을 **한글 이름 문자열**로 참조하고 정의가 없다.
- * 그런 값이 들어와도 프로 기본값으로 떨어질 뿐 화면이 비지 않는다.
+ * 티어는 `parkTierOf` 가 정한다 — 표(국내 27) + id 접두(해외 `STADIUM_ABL_`·
+ * `STADIUM_JBL_` → `pro`). 어느 쪽에도 안 걸리는 값(한글 이름 문자열·오타)은
+ * 프로 기본값으로 떨어질 뿐 화면이 비지 않는다.
  */
 export function parkViewOf(stadiumId: string | undefined | null): ParkView {
   if (!stadiumId) return defaultParkView();
-  const tier = PARK_TIER_OF[stadiumId];
+  const tier = parkTierOf(stadiumId);
   if (!tier) return defaultParkView();
 
   const hasOwnImage = PARK_IMAGES.has(stadiumId);

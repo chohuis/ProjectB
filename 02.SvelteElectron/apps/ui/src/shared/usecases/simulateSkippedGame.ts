@@ -73,14 +73,13 @@ export async function simulateSkippedGame(
     knockout: knockoutMatchIds(s).has(entry.id),
   }];
 
-  const parkRefs = { teams: m.teams ?? [], stadiums: m.stadiums ?? [] };
+  // 🔴 **담장은 안 넘긴다**(2026-09-22) — `simulateGame` 이 홈 팀으로 구한다.
   const simmed = await runSimBatch(
     batch as Parameters<typeof runSimBatch>[0],
     m.entities ?? [],
     s.npcInjuries,
     get(npcLiveStatsStore),
     s.worldSeed,
-    parkRefs,
   );
 
   const hit = simmed[0];

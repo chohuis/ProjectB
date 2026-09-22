@@ -93,6 +93,15 @@ declare global {
         opponentManager?: { tacticalIQ?: number; bullpenRead?: number; offenseMind?: number; motivator?: number; clutchDecision?: number };
         weather?: "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
         park?: "neutral" | "pitcher_park" | "hitter_park" | "dome";
+        /**
+         * 🔴 **담장** — 좌·중·우 거리(m)와 펜스 높이(m).
+         *
+         * ⚠ 안 넘기면 Rust 가 `ParkDims::default()`(중립)로 떨어진다.
+         *   `park`(4종)과는 **다른 축**이다 — 그쪽은 타율 보정, 이쪽은
+         *   타구가 담장을 넘는지를 가른다. 선언이 없어 화면이 한 번도
+         *   안 넘겼다(2026-09-22).
+         */
+        parkDims?: { lf: number; cf: number; rf: number; fence: number };
         fielders?: MatchFielderStats[];
         /** 상대 수비진. ⚠ 안 넘기면 양 반 모두 `fielders`가 지킨다 */
         opponentFielders?: MatchFielderStats[];

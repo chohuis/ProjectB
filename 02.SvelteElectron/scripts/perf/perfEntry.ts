@@ -26,6 +26,7 @@ import { managerEffect } from "../../apps/ui/src/shared/utils/managerStyle";
 import { leagueStatsOf } from "../../apps/ui/src/shared/utils/season-helpers";
 // 구장 담장 — **화면·엔진과 같은 함수**다. 계측이 표를 새로 짓지 않는다
 import { parkDimsForHomeTeam } from "../../apps/ui/src/shared/utils/parkDims";
+import { readAttendanceTally, resetAttendanceTally } from "../../apps/ui/src/shared/usecases/clubFinance";
 import { npcLiveStatsStore, livePitchingOvrOf, liveOvrOf } from "../../apps/ui/src/shared/stores/npcLiveStats";
 import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/stores/autoAdvance";
 import { startNewGameV3, getFarmDevLog, loadGameV3 } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
@@ -129,6 +130,8 @@ export async function boot(opts: { slotId: string; worldSeed: number; seasonYear
   // 🔴 **판 시작에서 예외 셈을 비운다** (2026-09-09 · 계측 2-1). 한 프로세스에서
   //   두 판을 돌리는 계기가 있어(오케스트레이터) 안 비우면 앞판 것이 섞인다
   resetAutoAdvanceErrors();
+  // 같은 이유로 관중 누적도 비운다 — 안 비우면 앞판 시즌이 겹쳐 쌓인다
+  resetAttendanceTally();
   await masterStore.load();
   // setupContentWatcher는 dev 전용(onContentChanged 없으면 no-op)이라 건너뛴다
   masterStore.connectToGameStore(
@@ -2758,10 +2761,11 @@ export function sangmuProbe(): Record<string, unknown> {
  * 1단계(구장 치수·성향을 채운다) **전후를 같은 잣대로** 재려고 만든다.
  * 고친 뒤 같은 씨앗으로 다시 돌려 이 표를 비교한다.
  *
- * ⚠ **관중은 여기서 못 낸다.** `calcClubRevenueNative` 가 `attendanceTotal`
- *   을 내지만 그걸 읽는 코드가 0건이라 상태에 안 남는다(실측 2026-09-22).
- *   대신 그 네 입력(수용 인원 · 승률 · marketAppeal · prestige)을 적는다 —
- *   넷이 같으면 관중도 같다.
+ * ⚠ **관중은 계측 모드에서만 나온다**(2026-09-22). `calcClubRevenueNative`
+ *   가 `attendanceTotal` 을 내는데 읽는 코드가 0건이라 상태에 안 남았다 —
+ *   `clubFinance.readAttendanceTally()` 가 그 값을 계측 때만 쌓는다.
+ *   실제 플레이는 안 바뀐다. 시즌 종료 정산을 한 번도 안 지났으면 0 이다.
+ *   그래서 네 입력(수용 인원 · 승률 · marketAppeal · prestige)도 그대로 둔다.
  * ⚠ 성향 출처는 **마스터에 적혀 있나**로 가른다. `profilesFromMaster` 가
  *   ①적힌 값 ②예산 지수 파생 ③둘 다 없으면 없음 순으로 채운다.
  * ⚠ 1군(`_1`)만 센다 — 2군은 1군 성향을 물려받고 순위표도 따로다.
@@ -2790,6 +2794,8 @@ export function overseasClubBaseline(): Record<string, unknown> {
   }
 
   const teamOfNpc = new Map(g.npcs.map((n) => [n.npcId, n.currentTeam ?? ""]));
+  // 관중 — 시즌 종료 정산이 계측 모드에서 쌓아 둔 값(`clubFinance`)
+  const att = readAttendanceTally();
   const rows: Record<string, unknown>[] = [];
 
   for (const leagueId of ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]) {
@@ -2830,8 +2836,13 @@ export function overseasClubBaseline(): Record<string, unknown> {
         홈런: a.hr,
         "홈런/경기": games > 0 ? Math.round((a.hr / games) * 1000) / 1000 : 0,
         ERA: a.ip > 0 ? Math.round((a.er * 9 / a.ip) * 100) / 100 : 0,
-        // 관중의 네 입력 — 관중 자체는 상태에 안 남는다(머리말)
+        // 관중의 네 입력 — 넷이 같으면 관중도 같다
         수용인원: (t.capacity && t.capacity > 0 ? t.capacity : stadium?.capacity) ?? 0,
+        // 🔴 관중 자체 — 계측 모드에서만 찬다. 정산 전이면 0 이다(머리말)
+        관중정산시즌: att[t.id]?.seasons ?? 0,
+        "관중/경기": att[t.id] && att[t.id].homeGames > 0
+          ? Math.round(att[t.id].total / att[t.id].homeGames)
+          : 0,
         FA영입: fa.n,
         FA평균OVR: fa.n > 0 ? Math.round(fa.ovrSum / fa.n) : 0,
       };

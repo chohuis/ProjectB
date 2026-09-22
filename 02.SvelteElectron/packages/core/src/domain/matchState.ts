@@ -296,7 +296,26 @@ export interface MatchStartOptions {
   // 환경
   weather?: WeatherType;
   park?: ParkType;
+  /**
+   * 담장 — 좌·중·우 거리(m)와 펜스 높이(m).
+   *
+   * ⚠ `park`(4종)과 **다른 축**이다. 그쪽은 타율 보정, 이쪽은 타구가
+   *   담장을 넘는지를 가른다. 안 넘기면 Rust 가 중립 기본값을 쓴다
+   *   (`types.rs` `impl Default for ParkDims`).
+   *
+   * 🔴 여기 선언이 없어서 **주인공 경기가 한 번도 안 넘겼다**(2026-09-22).
+   *   리그 경기는 `RunSimpleGameParams` 쪽으로 넘기고 있었다.
+   */
+  parkDims?: ParkDims;
   fielders?: FielderStats[];
+}
+
+/** 구장 담장 — Rust `ParkDims` 와 같은 모양이다 */
+export interface ParkDims {
+  lf: number;
+  cf: number;
+  rf: number;
+  fence: number;
 }
 
 // ── 생성 헬퍼 ─────────────────────────────────────────────────────────────────

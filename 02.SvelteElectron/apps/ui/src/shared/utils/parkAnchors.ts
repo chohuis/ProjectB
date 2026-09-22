@@ -119,7 +119,13 @@ export const PARK_COORDS: Record<ParkTier, ParkCoords> = {
   },
 };
 
-/** 구장 → 티어. 여기 없는 구장(해외 등)은 프로 기본값으로 떨어진다 */
+/**
+ * 구장 → 티어. **손으로 적는 것은 국내 27개뿐이다.**
+ *
+ * 해외는 여기 안 적는다 — `PARK_TIER_PREFIX` 가 받는다. 56개를 손으로
+ * 적으면 구장이 늘 때마다 두 곳을 고쳐야 하고, 한쪽만 고쳐진 채 남는다.
+ * 읽을 때는 이 표가 아니라 `parkTierOf()` 를 쓴다.
+ */
 export const PARK_TIER_OF: Record<string, ParkTier> = {
   STADIUM_SEOUL_GUARDIANS: "pro",
   STADIUM_SUWON_KNIGHTS: "pro",
@@ -150,33 +156,49 @@ export const PARK_TIER_OF: Record<string, ParkTier> = {
   STADIUM_HALLA: "highschool",
 };
 
-/** 그림이 있는 구장 목록 — 없으면 티어 기본 그림을 쓴다 */
-export const PARK_IMAGES: ReadonlySet<string> = new Set([
-  "STADIUM_SEOUL_GUARDIANS",
-  "STADIUM_SUWON_KNIGHTS",
-  "STADIUM_SEOUL_ROYALS",
-  "STADIUM_INCHEON_SHARKS",
-  "STADIUM_DAEGU_SABERS",
-  "STADIUM_CHANGWON_STARS",
-  "STADIUM_BUSAN_WAVES",
-  "STADIUM_SEOUL_COBRAS",
-  "STADIUM_GWANGJU_PANTHERS",
-  "STADIUM_DAEJEON_PHANTOMS",
-  "STADIUM_GEUMGANG_UNIV",
-  "STADIUM_NOEUL",
-  "STADIUM_MIREU",
-  "STADIUM_BYEOLBIT",
-  "STADIUM_TAEJONG",
-  "STADIUM_GANGBYEON",
-  "STADIUM_GYEBAEK",
-  "STADIUM_NAMNYEOK",
-  "STADIUM_CHANGGONG",
-  "STADIUM_GYERYONG",
-  "STADIUM_NAKDONG",
-  "STADIUM_MUJIGAE",
-  "STADIUM_SEORAK_HS",
-  "STADIUM_YEONGSAN",
-  "STADIUM_PALGONG",
-  "STADIUM_HANGANG",
-  "STADIUM_HALLA",
-]);
+/**
+ * 표에 없는 구장의 티어 — **id 접두로 정한다.**
+ *
+ * 🔴 해외(ABL·JBL) 구장은 프로 리그 구장이므로 티어가 `pro` 다. 그림은
+ *   안 그린다(사용자 확정 ⓑ · 2026-09-22) — 티어만 있으면 프로 기본 GIF 와
+ *   프로 좌표를 쓴다. 그래서 `PARK_IMAGES` 와 갈리는 것이 **정상이다.**
+ *
+ * ⚠ **접두 밖 id 는 여전히 티어가 없다.** 접두를 넓게 잡으면 한글 이름
+ *   문자열(「엠파이어 스타디움」)이나 오타 난 id 까지 조용히 프로가 되어
+ *   "데이터가 비었다"를 화면이 못 알려 준다.
+ * ⚠ id 규약은 `STADIUM_ABL_<팀>` · `STADIUM_JBL_<팀>` 이고 2군은 1군 구장
+ *   id 를 그대로 쓴다.
+ */
+export const PARK_TIER_PREFIX: ReadonlyArray<readonly [string, ParkTier]> = [
+  ["STADIUM_ABL_", "pro"],
+  ["STADIUM_JBL_", "pro"],
+];
+
+/**
+ * 구장의 티어 — **읽는 정본이 여기다.** 표를 먼저 보고, 없으면 접두 규칙.
+ *
+ * 못 찾으면 `undefined` 다 — 지어내지 않는다(호출부가 기본값으로 떨어진다).
+ */
+export function parkTierOf(stadiumId: string | undefined | null): ParkTier | undefined {
+  if (!stadiumId) return undefined;
+  const named = PARK_TIER_OF[stadiumId];
+  if (named) return named;
+  for (const [prefix, tier] of PARK_TIER_PREFIX) {
+    if (stadiumId.startsWith(prefix)) return tier;
+  }
+  return undefined;
+}
+
+/**
+ * 그림이 있는 구장 — **파생이다.** 손으로 적는 목록이 아니다.
+ *
+ * 🔴 예전엔 27줄짜리 두 번째 목록이었고 `PARK_TIER_OF` 와 **한 글자도 안
+ *   달랐다.** 정본이 둘이면 한쪽만 고쳐진 채 남는다 — 이 저장소가 반복해
+ *   본 형태다. 지금 `PARK_TIER_OF` 에 손으로 적히는 것은 **전용 PNG 가 있는
+ *   국내 27개뿐**이고(해외는 접두 규칙이 받는다), 그게 곧 이 집합이다.
+ *
+ * ⚠ 그래서 `PARK_IMAGES ⊆ 티어` 는 이제 구조로 참이다. 실제로 지켜야 할
+ *   것은 「이 id 마다 `resource/park/<id>.png` 가 있나」이고, 그건
+ *   `parkSourcesAgree.test.ts` 와 `npm run check:park` 이 파일로 본다.
+ */
+export const PARK_IMAGES: ReadonlySet<string> = new Set(Object.keys(PARK_TIER_OF));
