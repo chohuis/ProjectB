@@ -7,6 +7,7 @@
   import type { EntityRow, EntityDetails } from "../../shared/stores/master";
   import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
   import { parkViewForHomeTeam } from "../../shared/utils/parkView";
+  import { homeParkDims } from "../../shared/utils/gameSimulator";
   import { managerEffect } from "../../shared/utils/managerStyle";
   import { managerProfileOf } from "../../shared/utils/staffEffects";
   import TeamMark from "../../features/team/ui/TeamMark.svelte";
@@ -895,6 +896,10 @@
         ctx?.week ?? 0, ctx?.scheduleId ?? "");
       const response = await window.projectB.matchStart({
         ...(matchSeed === undefined ? {} : { seed: matchSeed }),
+        // 🔴 **담장** — 안 넘기면 엔진이 중립 기본값을 쓴다. 주인공은 어느
+        //   구장에서 던지든 같은 야구를 하고 있었다(2026-09-22 실측).
+        //   리그 경기와 **같은 함수**로 구한다 — 갈리면 또 다른 야구가 된다.
+        parkDims: homeParkDims(ctx?.homeTeamId),
         // 투구수 상한이 리그별이다 — 고교 105 / 그 외 120 (Phase 5-8)
         leagueId: $gameStore.protagonist.leagueId,
         // 1.1 A② §6-1 — 리그가 정하는 투구수 상한·선발 아웃 계수·마무리 문·의무 휴식 (규칙 파일)
@@ -1252,6 +1257,8 @@
           matchContext?.week ?? 0, matchContext?.scheduleId ?? "");
         await window.projectB.matchStart({
           ...(seed2 === undefined ? {} : { seed: seed2 }),
+          // 🔴 담장 — 위 `startEngineMatch` 와 같은 규약
+          parkDims: homeParkDims(matchContext?.homeTeamId),
           leagueId: get(gameStore).protagonist.leagueId,
           ...leagueMatchOptions(get(gameStore).protagonist.leagueId,
             get(seasonStore).leagueState[get(gameStore).protagonist.leagueId]?.playerConditions?.[get(gameStore).protagonist.id],

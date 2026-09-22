@@ -1,4 +1,6 @@
-import { parkDimsForHomeTeam } from "./parkDims";
+import { get } from "svelte/store";
+import { parkDimsForHomeTeam, type ParkDims } from "./parkDims";
+import { masterStore } from "../stores/master";
 import { managerProfileOf } from "./staffEffects";
 import { managerEffect } from "./managerStyle";
 import { seedFrom } from "./hash";
@@ -23,6 +25,27 @@ function parseResult<T>(json: string): T {
   const v = JSON.parse(json) as { error?: string } & T;
   if (v && typeof v === "object" && "error" in v) throw new Error(String((v as { error: string }).error));
   return v as T;
+}
+
+/**
+ * 홈 팀의 담장 — **엔진 입구가 스스로 구한다.**
+ *
+ * 🔴 예전엔 호출부가 넘겨야 했다. 그래서 **배경 리그 하나만 넘겼고**
+ *   주인공 리그 NPC 경기(`weekPhases/games.ts`) · 주인공 경기 세 갈래와
+ *   재경기(`advanceWeek.ts`) · 기록 보강(`applyGameOutcome.ts`)은
+ *   **여섯 자리 전부 안 넘겼다**(2026-09-22 실측). 구장 27개를 채워 놓고도
+ *   주인공은 어디서 던지든 중립 담장이었다 — 해외만의 문제가 아니라
+ *   **KBL·고교도 같이 틀렸다.**
+ *
+ * 그래서 「넘긴다」를 지웠다. 홈 팀 id 는 `simulateGame` 이 이미 받으므로
+ * 여기서 마스터를 보면 된다 — **호출부가 빠뜨릴 자리가 없어진다.**
+ *
+ * ⚠ 마스터가 아직 안 실렸으면(`teams` 0건) `parkDimsForHomeTeam` 이
+ *   중립을 낸다 — 지어내지 않는다.
+ */
+export function homeParkDims(homeTeamId: string | null | undefined): ParkDims {
+  const m = get(masterStore);
+  return parkDimsForHomeTeam(homeTeamId, m.teams ?? [], m.stadiums ?? []);
 }
 
 // ── EntityRow → SimPitcher / SimBatter 변환 ──────────────────
@@ -192,8 +215,11 @@ export async function simulateGame(
     awayRotIdx?:     number;
     week?:           number;
     npcInjuries?:    Record<string, NpcInjuryEntry>;
-    /** 홈 구장 담장. **안 넘기면 엔진이 중립 기본값을 쓴다** */
-    parkDims?:       import("./parkDims").ParkDims;
+    /**
+     * 홈 구장 담장. **안 넘기면 `homeParkDims(homeTeamId)` 로 스스로 구한다** —
+     * 호출부가 빠뜨려도 중립으로 안 떨어진다. 넘기는 것은 계측·검사용 우회다.
+     */
+    parkDims?:       ParkDims;
     rotationSize?:   number;
     npcLiveStats?:   Record<string, NpcLiveStat>;
     leagueId?:       string;
@@ -280,9 +306,9 @@ export async function simulateGame(
     buntMult: ef.buntMult, stealMult: ef.stealMult,
   } : undefined;
   const params = {
-    // 🔴 **담장을 십는다.** 안 넘기면 엔진이 중립 기본값을 써
-    //   27개 구장을 채워 놓고도 같은 야구를 한다.
-    parkDims: options?.parkDims,
+    // 🔴 **담장을 싣는다. 여기가 정본이다.** 호출부가 안 넘기면 홈 팀으로
+    //   직접 구한다 — 예전엔 호출부 몫이라 여섯 자리가 조용히 중립이었다.
+    parkDims: options?.parkDims ?? homeParkDims(homeTeamId),
     homeManager: mgrPayload(hMgrP, hEff),
     awayManager: mgrPayload(aMgrP, aEff),
     homeRotation: toSimPitchers(homeRoster.rotation),

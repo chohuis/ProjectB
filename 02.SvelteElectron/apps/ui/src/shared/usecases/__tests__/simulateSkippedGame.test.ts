@@ -55,9 +55,16 @@ describe("회피 경기 시뮬", () => {
     expect(S).toContain("hit.result.playerLines.length === 0) return null;");
   });
 
-  /** 시뮬에 필요한 재료를 빠뜨리면 조용히 나빠진다 — 배경과 같은 것을 넘긴다 */
-  it("구장·씨앗·컨디션·로테이션을 넘긴다", () => {
-    expect(S).toContain("const parkRefs = { teams: m.teams ?? [], stadiums: m.stadiums ?? [] };");
+  /**
+   * 시뮬에 필요한 재료를 빠뜨리면 조용히 나빠진다 — 배경과 같은 것을 넘긴다.
+   *
+   * ⚠ **구장은 여기서 빠졌다**(2026-09-22). 담장을 호출부가 넘기는 규약이었을
+   *   때 이 검사가 그 한 자리만 지켰고, **안 지켜진 자리가 여섯**이었다.
+   *   이제 `simulateGame` 이 홈 팀으로 스스로 구하므로 넘길 것이 없다 —
+   *   그 규약은 `parkDimsWiring.test.ts` 가 본다.
+   */
+  it("씨앗·컨디션·로테이션을 넘긴다", () => {
+    expect(S).not.toContain("parkRefs");
     expect(S).toContain("s.worldSeed,");
     expect(S).toContain("conditions: lState?.playerConditions ?? {},");
     expect(S).toContain("homeRotIdx: lState?.teamRotationIndex?.[entry.homeTeamId] ?? 0,");

@@ -814,11 +814,9 @@ function createSeasonStore() {
       careerStage?: import("../types/save").CareerStage,
     ): Promise<void> {
       const s = get({ subscribe });
-      // 🔴 **팀·구장을 넘긴다** — 담장을 고르는 데 쓴다.
-      //   안 넘기면 리그 전체가 중립 구장이 된다.
-      const mst = get(masterStore);
-      const result = await BackgroundLeague.simulateBackgroundLeagues(s, week, protagonistLeagueId, entities, get(npcLiveStatsStore), careerStage,
-        { teams: mst.teams, stadiums: mst.stadiums });
+      // 🔴 **담장은 여기서 안 넘긴다**(2026-09-22). `simulateGame` 이 홈 팀으로
+      //   스스로 구한다 — 넘기는 규약이면 안 넘기는 호출부가 조용히 중립이 된다.
+      const result = await BackgroundLeague.simulateBackgroundLeagues(s, week, protagonistLeagueId, entities, get(npcLiveStatsStore), careerStage);
       if (!result) return;
 
       update((st) => ({
