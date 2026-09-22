@@ -190,38 +190,15 @@ export function parkTierOf(stadiumId: string | undefined | null): ParkTier | und
 }
 
 /**
- * 그림이 있는 구장 목록 — 없으면 티어 기본 그림을 쓴다.
+ * 그림이 있는 구장 — **파생이다.** 손으로 적는 목록이 아니다.
  *
- * ⚠ **티어표와 같을 필요가 없다**(2026-09-22). 「티어는 있는데 전용 그림은
- *   없다」가 해외 구장의 상태다 — 검사도 `⊆` 로 본다. 같음을 요구하면 구장을
- *   늘릴 때마다 PNG 를 같이 그려야 하고, 그건 결정 ⓑ 와 정면으로 어긋난다.
+ * 🔴 예전엔 27줄짜리 두 번째 목록이었고 `PARK_TIER_OF` 와 **한 글자도 안
+ *   달랐다.** 정본이 둘이면 한쪽만 고쳐진 채 남는다 — 이 저장소가 반복해
+ *   본 형태다. 지금 `PARK_TIER_OF` 에 손으로 적히는 것은 **전용 PNG 가 있는
+ *   국내 27개뿐**이고(해외는 접두 규칙이 받는다), 그게 곧 이 집합이다.
+ *
+ * ⚠ 그래서 `PARK_IMAGES ⊆ 티어` 는 이제 구조로 참이다. 실제로 지켜야 할
+ *   것은 「이 id 마다 `resource/park/<id>.png` 가 있나」이고, 그건
+ *   `parkSourcesAgree.test.ts` 와 `npm run check:park` 이 파일로 본다.
  */
-export const PARK_IMAGES: ReadonlySet<string> = new Set([
-  "STADIUM_SEOUL_GUARDIANS",
-  "STADIUM_SUWON_KNIGHTS",
-  "STADIUM_SEOUL_ROYALS",
-  "STADIUM_INCHEON_SHARKS",
-  "STADIUM_DAEGU_SABERS",
-  "STADIUM_CHANGWON_STARS",
-  "STADIUM_BUSAN_WAVES",
-  "STADIUM_SEOUL_COBRAS",
-  "STADIUM_GWANGJU_PANTHERS",
-  "STADIUM_DAEJEON_PHANTOMS",
-  "STADIUM_GEUMGANG_UNIV",
-  "STADIUM_NOEUL",
-  "STADIUM_MIREU",
-  "STADIUM_BYEOLBIT",
-  "STADIUM_TAEJONG",
-  "STADIUM_GANGBYEON",
-  "STADIUM_GYEBAEK",
-  "STADIUM_NAMNYEOK",
-  "STADIUM_CHANGGONG",
-  "STADIUM_GYERYONG",
-  "STADIUM_NAKDONG",
-  "STADIUM_MUJIGAE",
-  "STADIUM_SEORAK_HS",
-  "STADIUM_YEONGSAN",
-  "STADIUM_PALGONG",
-  "STADIUM_HANGANG",
-  "STADIUM_HALLA",
-]);
+export const PARK_IMAGES: ReadonlySet<string> = new Set(Object.keys(PARK_TIER_OF));

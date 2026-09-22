@@ -173,8 +173,16 @@ describe("데이터 정합 — 표본이 아니라 전수", () => {
   it("그림표는 티어표의 부분집합이다 — 그림만 있고 티어가 없으면 안 된다", () => {
     const orphan = [...PARK_IMAGES].filter((id) => !parkTierOf(id));
     expect(orphan, `티어 없는 그림: ${orphan.join(" ")}`).toEqual([]);
-    // 지금은 그림이 국내 27개뿐이다 — 해외가 티어만 갖는 것이 정상이다
-    expect(PARK_IMAGES.size).toBe(Object.keys(PARK_TIER_OF).length);
+    // ⚠ 위는 `PARK_IMAGES` 가 `PARK_TIER_OF` 파생이라 구조로 참이다.
+    //   **느슨함이 실제로 쓰이는지**가 진짜 질문이고, 그건 아래가 본다.
+    const foreign = "STADIUM_ABL_TESTCLUB";
+    expect(parkTierOf(foreign)).toBe("pro");
+    expect(PARK_IMAGES.has(foreign)).toBe(false);
+    // 손으로 적히는 표에는 해외가 한 칸도 없다 — 접두 규칙이 받는다
+    const named = Object.keys(PARK_TIER_OF);
+    expect(
+      named.filter((id) => id.startsWith("STADIUM_ABL_") || id.startsWith("STADIUM_JBL_")),
+    ).toEqual([]);
   });
 
   /**
