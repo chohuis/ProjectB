@@ -41,6 +41,60 @@ const ALLOW = new Set(["TEAM_SPORTS_UNIT"]);
 const SCAN_DIRS = ["apps/ui/src", "apps/desktop", "packages/core/src"];
 const SKIP = /node_modules|leagueTeams\.generated\.ts|__tests__/;
 
+/**
+ * **주석을 지운다** — 코드만 남긴다 (2026-09-22).
+ *
+ * 🔴 왜. `dashboardMeta.ts` 의 주석에 "화면에 `TEAM_KBL_1` 이 뜬다"라고
+ *   **결함을 설명하는 예시**가 적혀 있는데, 검사가 그걸 실재하지 않는 팀
+ *   ID 로 잡아 빨강이었다. 주석은 코드가 아니다 — "이런 ID 가 뜨면 안 된다"를
+ *   적는 자리에서 검사가 우는 것은 검사 쪽이 틀린 것이다.
+ *
+ * ⚠ **`NOT_A_TEAM` 에 예외를 더하는 길로 가지 않는다.** 그러면 진짜 옛 ID 도
+ *   같이 통과한다(`TEAM_KBL_` 로 시작하는 것을 통째로 빼게 된다).
+ *
+ * ⚠ 문자열 안의 `//` 는 주석이 아니다(`"https://…"`). 글자를 하나씩 읽으며
+ *   따옴표 셋을 추적한다 — 정규식을 안 쓴다(CLAUDE.md).
+ * ⚠ 지우지 않고 **공백으로 바꾼다.** 줄·칸이 안 밀려 진단이 읽힌다.
+ */
+function stripComments(src) {
+  const out = Array.from(src);
+  let i = 0;
+  const n = src.length;
+  let quote = ""; // "", '"', "'", "`"
+  while (i < n) {
+    const c = src[i];
+    const d = src[i + 1];
+    if (quote) {
+      if (c === "\\") { i += 2; continue; }
+      if (c === quote) quote = "";
+      i++;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === "`") { quote = c; i++; continue; }
+    if (c === "/" && d === "/") {
+      while (i < n && src[i] !== "\n") { out[i] = " "; i++; }
+      continue;
+    }
+    if (c === "/" && d === "*") {
+      const end = src.indexOf("*/", i + 2);
+      const stop = end === -1 ? n : end + 2;
+      for (let k = i; k < stop; k++) if (src[k] !== "\n") out[k] = " ";
+      i = stop;
+      continue;
+    }
+    // Svelte 마크업 주석
+    if (c === "<" && src.startsWith("<!--", i)) {
+      const end = src.indexOf("-->", i + 4);
+      const stop = end === -1 ? n : end + 3;
+      for (let k = i; k < stop; k++) if (src[k] !== "\n") out[k] = " ";
+      i = stop;
+      continue;
+    }
+    i++;
+  }
+  return out.join("");
+}
+
 function walk(dir, out = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
@@ -57,7 +111,7 @@ const files = SCAN_DIRS.filter((d) => fs.existsSync(path.join(ROOT, d)))
 const bad = [];
 let checked = 0;
 for (const f of files) {
-  const src = fs.readFileSync(f, "utf8");
+  const src = stripComments(fs.readFileSync(f, "utf8"));
   // 접두사 조각(`id.startsWith("TEAM_HS_")`)은 팀 ID가 아니다 —
   // 끝이 `_`이거나 마디가 셋 미만이면 뺀다
   const ids = [...new Set([...src.matchAll(/TEAM_[A-Z0-9_]*[A-Z0-9]/g)].map((m) => m[0]))]
@@ -72,6 +126,13 @@ for (const f of files) {
 }
 
 console.log(`팀 ID 참조 검사 — 파일 ${files.length}개 · 팀 ID ${checked}종`);
+// ⚠ **아무것도 못 봤으면 통과가 아니다.** `stripComments` 가 과하게 지우면
+//   ID 가 0종이 되고 검사는 조용히 초록이 된다 — 이 저장소가 여러 번 밟은
+//   "잣대가 먼저 틀린" 형태다. 코드에 박힌 ID 는 최소한 몇 개는 있다.
+if (checked === 0) {
+  console.log("FAIL  코드에서 팀 ID 를 한 개도 못 찾았다 — 잣대(주석 지우기)를 의심하라");
+  process.exit(1);
+}
 if (bad.length === 0) {
   console.log(`  ok  전부 refs.json(${known.size}팀)에 있다`);
   process.exit(0);
