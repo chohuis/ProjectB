@@ -354,5 +354,179 @@ console.log("\n외국인 선수");
     noF.every((n) => n.nationality !== F.nationality));
 }
 
+// ── 성향이 로스터 생성에 실제로 닿는가 — 배선을 뺀 대조군 ───────────
+//
+// 🔴 **이 하네스는 성향을 한 번도 안 지났다** (B 실측 2026-09-22 ·
+//    `PLAN_OVERSEAS_CLUBS_2026-09-22.md` §5-6). 위 절들은 `rules` 만 넘긴다.
+//    실제 새 게임은 `newGameV3` 가 팀마다 `budgetOf` · `squadPlanOf` 를
+//    붙여서 넘긴다 — 그 두 칸이 빠지면 엔진이 `unwrap_or` 로 예전 동작으로
+//    떨어지고, **층마다 값은 맞는데 잇는 선이 없다**(CLAUDE.md 함정 규칙).
+//
+// 🔴 **그래서 이 대조군이 결함을 하나 찾았다** (2026-09-22 실측).
+//    **지금 예산에서는 성향을 빼도 프로 3리그가 한 칸도 안 움직인다.**
+//    배선은 살아 있는데 작동점이 밖이다: `roster_gen.rs` 가 내는 정원
+//    원값이 KBL 58~208 · ABL 87~191 인데 `rosterMax` 가 34(JBL 32)라
+//    **전 팀이 상한에 붙는다.** `qualityBias` 는 1인당 인건비 추정을 통해
+//    **정원에만** 닿으므로(선수 OVR 자체는 안 건드린다) 정원이 상한에
+//    붙는 순간 성향이 통째로 무효가 된다.
+//    · 이건 아마추어에서 이미 한 번 밟은 형태의 **거울상**이다 —
+//      그쪽은 예산이 너무 작아 늘 `rosterMin` 에 붙었다(`roster_gen.rs` 주석).
+//    · **여기서 안 고친다.** 값을 움직이면 밸런스가 흔들린다(동결) —
+//      제안과 근거는 `docs/BALANCE_BACKLOG.md` 「예산이 프로 정원을 못 정한다」.
+//
+// ⚠ 그래서 검사는 둘로 나뉜다:
+//    ① **배선이 살아 있는가** — 예산을 작동점 안으로 줄여서 본다. 줄인 판에서
+//      성향 유/무가 갈리면 선은 이어져 있는 것이다(줄이는 것은 계측일 뿐
+//      게임 값이 아니다).
+//    ② **지금 작동점을 못 박는다** — 실제 예산에서는 전 팀이 상한이다.
+//      누가 이걸 고치면 ②가 빨강이 되어 "이제 성향이 닿는다"를 알려 준다.
+//
+// ⚠ **표를 여기 다시 적지 않는다.** `squadPlanOf` 를 진입점으로 말아서
+//    번들해 부른다(`scripts/perf/squadPlanEntry.ts`). 손으로 베끼면
+//    코드 표와 하네스 표가 갈린다.
+{
+  console.log("\n성향 → 편성 (배선 대조군)");
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const os = require("node:os");
+
+  const refs = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../resource/data/master/entities/refs.json"), "utf8"));
+  const rulesFile = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../resource/data/master/players/generation_rules.json"), "utf8"));
+
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "squadplan-"));
+  const entryFile = path.join(tmp, "squadPlanEntry.cjs");
+  require("esbuild").buildSync({
+    entryPoints: [path.join(__dirname, "perf/squadPlanEntry.ts")],
+    bundle: true, platform: "node", format: "cjs", target: "node18",
+    outfile: entryFile, logLevel: "warning",
+  });
+  const plan = require(entryFile);
+
+  // 잣대가 비면 아래가 전부 헛돈다
+  check("코드 표를 실제로 불러왔다",
+    Object.keys(plan.QUALITY_BY_PHILOSOPHY).length === 12
+      && Object.keys(plan.SPEND_BY_RESOURCE).length === 4);
+
+  const salaryIndex = plan.buildSalaryIndex(refs.teams);
+  const ovrOf2 = (n) => n.playerType === "pitcher"
+    ? (n.abilities.pitching?.ovr ?? 0) : (n.abilities.batting?.ovr ?? 0);
+
+  /**
+   * `withPlan=false` 가 **배선을 뺀 판**이다 — 예산만 넘기고 성향은 안 넘긴다.
+   * `budgetScale` 은 **계측용**이다. 게임 값이 아니라, 정원 산식의 작동점이
+   * 상한 밖이라 배선이 안 보일 때 안으로 끌어오려고만 쓴다.
+   */
+  function run(leagueId, teams, withPlan, budgetScale = 1) {
+    const out = JSON.parse(engine.generateLeagueRosterNative(JSON.stringify({
+      leagueId, seasonYear: 2029, worldSeed: 4242,
+      teams: teams.map((t) => {
+        const b = plan.budgetOf(t);
+        return {
+          teamId: t.id,
+          schoolId: t.schoolId ?? "",
+          ...(salaryIndex.get(t.id) !== undefined ? { salaryIndex: salaryIndex.get(t.id) } : {}),
+          ...(t.power !== undefined ? { power: t.power } : {}),
+          ...(b !== undefined ? { budget: Math.max(1, Math.round(b * budgetScale)) } : {}),
+          ...(withPlan ? plan.squadPlanOf(t) : {}),
+        };
+      }),
+      rules: rulesFile.rosterRules[leagueId],
+      salaryRules: rulesFile.salaryRules,
+      powerRules: rulesFile.powerRules,
+      talent: rulesFile.talentRules,
+    })));
+    const byTeam = new Map();
+    for (const n of out.npcs) {
+      if (!byTeam.has(n.currentTeam)) byTeam.set(n.currentTeam, []);
+      byTeam.get(n.currentTeam).push(n);
+    }
+    const rows = [];
+    for (const t of teams) {
+      const r = byTeam.get(t.id) ?? [];
+      const ovrs = r.map(ovrOf2);
+      rows.push({
+        id: t.id,
+        n: r.length,
+        ovr: ovrs.length ? ovrs.reduce((a, b) => a + b, 0) / ovrs.length : 0,
+        philosophy: t.traits?.philosophy ?? "-",
+        resource: t.traits?.resource ?? "-",
+      });
+    }
+    return rows;
+  }
+
+  for (const leagueId of ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]) {
+    const teams = refs.teams.filter((t) => t.leagueId === leagueId && t.id.endsWith("_1"));
+    if (teams.length === 0) { check(`${leagueId} 1군 팀 존재`, false, "0팀"); continue; }
+
+    const rules = rulesFile.rosterRules[leagueId];
+    const max = rules.rosterMax ?? rules.rosterSize;
+    const mean = (xs, f) => xs.reduce((a, b) => a + f(b), 0) / xs.length;
+    const spread = (xs) => `${Math.min(...xs)}~${Math.max(...xs)}`;
+
+    // ── ② 지금 작동점 — 실제 예산에서는 전 팀이 상한이다 ──────────────
+    const on = run(leagueId, teams, true);
+    const off = run(leagueId, teams, false);
+    const moved = on.filter((r, i) => r.n !== off[i].n || Math.abs(r.ovr - off[i].ovr) > 0.01);
+
+    console.log(`    ${leagueId.padEnd(12)} 실제예산: 성향O 인원 ${spread(on.map((r) => r.n))} · ` +
+      `성향X 인원 ${spread(off.map((r) => r.n))} · 달라진 팀 ${moved.length}/${teams.length}` +
+      (moved.length === 0 ? `  ← 전 팀이 상한 ${max} 에 붙어 성향이 무효다` : ""));
+
+    // ⚠ **지금 상태를 못 박는다.** 고쳐지면 여기가 빨강이 되고, 그때
+    //   `BALANCE_BACKLOG` 의 「예산이 프로 정원을 못 정한다」를 닫으면 된다.
+    check(`${leagueId}: (알려진 결함) 실제 예산에서는 전 팀이 정원 상한 ${max} 이다`,
+      on.every((r) => r.n === max) && moved.length === 0,
+      `인원 ${spread(on.map((r) => r.n))} · 달라진 팀 ${moved.length}`);
+
+    // ── ① 배선이 살아 있는가 — 작동점 안으로 끌어와서 본다 ────────────
+    //   비율을 손으로 고르지 않는다. **절반 넘는 팀**이 상한 아래로 내려올
+    //   때까지 절반씩 줄여 가며 기계가 찾는다 — 예산·산식이 바뀌어도 따라온다.
+    //   ⚠ "한 팀이라도"로는 부족하다. 대부분이 아직 상한이면 아래 방향 검사가
+    //     상한끼리 비교하게 되어 아무것도 못 본다(ABL 에서 실제로 그랬다).
+    const half = Math.ceil(teams.length / 2);
+    let scale = 1, live = null;
+    for (let i = 0; i < 12; i++) {
+      scale /= 2;
+      const r = run(leagueId, teams, true, scale);
+      if (r.filter((x) => x.n < max).length >= half) { live = r; break; }
+    }
+    check(`${leagueId}: 절반 넘는 팀이 상한 아래로 내려오는 배율이 있다`, live !== null,
+      "12번 반으로 줄여도 대부분 상한 — 산식이 예산을 아예 안 본다");
+    if (!live) continue;
+
+    const liveOff = run(leagueId, teams, false, scale);
+    const liveMoved = live.filter((r, i) => r.n !== liveOff[i].n);
+    check(`${leagueId}: 성향을 빼면 편성이 달라진다 (배율 1/${Math.round(1 / scale)})`,
+      liveMoved.length > 0,
+      `${liveMoved.length}/${teams.length}팀만 움직였다 — 배선이 안 닿는다`);
+
+    const sizes = [...new Set(live.map((r) => r.n))];
+    check(`${leagueId}: 그 배율에서 정원이 팀마다 갈린다`, sizes.length > 1,
+      `전 팀 ${sizes[0]}명`);
+
+    // **방향** — `qualityBias` 가 높은 철학일수록 인원이 적다.
+    //   표는 코드에서 읽는다(여기 숫자를 안 적는다)
+    const q = (r) => plan.QUALITY_BY_PHILOSOPHY[r.philosophy];
+    const rated = live.filter((r) => q(r) !== undefined);
+    if (rated.length >= 6) {
+      const sorted = [...rated].sort((a, b) => q(a) - q(b));
+      const lowQ = sorted.slice(0, 3);
+      const highQ = sorted.slice(-3);
+      check(`${leagueId}: 질적인 팀이 인원이 적다`,
+        mean(highQ, (r) => r.n) < mean(lowQ, (r) => r.n),
+        `질적 ${mean(highQ, (r) => r.n).toFixed(1)}명 vs 다인원 ${mean(lowQ, (r) => r.n).toFixed(1)}명`);
+    }
+
+    console.log(`    ${" ".repeat(12)} 배율 1/${Math.round(1 / scale)}: 성향O 인원 ` +
+      `${spread(live.map((r) => r.n))} · 성향X 인원 ${spread(liveOff.map((r) => r.n))} · ` +
+      `달라진 팀 ${liveMoved.length}/${teams.length}`);
+  }
+
+  fs.rmSync(tmp, { recursive: true, force: true });
+}
+
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
 process.exit(failed === 0 ? 0 : 1);
