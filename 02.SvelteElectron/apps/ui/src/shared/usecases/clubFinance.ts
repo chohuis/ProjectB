@@ -166,9 +166,14 @@ export async function settleClubFinance(seasonYear: number): Promise<string[]> {
     if (scales.length === 0) continue;
     const leagueAvg = scales.reduce((a, b) => a + b, 0) / scales.length;
 
+    // 🔴 **관중 상한은 구장 것이다 — 정본 하나** (2026-09-22 · 2단계 ④).
+    //   예전엔 팀 `capacity` 가 있으면 그걸 먼저 봤다. 그 칸은 두 벌이었고
+    //   (1군은 구장과 같은 값 · 2군은 제 값이 따로) 지웠다 — 2군이 1군 구장을
+    //   물려받는 이상(확정 F) 2군만 다른 상한을 갖는 것은 앞뒤가 안 맞는다.
+    //   ⚠ 그래도 이 산식에 닿는 값은 **한 칸도 안 바뀐다**: 여기 오는 팀은
+    //     `needsFarmSplit` 으로 걸러진 1군뿐이고, 1군은 두 값이 같았다.
     const capOf = new Map((m.stadiums ?? []).map((x) => [x.id, x.capacity ?? 0]));
-    const capacityOf = (t: { id: string; capacity?: number; stadium?: string }) =>
-      (t.capacity && t.capacity > 0 ? t.capacity : capOf.get(t.stadium ?? "")) ?? 0;
+    const capacityOf = (t: { id: string; stadium?: string }) => capOf.get(t.stadium ?? "") ?? 0;
     const caps = teams.map(capacityOf).filter((v) => v > 0);
     const avgCap = caps.length ? caps.reduce((a, b) => a + b, 0) / caps.length : 1;
 
@@ -230,8 +235,9 @@ export async function settleClubFinance(seasonYear: number): Promise<string[]> {
         //   (실측: 부산 static 210억인데 수입 261억).
         ticketPrice: (rules.ticketPrice[leagueId] ?? 1)
           * (share.gate / (rules.types.balanced?.gate ?? share.gate)),
-        // ⚠ 팀 값이 있으면 그게 우선이다 — ABL·JBL은 팀에 들어 있다
-        capacity: (t.capacity && t.capacity > 0 ? t.capacity : capOf.get(t.stadium ?? "")) ?? 0,
+        // ⚠ **위 `capacityOf` 와 같은 자리를 읽는다.** 예전엔 여기만 따로
+        //   풀어 적어서, 한쪽만 고치면 평균과 개별값이 다른 잣대가 됐다
+        capacity: capacityOf(t),
         // 홈경기는 절반이다
         homeGames,
         winPct: st.winPct,

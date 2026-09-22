@@ -119,8 +119,9 @@ export interface StadiumRef {
   id: string;
   name: string;
   parkFactor?: string;
-  /** **수용인원** (4-A · 2026-08-29). 관중 수입의 유일한 근거다.
-   *  🔴 예전엔 필드 자체가 없었고, 팀 쪽 `capacity`도 ABL·JBL만 있었다 */
+  /** **수용인원** (4-A · 2026-08-29). 관중 수입의 유일한 근거고 **정본은 여기 하나다.**
+   *  🔴 예전엔 필드 자체가 없었고, 팀 쪽 `capacity`도 ABL·JBL만 있었다.
+   *     그 팀 칸은 2026-09-22 에 지웠다 — 두 벌이면 한쪽만 고쳐진 채 남는다 */
   capacity?: number;
   /**
    * 담장 — 좌·중·우 거리(m)와 펜스 높이(m).
@@ -205,7 +206,9 @@ export interface TeamRef {
   stadium?: string;
   city?: string;
   colors?: [string, string];
-  capacity?: number;
+  // 🔴 `capacity` 칸은 여기 없다(2026-09-22 · 2단계 ④). **관중 상한은 구장 것**
+  //    하나다(`StadiumRef.capacity`). 팀에도 두면 1군은 같은 값이 두 벌이고
+  //    2군은 제 값과 물려받은 1군 구장 값이 갈린다 — 읽는 자리마다 다른 답이 난다.
   /** 전력★ 1~5 — 고정 세계관 (DESIGN §7.1). 예산·로스터 규모·대회 시드의 기준 */
   power?: number;
   traits?: { philosophy?: string; resource?: string; status?: string };

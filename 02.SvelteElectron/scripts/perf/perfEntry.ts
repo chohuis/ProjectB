@@ -2838,7 +2838,8 @@ export function overseasClubBaseline(): Record<string, unknown> {
         "홈런/경기": games > 0 ? Math.round((a.hr / games) * 1000) / 1000 : 0,
         ERA: a.ip > 0 ? Math.round((a.er * 9 / a.ip) * 100) / 100 : 0,
         // 관중의 네 입력 — 넷이 같으면 관중도 같다
-        수용인원: (t.capacity && t.capacity > 0 ? t.capacity : stadium?.capacity) ?? 0,
+        // 정본은 구장 하나다 — 팀 칸은 2026-09-22 에 지웠다(2단계 ④)
+        수용인원: stadium?.capacity ?? 0,
         // 🔴 관중 자체 — 계측 모드에서만 찬다. 정산 전이면 0 이다(머리말)
         관중정산시즌: att[t.id]?.seasons ?? 0,
         "관중/경기": att[t.id] && att[t.id].homeGames > 0

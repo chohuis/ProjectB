@@ -48,15 +48,18 @@
   }
 
   /**
-   * 수용 인원 — **구장에서 가져온다.**
+   * 수용 인원 — **구장에서 가져온다. 정본은 거기 하나다**(2026-09-22 · 2단계 ④).
    *
-   * 🔴 화면이 `team.capacity`만 보고 있었는데 그건 **ABL·JBL 팀에만** 있다
-   *   (KBL·고교·대학·독립은 전부 0). 4-A에서 구장 27개에 수용인원을
-   *   넣었으므로 거기서 읽는다 — 팀 값이 있으면 그게 우선이다.
+   * 🔴 화면이 `team.capacity`만 보고 있었는데 그건 **ABL·JBL 팀에만** 있었다
+   *   (KBL·고교·대학·독립은 전부 0). 4-A에서 구장에 수용인원을 넣어 폴백을
+   *   달았고, 이제는 팀 칸 자체를 지웠다 — 두 벌이면 한쪽만 고쳐진 채 남는다.
+   *
+   * ⚠ 그래서 ABL·JBL **2군**의 표시 상한이 2,200~5,000 → 제 1군 구장 값으로
+   *   바뀐다. 2군은 1군 구장을 물려받으므로(확정 F) 그게 맞고, KBL 2군은
+   *   전부터 그렇게 보였다. 재정 산식에는 안 닿는다(`clubFinance` 는 1군만).
    */
-  $: stadiumCapacity = (team?.capacity && team.capacity > 0)
-    ? team.capacity
-    : (($masterStore.stadiums ?? []).find((s) => s.id === team?.stadium)?.capacity ?? 0);
+  $: stadiumCapacity =
+    ($masterStore.stadiums ?? []).find((s) => s.id === team?.stadium)?.capacity ?? 0;
 
   function leagueLabel(lid: string): string {
     const map: Record<string, string> = {

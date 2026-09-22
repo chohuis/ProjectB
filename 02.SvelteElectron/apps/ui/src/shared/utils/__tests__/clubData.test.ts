@@ -35,17 +35,33 @@ describe("구장 수용인원", () => {
     }
   });
 
-  /** ⚠ 팀이 참조하는 구장에 값이 있어야 관중 수입을 만들 수 있다 */
-  it("국내 팀이 쓰는 구장이 다 채워졌다", () => {
+  /**
+   * ⚠ 팀이 참조하는 구장에 값이 있어야 관중 수입을 만들 수 있다.
+   *
+   * 🔴 **전수로 넓혔다**(2026-09-22 · 2단계 ④). 예전엔 국내 넷만 봤다 —
+   *   해외는 팀 `capacity` 가 따로 있어 구장이 비어도 티가 안 났기 때문이다.
+   *   그 팀 칸을 지웠으니 이제 **238팀 전부**가 구장에서 읽는다.
+   */
+  it("팀이 쓰는 구장이 전부 채워졌다 — 238팀 전수", () => {
     const capOf = new Map(R.stadiums.map((s) => [s.id, s.capacity ?? 0]));
-    const domestic = R.teams.filter((t) =>
-      ["LEAGUE_KBL", "LEAGUE_UNIVERSITY", "LEAGUE_HIGHSCHOOL", "LEAGUE_INDEPENDENT"].includes(
-        t.leagueId,
-      ),
-    );
-    for (const t of domestic) {
+    for (const t of R.teams) {
       expect(capOf.get(t.stadium) ?? 0, `${t.id} → ${t.stadium}`).toBeGreaterThan(0);
     }
+  });
+
+  /**
+   * 🔴 **정본 하나** — 팀에 `capacity` 를 다시 적으면 안 된다.
+   *   1군은 구장과 같은 값이 두 벌이 되고, 2군은 제 값과 물려받은 1군 구장
+   *   값이 갈려 읽는 자리마다 다른 답이 난다(실측 2026-09-22: 2군 28팀이
+   *   팀 2,200~5,000 · 구장 25,000~56,000).
+   */
+  it("팀에는 수용인원 칸이 없다", () => {
+    const back = R.teams.filter((t) => t.capacity !== undefined).map((t) => t.id);
+    expect(back, `팀 capacity 가 되살아났다: ${back.slice(0, 6).join(" ")}`).toEqual([]);
+    // 타입에도 없어야 "적어도 된다"가 안 된다
+    expect(read("apps/ui/src/shared/stores/master.ts")).not.toContain(
+      "  colors?: [string, string];\n  capacity?: number;",
+    );
   });
 
   /** ⚠ 규모가 리그를 따라야 한다 — 고교가 프로보다 크면 수입이 뒤집힌다 */
@@ -166,12 +182,28 @@ describe("문사 데이터", () => {
 });
 
 describe("화면 배선", () => {
-  /** 🔴 화면이 `team.capacity` 만 봤는데 그건 ABL·JBL 에만 있다 */
-  it("팀 상세가 구장에서 수용인원을 읽는다", () => {
+  /**
+   * 🔴 화면이 `team.capacity` 만 봤는데 그건 ABL·JBL 에만 있었다.
+   * ⚠ 2026-09-22 부터 팀 칸이 아예 없다 — **폴백도 남기지 않는다.**
+   *   남기면 "팀에 적으면 그게 이긴다"가 되어 정본이 다시 둘이 된다.
+   */
+  it("팀 상세가 구장에서만 수용인원을 읽는다", () => {
     const M = read("apps/ui/src/features/team/ui/TeamDetailModal.svelte");
     expect(M).toContain("$: stadiumCapacity =");
     expect(M).toContain(".find((s) => s.id === team?.stadium)?.capacity");
+    expect(M.includes("team?.capacity && team.capacity > 0"), "팀 값 폴백이 남아 있다").toBe(false);
     expect(M.includes("{#if team.capacity} · {capacityFmt(team.capacity)}석{/if}")).toBe(false);
+  });
+
+  /** 재정도 같은 자리에서 읽는가 — 평균과 개별값이 다른 잣대면 비율이 거짓말이다 */
+  it("재정이 구장에서만 수용인원을 읽는다", () => {
+    const F = read("apps/ui/src/shared/usecases/clubFinance.ts");
+    expect(F).toContain(
+      'const capacityOf = (t: { id: string; stadium?: string }) => capOf.get(t.stadium ?? "") ?? 0;',
+    );
+    // 개별 전달값도 같은 함수를 탄다 — 예전엔 여기만 풀어 적혀 있었다
+    expect(F).toContain("capacity: capacityOf(t),");
+    expect(F.includes("t.capacity && t.capacity > 0"), "팀 값 폴백이 남아 있다").toBe(false);
   });
 
   it("모기업을 표시한다", () => {
