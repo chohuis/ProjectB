@@ -46,7 +46,7 @@
 | 시즌 캘린더 | `CALENDAR_V2.md` | — |
 | 로스터 · 선수 경력 | `PLAN_ROSTER_CAREER.md` | 경로 전수 `ROSTER_FLOWS_2026-09-03.md` · NPC 이력 검토 `NPC_HISTORY_REVIEW_2026-09-03.md` |
 | 리그·구단 제도 · 구단 깊이 | `PLAN_LEAGUE_SYSTEMS.md` · `PLAN_CLUB_DEPTH.md` | — |
-| 해외 진출 | `PLAN_OVERSEAS.md` | 해외 구단의 성향·구장 계획 `PLAN_OVERSEAS_CLUBS_2026-09-22.md`(1.0.3 첫 항목 · 결정 둘 대기) |
+| 해외 진출 | `PLAN_OVERSEAS.md` | 해외 구단의 성향·구장 `PLAN_OVERSEAS_CLUBS_2026-09-22.md`(1.0.3 첫 항목 · **09-22 닫힘** · 0~3단계) |
 | 골든글러브 (수비 기록) | `PLAN_GOLDEN_GLOVE.md` | — |
 | 구종 학습 안내·경고 | `PLAN_PITCH_LEARNING_2026-09-04.md` | 1.0.2 이후 |
 | 경기 엔진 | `PLAN_ENGINE_COMPLETE.md` → 결과 `ENGINE_COMPLETE_RESULT.md` | 닫힘 (08-30) |
