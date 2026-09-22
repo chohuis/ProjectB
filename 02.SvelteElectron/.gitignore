@@ -50,6 +50,8 @@ coverage/
 
 # 계측 판·보고서 산출물은 이름을 가리지 않고 전부 무시한다 (2026-09-12 — 이름으로 하나씩 적었더니 새 폴더가 새어 올라갔다)
 resource/logs/runs*/
+# probe:overseas 산출물(워크트리 루트 · 2026-09-22) — 판 원본은 git 밖
+runs/
 resource/logs/d-*/
 resource/logs/d-*.txt
 resource/logs/*-report.txt
