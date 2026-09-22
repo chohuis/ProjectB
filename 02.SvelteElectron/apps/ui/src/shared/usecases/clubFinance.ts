@@ -21,6 +21,38 @@ import { masterStore } from "../stores/master";
 import { loadRosterRules } from "../repo/newGameV3";
 import { seedFrom } from "../utils/hash";
 import { SANGMU_TEAM_IDS } from "../utils/ids";
+import { isMeasureMode } from "../utils/measureMode";
+
+// ── 관중 계측 칸 (2026-09-22) ──────────────────────────────────
+//
+// 🔴 `calcClubRevenueNative` 가 `attendanceRate`·`attendanceTotal` 을 내는데
+//   **읽는 코드가 0건이었다**(전수 grep · 2026-09-22). 상태에도 화면에도
+//   안 남아 "구장·성향을 채우면 관중이 갈리는가"를 **잴 수가 없었다** —
+//   0단계 보고서가 그걸 못 재고 대신 네 입력만 적었다.
+//
+// ⚠ **계측 모드에서만 쌓는다**(`__PB_MEASURE__` · 헤드리스 부팅). 실제
+//   플레이는 한 줄도 안 바뀐다 — 세이브에 안 들어가고 화면도 안 읽는다.
+// ⚠ 값을 여기서 다시 만들지 않는다. 엔진이 낸 `attendanceTotal` 을 그대로
+//   더한다 — 계측이 제 산식을 지으면 재는 값과 도는 값이 갈린다.
+interface AttendanceTallyRow {
+  /** 시즌 홈경기 관중 합계 */
+  total: number;
+  homeGames: number;
+  seasons: number;
+}
+const _attendanceTally = new Map<string, AttendanceTallyRow>();
+
+/** 팀 → 관중 누적. 계측 전용 — 실제 플레이에선 늘 비어 있다 */
+export function readAttendanceTally(): Record<string, AttendanceTallyRow> {
+  const out: Record<string, AttendanceTallyRow> = {};
+  for (const [k, v] of _attendanceTally) out[k] = { ...v };
+  return out;
+}
+
+/** 판 사이에 비운다 — 안 비우면 시즌이 겹쳐 쌓인다 */
+export function resetAttendanceTally(): void {
+  _attendanceTally.clear();
+}
 
 export interface ClubRevenue {
   attendanceRate: number;
@@ -175,6 +207,8 @@ export async function settleClubFinance(seasonYear: number): Promise<string[]> {
       const st = ls.standings.find((x) => x.teamId === t.id);
       if (!st) continue;
       const games = st.wins + st.losses + st.draws;
+      // 홈경기는 절반이다 — 수입 산식과 관중 계측이 **같은 값**을 봐야 한다
+      const homeGames = Math.max(0, Math.round(games / 2));
       const prof = (g.proTeamProfiles?.[t.id] ?? {}) as
         { marketAppeal?: number; prestige?: number };
       // ⚠ **독립은 유형을 안 가른다.** 열 팀 다 지원금으로 버티는 구조라
@@ -199,7 +233,7 @@ export async function settleClubFinance(seasonYear: number): Promise<string[]> {
         // ⚠ 팀 값이 있으면 그게 우선이다 — ABL·JBL은 팀에 들어 있다
         capacity: (t.capacity && t.capacity > 0 ? t.capacity : capOf.get(t.stadium ?? "")) ?? 0,
         // 홈경기는 절반이다
-        homeGames: Math.max(0, Math.round(games / 2)),
+        homeGames,
         winPct: st.winPct,
         marketAppeal: prof.marketAppeal ?? 50,
         prestige: prof.prestige ?? 50,
@@ -207,6 +241,15 @@ export async function settleClubFinance(seasonYear: number): Promise<string[]> {
       }));
       const r = JSON.parse(raw) as ClubRevenue & { error?: string };
       if (r.error) continue;
+
+      // 관중 — 계측 모드에서만 남긴다(머리말). 실제 플레이는 이 줄을 안 탄다
+      if (isMeasureMode()) {
+        const a = _attendanceTally.get(t.id) ?? { total: 0, homeGames: 0, seasons: 0 };
+        a.total += r.attendanceTotal ?? 0;
+        a.homeGames += homeGames;
+        a.seasons += 1;
+        _attendanceTally.set(t.id, a);
+      }
 
       // ── 지출 (4-B) ───────────────────────────────────────
       const st2 = staffOf.get(t.id) ?? { mgr: 0, coaches: [] };
