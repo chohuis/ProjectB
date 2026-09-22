@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { makeSaveGame, type SaveGame } from "../../types/save";
 import { deriveProfileFromBudgetIndex } from "../game";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 /**
@@ -169,5 +169,42 @@ describe("옛 세이브의 성향 — 세이브가 이긴다", () => {
   it("타입에도 칸이 없다 — 있으면 '적어도 된다'가 된다", () => {
     const master = readFileSync(join(__dirname, "../master.ts"), "utf8");
     expect(master).not.toContain("  proTeamProfile?: ProTeamProfile;");
+  });
+
+  /**
+   * 🔴 **정본이 넷이 아니라 다섯이었다** (2026-09-22 · 계획 §5-6 b).
+   *   `resource/data/master/teams/pro_usa/*.json` 16개에 같은 12항목이
+   *   **또 한 벌** 있었다. 게임은 이 파일들을 한 번도 안 읽는다 —
+   *   `_manifest.json` 에 `teams/` 가 없어 런타임 로드 대상이 아니다.
+   *
+   * ⚠ `teams/` 아래를 통째로 본다. `pro_korea` 8팀에도 12항목이 남아 있지만
+   *   그쪽 `teamId` 는 Phase 5 ID 교체 뒤 `refs.json` 에 **하나도 없는**
+   *   죽은 팀이라 성격이 다르다 — 지울지는 사용자가 정한다(보고에 적었다).
+   *   그래서 여기서는 **살아 있는 팀의 파일만** 본다.
+   */
+  it("`master/teams/` 의 살아 있는 팀에 12항목이 다시 안 생겼다", () => {
+    const teamsRoot = join(__dirname, "../../../../../../resource/data/master/teams");
+    const refs = JSON.parse(
+      readFileSync(
+        join(__dirname, "../../../../../../resource/data/master/entities/refs.json"),
+        "utf8",
+      ),
+    ) as { teams: { id: string }[] };
+    const alive = new Set(refs.teams.map((t) => t.id));
+    const bad: string[] = [];
+    const walk = (d: string) => {
+      for (const e of readdirSync(d, { withFileTypes: true })) {
+        const p = join(d, e.name);
+        if (e.isDirectory()) {
+          walk(p);
+          continue;
+        }
+        if (!e.name.endsWith(".json")) continue;
+        const j = JSON.parse(readFileSync(p, "utf8")) as { teamId?: string; teamProfile?: unknown };
+        if (j.teamProfile && j.teamId && alive.has(j.teamId)) bad.push(`${e.name}(${j.teamId})`);
+      }
+    };
+    walk(teamsRoot);
+    expect(bad, `성향 12항목이 되살아난 파일: ${bad.slice(0, 6).join(" ")}`).toEqual([]);
   });
 });

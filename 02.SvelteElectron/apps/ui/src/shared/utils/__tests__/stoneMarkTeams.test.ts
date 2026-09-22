@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { inkFor, luminanceOf, stoneStyle } from "../stoneMark";
 
@@ -10,30 +10,24 @@ import { inkFor, luminanceOf, stoneStyle } from "../stoneMark";
  *   보조색을 글자에 썼기 때문이다. 여기는 그 실패를 검사로 굳힌다 —
  *   **한 팀이라도 묻히면 실패한다.**
  *
- * ⚠ 색 몇 개만 골라 보면 못 잡는다. `teams/` 아래를 전부 훑는다.
+ * 🔴 **잣대가 틀려 있었다** (2026-09-22 실측). 예전엔 `resource/data/master/teams/`
+ *   아래를 훑었는데 그 파일들은 **게임이 한 번도 안 읽는 구 데이터**다 —
+ *   `_manifest.json` 에 없고(런타임 로드 대상이 아니다), 고교·대학·독립·
+ *   pro_korea 의 `teamId` 는 Phase 5 ID 교체 뒤 `refs.json` 에 **하나도 없다.**
+ *   ABL 16팀은 id 는 살아 있지만 **색이 16팀 전부 refs 와 다르다.**
+ *   즉 화면이 그리는 색이 아니라 아무도 안 쓰는 색 48개를 검사하고 있었다.
+ *
+ *   **정본은 `refs.json` 이다**(DESIGN §8.2 원칙 6). 거기서 읽는다 —
+ *   표본이 48 → **238팀 전수**가 되고, 그중에 화면이 실제로 그리는 색이 있다.
  */
 
-const ROOT = join(process.cwd(), "resource/data/master/teams");
+const ROOT = process.cwd();
 
 function allTeams(): Array<{ id: string; colors: [string, string] }> {
-  const out: Array<{ id: string; colors: [string, string] }> = [];
-  const walk = (d: string) => {
-    for (const f of readdirSync(d)) {
-      const p = join(d, f);
-      if (statSync(p).isDirectory()) {
-        walk(p);
-        continue;
-      }
-      if (!f.endsWith(".json")) continue;
-      const j = JSON.parse(readFileSync(p, "utf8")) as {
-        teamId?: string;
-        colors?: [string, string];
-      };
-      if (j.colors) out.push({ id: j.teamId ?? f, colors: j.colors });
-    }
-  };
-  walk(ROOT);
-  return out;
+  const refs = JSON.parse(
+    readFileSync(join(ROOT, "resource/data/master/entities/refs.json"), "utf8"),
+  ) as { teams: { id: string; colors?: [string, string] }[] };
+  return refs.teams.filter((t) => t.colors).map((t) => ({ id: t.id, colors: t.colors! }));
 }
 
 function contrast(a: string, b: string): number {
@@ -50,7 +44,9 @@ describe("실제 팀 색으로 그린 알", () => {
   const teams = allTeams();
 
   it("색을 가진 팀이 실제로 있다 — 없으면 아래가 다 헛돈다", () => {
-    expect(teams.length).toBeGreaterThan(40);
+    // ⚠ 정본으로 옮기면서 48 → 238 이 됐다. 다시 48 대로 떨어지면 잣대가
+    //   구 데이터로 되돌아간 것이다
+    expect(teams.length).toBeGreaterThan(200);
   });
 
   it("모든 팀에서 자리 이름이 읽힌다", () => {

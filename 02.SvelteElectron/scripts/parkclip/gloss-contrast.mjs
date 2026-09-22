@@ -15,14 +15,13 @@ const pw = require_("playwright-core");
 
 import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const TEAMS = path.join(ROOT, "resource/data/master/teams");
-
-const walk = (d) => fs.readdirSync(d, { withFileTypes: true })
-  .flatMap((e) => (e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]));
-const teams = walk(TEAMS).filter((f) => f.endsWith(".json"))
-  .map((f) => JSON.parse(fs.readFileSync(f, "utf8")))
-  .filter((j) => j.colors)
-  .map((j) => ({ id: j.teamId ?? "?", main: j.colors[0], sub: j.colors[1] }));
+// ⚠ **정본은 `refs.json` 하나다.** 예전엔 `master/teams/` 아래를 훑었는데
+//   그건 게임이 한 번도 안 읽는 구 데이터고, ABL 16팀은 색이 refs 와 전부
+//   다르다(2026-09-22 실측 · `stoneMarkTeams.test.ts` 머리말).
+const REFS = path.join(ROOT, "resource/data/master/entities/refs.json");
+const teams = JSON.parse(fs.readFileSync(REFS, "utf8")).teams
+  .filter((t) => t.colors)
+  .map((t) => ({ id: t.id, main: t.colors[0], sub: t.colors[1] }));
 
 const OUT = path.join(os.tmpdir(), "projectb-parkclip");
 fs.mkdirSync(OUT, { recursive: true });
