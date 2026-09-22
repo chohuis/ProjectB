@@ -253,12 +253,15 @@ export function foreignSlotsFor(
  *                 — `philosophy` 에서 온다
  * ```
  *
- * ⚠ **ABL·JBL 은 `traits` 가 비어 있다**(실측 · 28팀 전부). 그쪽은
- *   `power`(전력★ 1~5)로 떨어진다 — 강팀일수록 질적으로 본다.
+ * 🔴 **ABL·JBL 28팀도 이제 `traits` 가 있다**(2026-09-22 · 1단계). 예전엔
+ *   비어 있어 `power`(전력★ 1~5) 폴백으로 떨어졌다. 폴백은 지우지 않는다 —
+ *   성향이 안 들어온 리그가 새로 생기면 그때도 화면이 비면 안 된다.
+ *   **비어 있지 않은지는 기계가 본다**(`proTeamData.test.ts`).
  * ⚠ 값이 하나도 없으면 `undefined` 를 낸다 — 엔진이 예전 동작으로 간다.
- * ⚠ 표를 여기 한 벌만 둔다. 성향 이름은 `refs.json` 이 정본이다.
+ * ⚠ 표를 여기 한 벌만 둔다. 성향 이름은 `refs.json` 이 정본이고, 그 두
+ *   글자가 이 표 안인지는 게이트가 대조한다.
  */
-const SPEND_BY_RESOURCE: Record<string, number> = {
+export const SPEND_BY_RESOURCE: Record<string, number> = {
   // 궁핍한 팀은 남길 여유가 없다 — 있는 걸 다 쓴다
   궁핍: 1.0,
   // 알뜰한 팀은 아껴 두고 시장에서 기회를 본다
@@ -268,7 +271,7 @@ const SPEND_BY_RESOURCE: Record<string, number> = {
   부유: 0.9,
 };
 
-const QUALITY_BY_PHILOSOPHY: Record<string, number> = {
+export const QUALITY_BY_PHILOSOPHY: Record<string, number> = {
   // 인원을 많이 데리고 키운다
   육성중심: 0.2,
   "젊은피(세대교체)": 0.25,
