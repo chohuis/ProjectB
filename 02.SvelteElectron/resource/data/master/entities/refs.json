@@ -8186,7 +8186,17 @@
             "desc": "호남 vs 영남 전통 라이벌"
           }
         ],
-        "parentCompany": "부산해운"
+        "parentCompany": "부산해운",
+        "titleYears": [
+          1985,
+          1986,
+          1988,
+          1994,
+          2000,
+          2006
+        ],
+        "nationalTitles": 6,
+        "peakEra": "창단 2년차부터 네 해 안에 세 번 우승 — 1980년대 후반 부산 야구의 전성기. 2006년 이후로는 정상에 없다"
       }
     },
     {
@@ -8277,7 +8287,13 @@
             "desc": "영남 라이벌"
           }
         ],
-        "parentCompany": "창원기계"
+        "parentCompany": "창원기계",
+        "titleYears": [
+          2015,
+          2020
+        ],
+        "nationalTitles": 2,
+        "peakEra": "2015년 창단 7년차 첫 우승, 2020년 두 번째 — 자금과 육성을 함께 돌린 신흥 강자의 완성"
       }
     },
     {
@@ -8368,7 +8384,14 @@
             "desc": "영남 라이벌"
           }
         ],
-        "parentCompany": "대구제강"
+        "parentCompany": "대구제강",
+        "titleYears": [
+          2002,
+          2011,
+          2017
+        ],
+        "nationalTitles": 3,
+        "peakEra": "2011년 스몰볼의 완성: 팀 홈런 최하위로 우승한 유일한 해"
       }
     },
     {
@@ -8459,7 +8482,10 @@
             "desc": "신흥 데이터야구 vs 리빌딩, 세대 대비"
           }
         ],
-        "parentCompany": "충청건설"
+        "parentCompany": "충청건설",
+        "titleYears": [],
+        "nationalTitles": 0,
+        "peakEra": "2019년 창단 2년차 9위: 지금까지 가장 높이 올라간 해"
       }
     },
     {
@@ -8556,7 +8582,18 @@
             "desc": "호남 vs 영남 전통 라이벌"
           }
         ],
-        "parentCompany": "호남식품"
+        "parentCompany": "호남식품",
+        "titleYears": [
+          1987,
+          1990,
+          1991,
+          1995,
+          1999,
+          2004,
+          2014
+        ],
+        "nationalTitles": 7,
+        "peakEra": "1990~1991 연패: 호남 야구의 절정이자 전국에서 팬이 가장 많던 시절"
       }
     },
     {
@@ -8647,7 +8684,14 @@
             "desc": "수도권 라이벌"
           }
         ],
-        "parentCompany": "인천중공"
+        "parentCompany": "인천중공",
+        "titleYears": [
+          1998,
+          2005,
+          2013
+        ],
+        "nationalTitles": 3,
+        "peakEra": "1998년 창단 5년차 첫 우승: 밖에서 데려오지 않고 직접 키운 선수들만으로 올라섰다"
       }
     },
     {
@@ -8738,7 +8782,13 @@
             "desc": "수도권 라이벌"
           }
         ],
-        "parentCompany": "대한전자"
+        "parentCompany": "대한전자",
+        "titleYears": [
+          2007,
+          2012
+        ],
+        "nationalTitles": 2,
+        "peakEra": "2007년 첫 우승: 리그 최다 득점 타선으로 밀어붙인 한 해"
       }
     },
     {
@@ -8845,7 +8895,19 @@
             "desc": "서울 더비 — 최강 자금력 vs 투수왕국"
           }
         ],
-        "parentCompany": "세종화학"
+        "parentCompany": "세종화학",
+        "titleYears": [
+          1992,
+          1996,
+          2001,
+          2008,
+          2009,
+          2016,
+          2023,
+          2024
+        ],
+        "nationalTitles": 8,
+        "peakEra": "2008~2009 연패에 이어 2023~2024 또 한 번의 연패 — 마운드 하나로 서울 더비를 두 번 뒤집었다"
       }
     },
     {
@@ -8957,7 +9019,23 @@
             "desc": "서울 더비 — 최강 자금력 vs 투수왕국"
           }
         ],
-        "parentCompany": "한성물산"
+        "parentCompany": "한성물산",
+        "titleYears": [
+          1982,
+          1983,
+          1984,
+          1989,
+          1993,
+          1997,
+          2003,
+          2010,
+          2019,
+          2021,
+          2022,
+          2025
+        ],
+        "nationalTitles": 12,
+        "peakEra": "리그 출범 3연패(1982~1984)와 2020년대 왕조 — 창단 이래 최다 우승 자리를 한 번도 내주지 않았다"
       }
     },
     {
@@ -9059,7 +9137,12 @@
             "desc": "신흥 데이터야구 vs 리빌딩, 세대 대비"
           }
         ],
-        "parentCompany": "경기유통"
+        "parentCompany": "경기유통",
+        "titleYears": [
+          2018
+        ],
+        "nationalTitles": 1,
+        "peakEra": "2018년 창단 6년차 우승: 데이터 야구가 처음 정상에 오른 해"
       }
     },
     {

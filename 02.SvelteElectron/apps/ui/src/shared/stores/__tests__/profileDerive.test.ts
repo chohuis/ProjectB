@@ -223,9 +223,11 @@ describe("연혁 → prestige", () => {
       id: string;
       history?: {
         budget?: number;
+        foundedYear?: number;
         titleYears?: number[];
         nationalTitles?: number;
         peakEra?: string;
+        titles?: { season: string; competition: string; result: string }[];
       };
       traits?: { philosophy?: string; resource?: string };
     }[];
@@ -345,12 +347,6 @@ describe("연혁 → prestige", () => {
   });
 
   /**
-   * 🔴 **국내 10팀은 한 칸도 안 움직인다 — 데이터 사실이다.**
-   *   KBL `history` 에는 `titleYears`·`nationalTitles`·`peakEra` 가 아예 없다.
-   *   `titles`(과거 5시즌 기록)로 대신 세지 않았다 — 통산 우승과 뜻이 다른 표고,
-   *   두 잣대를 섞으면 리그끼리 비교가 깨진다. 국내 연혁을 채울지는 따로 정한다.
-   */
-  /**
    * 🔴 **배선 대조군.** 위 검사들은 전부 순수 함수를 직접 부른다 — 실제
    *   게임이 `history` 를 안 넘기면 전부 초록인 채로 아무 일도 안 일어난다.
    *   이 저장소가 제일 자주 밟은 형태다("층마다 맞는데 잇는 선이 없다").
@@ -364,10 +360,93 @@ describe("연혁 → prestige", () => {
     );
   });
 
-  it("KBL 10팀은 연혁 칸이 없어 그대로다", () => {
+  /**
+   * 🔴 **국내 10팀도 연혁을 들고 있다** (2026-09-25 · 사용자 확정 ·
+   *   `PLAN_OVERSEAS_CLUBS_2026-09-22.md` §8). 전에는 이 자리가
+   *   "KBL 은 칸이 없어 그대로다"를 못 박고 있었다 — 그때는 데이터 사실이었다.
+   *
+   * ⚠ 값(우승 횟수)이 아니라 **순서의 뒤집힘**을 못 박는다. 예산이 같아
+   *   동률이던 자리가 연혁으로 갈렸다는 것이 이 변경의 요점이고, 우승 횟수를
+   *   적으면 데이터를 손볼 때마다 여기도 같이 고쳐야 한다.
+   */
+  it("KBL 10팀도 연혁을 탄다 — 명문이 동률에서 올라선다", () => {
     const on = leagueProfiles("LEAGUE_KBL", true);
     const off = leagueProfiles("LEAGUE_KBL", false);
     expect(on.size).toBe(10);
-    for (const [id, p] of on) expect(p.prestige, id).toBe(off.get(id)!.prestige);
+    const p = (id: string) => on.get(`TEAM_KBL_${id}_1`)!.prestige;
+    const q = (id: string) => off.get(`TEAM_KBL_${id}_1`)!.prestige;
+
+    // 연혁은 이름값을 깎지 않는다
+    for (const [id, v] of on) expect(v.prestige, id).toBeGreaterThanOrEqual(off.get(id)!.prestige);
+
+    // ① 명문이 예산 동률이던 중견 셋 위로 올라선다
+    expect(q("BUSAN_WAVES")).toBe(q("DAEGU_SABERS"));
+    expect(q("BUSAN_WAVES")).toBe(q("SEOUL_COBRAS"));
+    expect(p("BUSAN_WAVES")).toBeGreaterThan(p("DAEGU_SABERS"));
+    expect(p("BUSAN_WAVES")).toBeGreaterThan(p("SEOUL_COBRAS"));
+
+    // ② 명문·엘리트가 예산 동률이던 신흥 위로 올라선다
+    expect(q("GWANGJU_PANTHERS")).toBe(q("SUWON_KNIGHTS"));
+    expect(q("SEOUL_GUARDIANS")).toBe(q("SUWON_KNIGHTS"));
+    expect(p("GWANGJU_PANTHERS")).toBeGreaterThan(p("SUWON_KNIGHTS"));
+    expect(p("SEOUL_GUARDIANS")).toBeGreaterThan(p("SUWON_KNIGHTS"));
+
+    // ③ 천장에 닿아 있던 팀은 안 움직이고, 아무도 그 위로 못 간다
+    expect(p("SEOUL_ROYALS")).toBe(q("SEOUL_ROYALS"));
+    for (const [id, v] of on)
+      expect(v.prestige, `${id} 가 ROYALS 를 넘었다`).toBeLessThanOrEqual(p("SEOUL_ROYALS"));
+
+    // ④ 우승 0 인 팀은 가산이 정확히 0 — "같은 예산의 무관 팀"이 기준선으로 남는다
+    expect(p("DAEJEON_PHANTOMS")).toBe(q("DAEJEON_PHANTOMS"));
+  });
+
+  /**
+   * 🔴 국내 연혁의 **데이터 제약** — `prestige` 식은 길이만 보므로 여기서만 잡힌다.
+   *   한 해에 우승 팀은 하나고, 창단 전에는 못 이기고, `titles`(최근 5시즌)에
+   *   적힌 우승은 `titleYears` 에도 있어야 한다. 해외 28팀은 이 제약을 안 지켜
+   *   KBL 만 본다(`PLAN_OVERSEAS_CLUBS_2026-09-22.md` §8-4).
+   */
+  it("KBL 우승 연도는 겹치지 않고 창단 뒤이며 최근 5시즌과 맞는다", () => {
+    const list = refs.teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1"));
+    expect(list.length).toBe(10);
+
+    const owner = new Map<number, string>();
+    for (const t of list) {
+      const h = t.history!;
+      expect(h.titleYears, `${t.id} titleYears 없음`).toBeDefined();
+      expect(h.nationalTitles, `${t.id} nationalTitles 가 길이와 다르다`).toBe(
+        h.titleYears!.length,
+      );
+      for (const y of h.titleYears!) {
+        expect(owner.get(y), `${y}년 우승이 둘이다 (${owner.get(y)} · ${t.id})`).toBeUndefined();
+        owner.set(y, t.id);
+        expect(y, `${t.id} 창단(${h.foundedYear}) 전 우승`).toBeGreaterThanOrEqual(h.foundedYear!);
+      }
+    }
+
+    // 빈 해가 없다 — 리그 최초 창단부터 직전 시즌까지 매해 하나씩
+    const ys = [...owner.keys()].sort((a, b) => a - b);
+    for (let y = ys[0]; y <= ys[ys.length - 1]; y++)
+      expect(owner.has(y), `${y}년 우승 팀이 없다`).toBe(true);
+
+    // `titles`(S-1 = BASE_SEASON_YEAR - 1 = 2025) 의 우승이 titleYears 에 있다
+    const SEASON_YEAR: Record<string, number> = {
+      "S-1": 2025,
+      "S-2": 2024,
+      "S-3": 2023,
+      "S-4": 2022,
+      "S-5": 2021,
+    };
+    let checked = 0;
+    for (const t of list) {
+      for (const x of t.history!.titles ?? []) {
+        if (x.result !== "우승") continue;
+        expect(owner.get(SEASON_YEAR[x.season]), `${t.id} ${x.season} 우승이 통산에 없다`).toBe(
+          t.id,
+        );
+        checked++;
+      }
+    }
+    expect(checked, "최근 5시즌 우승이 하나도 안 잡혔다 — 잣대가 틀렸다").toBeGreaterThan(0);
   });
 });

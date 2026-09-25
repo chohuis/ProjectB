@@ -37,7 +37,14 @@ console.log("refs history 모양");
   check("rivals가 있다", teams.every((t) => Array.isArray(t.history.rivals)));
 
   // v1 필드는 없어야 한다 — 있으면 화면이 또 그걸 읽을 유혹이 생긴다
-  const V1 = ["founded", "nationalTitles", "proPlayers", "recentRecords", "titleYears", "peakEra", "summary", "rival"];
+  //
+  // 🔴 `titleYears` · `nationalTitles` · `peakEra` 셋은 이 목록에서 **뺐다**
+  //    (2026-09-25). 더는 죽은 칸이 아니다 — `game.ts` 의 `prestige` 파생이
+  //    읽고(`432203c36`) 타입에도 있다. 해외 28팀은 원래 들고 있었고 국내
+  //    10팀도 채웠다(사용자 확정 · `PLAN_OVERSEAS_CLUBS_2026-09-22.md` §8).
+  //    **아래 §4 화면 소스 검사는 그대로다** — 데이터가 들고 있는 것과 화면이
+  //    읽는 것은 다른 문제고, 화면 금지는 계속 건다(`V1_PATTERNS`).
+  const V1 = ["founded", "proPlayers", "recentRecords", "summary", "rival"];
   const leaked = [];
   for (const t of teams) for (const k of V1) if (k in t.history) leaked.push(`${t.id}.${k}`);
   check("v1 필드가 남아 있지 않다", leaked.length === 0, leaked.slice(0, 5).join(", "));
