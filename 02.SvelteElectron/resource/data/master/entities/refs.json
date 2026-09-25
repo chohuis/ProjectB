@@ -13676,11 +13676,11 @@
         "#ffc425"
       ],
       "traits": {
-        "philosophy": "육성중심",
+        "philosophy": "수비/짜임새",
         "resource": "안정"
       },
       "profile": {
-        "style": "육성중심",
+        "style": "수비/짜임새",
         "prestige": "B",
         "fanBase": "지역",
         "facilityLevel": 3,
@@ -13746,11 +13746,11 @@
         "#ffc425"
       ],
       "traits": {
-        "philosophy": "육성중심",
+        "philosophy": "수비/짜임새",
         "resource": "안정"
       },
       "profile": {
-        "style": "육성중심",
+        "style": "수비/짜임새",
         "prestige": "C",
         "fanBase": "소규모",
         "facilityLevel": 2,
