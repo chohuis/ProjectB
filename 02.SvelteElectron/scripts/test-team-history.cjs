@@ -48,6 +48,23 @@ console.log("refs history 모양");
   const leaked = [];
   for (const t of teams) for (const k of V1) if (k in t.history) leaked.push(`${t.id}.${k}`);
   check("v1 필드가 남아 있지 않다", leaked.length === 0, leaked.slice(0, 5).join(", "));
+
+  // 🔴 해외 56팀(ABL 32 · JBL 24)도 죽은 칸 셋을 지웠다 (2026-09-26 · 사용자
+  //    확정 · `PLAN_OVERSEAS_CLUBS_2026-09-22.md` §8-4). 읽는 자리가 0 이었고,
+  //    `summary` 문안은 지우는 대신 `profile.desc` 로 옮겼다(읽는 자리가 거기다).
+  // ⚠ `founded` 는 **아직 뺀다.** 해외는 창단 칸이 둘이고 `titleYears`·
+  //    `peakEra` 가 맞물리는 쪽이 `founded` 다(`foundedYear` 기준 23팀이 창단
+  //    전 우승). 한 칸으로 합치는 것은 화면 값이 바뀌어 사용자 결정 대기다.
+  const overseas = refs.teams.filter((t) =>
+    t.leagueId === "LEAGUE_ABL" || t.leagueId === "LEAGUE_JBL");
+  const DEAD_FOREIGN = ["proPlayers", "recentRecords", "summary", "rival"];
+  const leakedF = [];
+  for (const t of overseas) for (const k of DEAD_FOREIGN) if (k in t.history) leakedF.push(`${t.id}.${k}`);
+  console.log(`    해외 ${overseas.length}팀 · 죽은 칸 ${leakedF.length}개`);
+  check("해외에도 죽은 칸이 남아 있지 않다", leakedF.length === 0, leakedF.slice(0, 5).join(", "));
+  check("해외 문안이 profile.desc 에 있다",
+    overseas.every((t) => (t.profile?.desc ?? "").length > 30),
+    overseas.filter((t) => (t.profile?.desc ?? "").length <= 30).slice(0, 3).map((t) => t.id).join(", "));
 }
 
 // ── 2. 화면이 실제로 채울 값이 있는가 ─────────────────────────

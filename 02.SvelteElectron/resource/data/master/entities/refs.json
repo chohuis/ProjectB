@@ -12064,11 +12064,10 @@
         "funding": "최상",
         "difficulty": "최상",
         "promoChance": "낮음",
-        "desc": "뉴욕 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "뉴욕 연고 ABL 팀. 제 색이 뚜렷하다. ABL 최다 우승 구단. 뉴욕의 상징이자 전 세계 야구 팬들이 주목하는 명문."
       },
       "history": {
         "founded": 1925,
-        "rival": "TEAM_ABL_HARBORHAWKS_1",
         "titleYears": [
           1927,
           1936,
@@ -12083,34 +12082,6 @@
           2009
         ],
         "peakEra": "1990년대 왕조: 5년간 4회 우승, ABL 역사상 최강 전력으로 평가",
-        "summary": "ABL 최다 우승 구단. 뉴욕의 상징이자 전 세계 야구 팬들이 주목하는 명문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 1위",
-            "national": "우승"
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 2위",
-            "national": "준우승"
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 1위",
-            "national": "우승"
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 3위",
-            "national": "4강"
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 1위",
-            "national": "우승"
-          }
-        ],
         "nationalTitles": 27,
         "budget": 275900000000,
         "parentCompany": "홀랜드 패밀리 트러스트",
@@ -12146,41 +12117,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "뉴욕 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "뉴욕 연고 ABL 팀. 제 색이 뚜렷하다. 뉴욕 엠파이어 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1930,
-        "rival": "",
         "titleYears": [],
         "peakEra": "뉴욕 엠파이어 팜 유망주 육성팀",
-        "summary": "뉴욕 엠파이어 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1916,
         "titles": []
@@ -12213,51 +12155,22 @@
         "funding": "최상",
         "difficulty": "최상",
         "promoChance": "낮음",
-        "desc": "보스턴 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "보스턴 연고 ABL 팀. 제 색이 뚜렷하다. 전통의 명가. 열광적인 팬 문화와 보수적 구단 운영이 공존하는 ABL의 상징."
       },
       "history": {
         "founded": 1901,
-        "rival": "TEAM_ABL_EMPIRE_1",
         "titleYears": [
           1903,
           1912,
           1915,
-          1916,
+          1917,
           1918,
           2004,
-          2007,
+          2005,
           2013,
           2018
         ],
         "peakEra": "2004년 저주 종식: 86년 무관의 한을 풀고 두 번의 우승으로 왕조 재건",
-        "summary": "전통의 명가. 열광적인 팬 문화와 보수적 구단 운영이 공존하는 ABL의 상징.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 3위",
-            "national": "4강"
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 1위",
-            "national": "준우승"
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 4위",
-            "national": "8강"
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 2위",
-            "national": "우승"
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 2위",
-            "national": "준우승"
-          }
-        ],
         "nationalTitles": 9,
         "budget": 175000000000,
         "parentCompany": "베이스테이트 스포츠 벤처스",
@@ -12293,41 +12206,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "보스턴 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "보스턴 연고 ABL 팀. 제 색이 뚜렷하다. 보스턴 하버호크스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1906,
-        "rival": "",
         "titleYears": [],
         "peakEra": "보스턴 하버호크스 팜 유망주 육성팀",
-        "summary": "보스턴 하버호크스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1990,
         "titles": []
@@ -12360,44 +12244,15 @@
         "funding": "상",
         "difficulty": "중",
         "promoChance": "낮음",
-        "desc": "클리블랜드 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "클리블랜드 연고 ABL 팀. 제 색이 뚜렷하다. 오대호 연안의 전통팀. 오랜 가뭄 끝에 팬들의 사랑을 받으며 리빌딩 중."
       },
       "history": {
         "founded": 1915,
-        "rival": "TEAM_ABL_MOTORWOLVES_1",
         "titleYears": [
           1948,
           1954
         ],
         "peakEra": "1948년 감격: 전후 최강 전력을 앞세워 ABL 제패",
-        "summary": "오대호 연안의 전통팀. 오랜 가뭄 끝에 팬들의 사랑을 받으며 리빌딩 중.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 8위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 9위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 7위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 6위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 7위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 2,
         "budget": 185500000000,
         "parentCompany": "레이크쇼어 파트너스",
@@ -12433,41 +12288,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "클리블랜드 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "클리블랜드 연고 ABL 팀. 제 색이 뚜렷하다. 클리블랜드 레이크스피리츠 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1920,
-        "rival": "",
         "titleYears": [],
         "peakEra": "클리블랜드 레이크스피리츠 팜 유망주 육성팀",
-        "summary": "클리블랜드 레이크스피리츠 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1945,
         "titles": []
@@ -12500,11 +12326,10 @@
         "funding": "상",
         "difficulty": "상",
         "promoChance": "낮음",
-        "desc": "댈러스 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "댈러스 연고 ABL 팀. 제 색이 뚜렷하다. 텍사스 최대 도시의 대형 구단. 빅마켓 공격 운영으로 FA 시장 큰손."
       },
       "history": {
         "founded": 1972,
-        "rival": "TEAM_ABL_SPACECOMETS_1",
         "titleYears": [
           2010,
           2011,
@@ -12513,34 +12338,6 @@
           2025
         ],
         "peakEra": "2010년대 초 연패와 2020년대 왕조 구축으로 최근 ABL 최강 전력",
-        "summary": "텍사스 최대 도시의 대형 구단. 빅마켓 공격 운영으로 FA 시장 큰손.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 2위",
-            "national": "준우승"
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 4위",
-            "national": "8강"
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 1위",
-            "national": "우승"
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 1위",
-            "national": "우승"
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 1위",
-            "national": "우승"
-          }
-        ],
         "nationalTitles": 5,
         "budget": 196000000000,
         "parentCompany": "트리니티 캐피털",
@@ -12576,41 +12373,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "댈러스 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "댈러스 연고 ABL 팀. 제 색이 뚜렷하다. 댈러스 론스타스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1977,
-        "rival": "",
         "titleYears": [],
         "peakEra": "댈러스 론스타스 팜 유망주 육성팀",
-        "summary": "댈러스 론스타스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1935,
         "titles": []
@@ -12643,46 +12411,17 @@
         "funding": "상",
         "difficulty": "중",
         "promoChance": "낮음",
-        "desc": "디트로이트 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "디트로이트 연고 ABL 팀. 제 색이 뚜렷하다. 자동차 도시 디트로이트의 자존심. 산업 쇠퇴와 함께 팀도 재건 중."
       },
       "history": {
         "founded": 1901,
-        "rival": "TEAM_ABL_LAKESPIRITS_1",
         "titleYears": [
           1935,
-          1945,
+          1947,
           1968,
           1984
         ],
         "peakEra": "1968년 격동의 우승: 도시 혼란 속 팀의 단결로 일군 감동의 챔피언십",
-        "summary": "자동차 도시 디트로이트의 자존심. 산업 쇠퇴와 함께 팀도 재건 중.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 12위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 11위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 10위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 9위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 10위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 4,
         "budget": 206500000000,
         "parentCompany": "그레이트레이크 인더스트리",
@@ -12718,41 +12457,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "디트로이트 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "디트로이트 연고 ABL 팀. 제 색이 뚜렷하다. 디트로이트 모터울브즈 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1906,
-        "rival": "",
         "titleYears": [],
         "peakEra": "디트로이트 모터울브즈 팜 유망주 육성팀",
-        "summary": "디트로이트 모터울브즈 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1947,
         "titles": []
@@ -12785,44 +12495,15 @@
         "funding": "상",
         "difficulty": "중",
         "promoChance": "낮음",
-        "desc": "마이애미 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "마이애미 연고 ABL 팀. 제 색이 뚜렷하다. 플로리다 최남단의 신흥 구단. 기복은 있지만 간헐적 다크호스 성격."
       },
       "history": {
         "founded": 1993,
-        "rival": "TEAM_ABL_PEACHTREEFALCONS_1",
         "titleYears": [
           1997,
           2003
         ],
         "peakEra": "1997년 신생팀 기적: 창단 5년차 FL 최단기 우승으로 야구계 충격",
-        "summary": "플로리다 최남단의 신흥 구단. 기복은 있지만 간헐적 다크호스 성격.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 9위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 7위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 11위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 10위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 11위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 2,
         "budget": 165200000000,
         "parentCompany": "선코스트 벤처스",
@@ -12858,41 +12539,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "마이애미 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "마이애미 연고 ABL 팀. 제 색이 뚜렷하다. 마이애미 웨이브라이더스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1998,
-        "rival": "",
         "titleYears": [],
         "peakEra": "마이애미 웨이브라이더스 팜 유망주 육성팀",
-        "summary": "마이애미 웨이브라이더스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1974,
         "titles": []
@@ -12925,43 +12577,14 @@
         "funding": "상",
         "difficulty": "상",
         "promoChance": "낮음",
-        "desc": "시애틀 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "시애틀 연고 ABL 팀. 제 색이 뚜렷하다. 북서부 해안 대표팀. 꾸준한 강팀 이미지와 넓은 홈구장이 특징."
       },
       "history": {
         "founded": 1977,
-        "rival": "TEAM_ABL_BAYSEALS_1",
         "titleYears": [
-          2001
+          2002
         ],
-        "peakEra": "2001년 서부 패권: 정규시즌 116승 역대 최다승 기록 후 챔피언십 제패",
-        "summary": "북서부 해안 대표팀. 꾸준한 강팀 이미지와 넓은 홈구장이 특징.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 5위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 5위",
-            "national": "8강"
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 4위",
-            "national": "4강"
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 5위",
-            "national": ""
-          }
-        ],
+        "peakEra": "2002년 서부 패권: 정규시즌 116승 역대 최다승 기록 후 챔피언십 제패",
         "nationalTitles": 1,
         "budget": 238000000000,
         "parentCompany": "노스웨스트 홀딩스",
@@ -12997,41 +12620,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "시애틀 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "시애틀 연고 ABL 팀. 제 색이 뚜렷하다. 시애틀 레인애로우스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1982,
-        "rival": "",
         "titleYears": [],
         "peakEra": "시애틀 레인애로우스 팜 유망주 육성팀",
-        "summary": "시애틀 레인애로우스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1970,
         "titles": []
@@ -13064,11 +12658,10 @@
         "funding": "상",
         "difficulty": "상",
         "promoChance": "낮음",
-        "desc": "시카고 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "시카고 연고 ABL 팀. 제 색이 뚜렷하다. 제2의 도시 시카고의 자존심. 오랜 역사와 열광적 팬 문화의 명문 구단."
       },
       "history": {
         "founded": 1900,
-        "rival": "TEAM_ABL_RIVERCARDINALS_1",
         "titleYears": [
           1906,
           1907,
@@ -13078,34 +12671,6 @@
           2016
         ],
         "peakEra": "1900년대 초 3연패와 2016년 108년 만의 우승 — ABL 최장 가뭄 종식",
-        "summary": "제2의 도시 시카고의 자존심. 오랜 역사와 열광적 팬 문화의 명문 구단.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 6위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 6위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 6위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 5위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 4위",
-            "national": "8강"
-          }
-        ],
         "nationalTitles": 6,
         "budget": 79800000000,
         "parentCompany": "미들랜드 트러스트",
@@ -13141,41 +12706,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "시카고 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "시카고 연고 ABL 팀. 제 색이 뚜렷하다. 시카고 윈드베어스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1905,
-        "rival": "",
         "titleYears": [],
         "peakEra": "시카고 윈드베어스 팜 유망주 육성팀",
-        "summary": "시카고 윈드베어스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1933,
         "titles": []
@@ -13208,43 +12744,14 @@
         "funding": "상",
         "difficulty": "상",
         "promoChance": "낮음",
-        "desc": "덴버 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "덴버 연고 ABL 팀. 제 색이 뚜렷하다. 로키산맥 고지대 홈이 강점. 서부 중부 지역을 대표하는 강팀."
       },
       "history": {
         "founded": 1993,
-        "rival": "TEAM_ABL_DESERTSERPENTS_1",
         "titleYears": [
           2007
         ],
         "peakEra": "2007년 고원의 기적: 고지대 홈 어드밴티지를 극대화한 전략 우승",
-        "summary": "로키산맥 고지대 홈이 강점. 서부 중부 지역을 대표하는 강팀.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 7위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 8위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 9위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 7위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 8위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 1,
         "budget": 217000000000,
         "parentCompany": "로키마운틴 파트너스",
@@ -13280,41 +12787,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "덴버 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "덴버 연고 ABL 팀. 제 색이 뚜렷하다. 덴버 마운틴픽스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1998,
-        "rival": "",
         "titleYears": [],
         "peakEra": "덴버 마운틴픽스 팜 유망주 육성팀",
-        "summary": "덴버 마운틴픽스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1971,
         "titles": []
@@ -13347,45 +12825,16 @@
         "funding": "상",
         "difficulty": "상",
         "promoChance": "낮음",
-        "desc": "휴스턴 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "휴스턴 연고 ABL 팀. 제 색이 뚜렷하다. 우주도시 휴스턴 대표. 데이터 야구와 투수 육성의 선도 구단."
       },
       "history": {
         "founded": 1962,
-        "rival": "TEAM_ABL_LONESTARS_1",
         "titleYears": [
+          2015,
           2017,
-          2019,
           2022
         ],
         "peakEra": "2017년 허리케인 이후 감동 우승: 도시 재건과 함께한 역사적 챔피언십",
-        "summary": "우주도시 휴스턴 대표. 데이터 야구와 투수 육성의 선도 구단.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 4위",
-            "national": "8강"
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 2위",
-            "national": "우승"
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 3위",
-            "national": "4강"
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 3위",
-            "national": "4강"
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 3위",
-            "national": "4강"
-          }
-        ],
         "nationalTitles": 3,
         "budget": 148400000000,
         "parentCompany": "걸프코스트 에너지",
@@ -13421,41 +12870,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "휴스턴 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "휴스턴 연고 ABL 팀. 제 색이 뚜렷하다. 휴스턴 스페이스코밋츠 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1967,
-        "rival": "",
         "titleYears": [],
         "peakEra": "휴스턴 스페이스코밋츠 팜 유망주 육성팀",
-        "summary": "휴스턴 스페이스코밋츠 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1953,
         "titles": []
@@ -13488,49 +12908,20 @@
         "funding": "최상",
         "difficulty": "최상",
         "promoChance": "낮음",
-        "desc": "로스앤젤레스 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "로스앤젤레스 연고 ABL 팀. 제 색이 뚜렷하다. LA의 상징적 구단. 엔터테인먼트 수도답게 스타 선수 영입과 흥행에 강점."
       },
       "history": {
         "founded": 1958,
-        "rival": "TEAM_ABL_BAYSEALS_1",
         "titleYears": [
           1959,
+          1962,
           1963,
           1965,
+          1966,
           1988,
-          2020,
-          2021,
-          2024
+          2021
         ],
         "peakEra": "1960년대 투수 왕조: 에이스 삼각편대로 서부 지배, 2020년대 재건 성공",
-        "summary": "LA의 상징적 구단. 엔터테인먼트 수도답게 스타 선수 영입과 흥행에 강점.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 2위",
-            "national": "우승"
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 3위",
-            "national": "4강"
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 2위",
-            "national": "준우승"
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 2위",
-            "national": "우승"
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 2위",
-            "national": "준우승"
-          }
-        ],
         "nationalTitles": 7,
         "budget": 156800000000,
         "parentCompany": "퍼시픽 캐피털 파트너스",
@@ -13566,41 +12957,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "로스앤젤레스 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "로스앤젤레스 연고 ABL 팀. 제 색이 뚜렷하다. LA 선드래곤스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1963,
-        "rival": "",
         "titleYears": [],
         "peakEra": "로스앤젤레스 선드래곤스 팜 유망주 육성팀",
-        "summary": "LA 선드래곤스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1948,
         "titles": []
@@ -13633,43 +12995,14 @@
         "funding": "상",
         "difficulty": "중",
         "promoChance": "낮음",
-        "desc": "피닉스 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "피닉스 연고 ABL 팀. 제 색이 뚜렷하다. 사막 기후의 홈을 활용한 공격 야구. 꾸준한 포스트시즌 경쟁팀."
       },
       "history": {
         "founded": 1998,
-        "rival": "TEAM_ABL_MOUNTAINPEAKS_1",
         "titleYears": [
           2001
         ],
         "peakEra": "2001년 창단 4년 만의 우승: 풀스쿼드 야구의 승리로 ABL 최단기 신기록",
-        "summary": "사막 기후의 홈을 활용한 공격 야구. 꾸준한 포스트시즌 경쟁팀.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 10위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 10위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 8위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 8위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 9위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 1,
         "budget": 261900000000,
         "parentCompany": "선벨트 인베스트먼트",
@@ -13705,41 +13038,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "피닉스 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "피닉스 연고 ABL 팀. 제 색이 뚜렷하다. 피닉스 데저트서펀츠 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 2003,
-        "rival": "",
         "titleYears": [],
         "peakEra": "피닉스 데저트서펀츠 팜 유망주 육성팀",
-        "summary": "피닉스 데저트서펀츠 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1969,
         "titles": []
@@ -13772,41 +13076,12 @@
         "funding": "상",
         "difficulty": "중",
         "promoChance": "낮음",
-        "desc": "샌디에이고 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "샌디에이고 연고 ABL 팀. 제 색이 뚜렷하다. 서부 해안의 중견 구단. 아직 우승 없지만 꾸준한 중위권 경쟁력 보유."
       },
       "history": {
         "founded": 1969,
-        "rival": "TEAM_ABL_SUNDRAGONS_1",
         "titleYears": [],
         "peakEra": "2002년 포스트시즌 최고 진출: 준우승으로 첫 우승 문턱까지",
-        "summary": "서부 해안의 중견 구단. 아직 우승 없지만 꾸준한 중위권 경쟁력 보유.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 11위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 12위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 12위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 12위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 12위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "budget": 247800000000,
         "parentCompany": "라호야 홀딩스",
@@ -13842,41 +13117,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "샌디에이고 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "샌디에이고 연고 ABL 팀. 제 색이 뚜렷하다. 샌디에이고 코스털레이스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1974,
-        "rival": "",
         "titleYears": [],
         "peakEra": "샌디에이고 코스털레이스 팜 유망주 육성팀",
-        "summary": "샌디에이고 코스털레이스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1984,
         "titles": []
@@ -13909,47 +13155,18 @@
         "funding": "상",
         "difficulty": "상",
         "promoChance": "낮음",
-        "desc": "샌프란시스코 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "샌프란시스코 연고 ABL 팀. 제 색이 뚜렷하다. 베이 에어리어 대표팀. 투수 중심 야구와 수비 우선 전략의 명가."
       },
       "history": {
         "founded": 1958,
-        "rival": "TEAM_ABL_SUNDRAGONS_1",
         "titleYears": [
-          2010,
+          2008,
           2012,
           2014,
           2019,
           2020
         ],
         "peakEra": "2010년대 홀수해 왕조: 5년간 3회 우승의 독특한 격년 우승 패턴",
-        "summary": "베이 에어리어 대표팀. 투수 중심 야구와 수비 우선 전략의 명가.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 5위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 4위",
-            "national": "8강"
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 4위",
-            "national": "4강"
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 5위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 6위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 5,
         "budget": 233800000000,
         "parentCompany": "골든게이트 벤처스",
@@ -13985,41 +13202,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "샌프란시스코 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "샌프란시스코 연고 ABL 팀. 제 색이 뚜렷하다. 샌프란시스코 베이씰스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1963,
-        "rival": "",
         "titleYears": [],
         "peakEra": "샌프란시스코 베이씰스 팜 유망주 육성팀",
-        "summary": "샌프란시스코 베이씰스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1998,
         "titles": []
@@ -14052,11 +13240,10 @@
         "funding": "상",
         "difficulty": "상",
         "promoChance": "낮음",
-        "desc": "세인트루이스 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "세인트루이스 연고 ABL 팀. 제 색이 뚜렷하다. 중부 야구의 성지. 야구 문화가 일상에 녹아있는 진정한 야구 도시 팀."
       },
       "history": {
         "founded": 1900,
-        "rival": "TEAM_ABL_WINDBEARS_1",
         "titleYears": [
           1926,
           1931,
@@ -14067,38 +13254,10 @@
           1964,
           1967,
           1982,
-          2006,
-          2011
+          1993,
+          2006
         ],
         "peakEra": "내셔널 리그 최다 우승 구단: 100년 역사의 전통과 팬 사랑이 공존",
-        "summary": "중부 야구의 성지. 야구 문화가 일상에 녹아있는 진정한 야구 도시 팀.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 6위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 5위",
-            "national": "8강"
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 6위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 5위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 11,
         "budget": 140000000000,
         "parentCompany": "미시시피 브루잉",
@@ -14134,41 +13293,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "세인트루이스 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "세인트루이스 연고 ABL 팀. 제 색이 뚜렷하다. 세인트루이스 리버카디널스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1905,
-        "rival": "",
         "titleYears": [],
         "peakEra": "세인트루이스 리버카디널스 팜 유망주 육성팀",
-        "summary": "세인트루이스 리버카디널스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1921,
         "titles": []
@@ -14201,44 +13331,15 @@
         "funding": "상",
         "difficulty": "상",
         "promoChance": "낮음",
-        "desc": "애틀랜타 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "애틀랜타 연고 ABL 팀. 제 색이 뚜렷하다. 미국 남동부 대표팀. 90년대 전성기 후 2021년 우승으로 왕조 재건 선언."
       },
       "history": {
         "founded": 1966,
-        "rival": "TEAM_ABL_WAVERIDERS_1",
         "titleYears": [
-          1995,
-          2021
+          1994,
+          1995
         ],
         "peakEra": "1990년대 왕조 기반: 14년 연속 지구 우승이라는 전무후무한 기록",
-        "summary": "미국 남동부 대표팀. 90년대 전성기 후 2021년 우승으로 왕조 재건 선언.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "정규시즌 4위",
-            "national": "우승"
-          },
-          {
-            "year": 2022,
-            "regional": "정규시즌 3위",
-            "national": "4강"
-          },
-          {
-            "year": 2023,
-            "regional": "정규시즌 3위",
-            "national": "4강"
-          },
-          {
-            "year": 2024,
-            "regional": "정규시즌 4위",
-            "national": "8강"
-          },
-          {
-            "year": 2025,
-            "regional": "정규시즌 3위",
-            "national": "4강"
-          }
-        ],
         "nationalTitles": 2,
         "budget": 227500000000,
         "parentCompany": "서던 미디어 네트웍스",
@@ -14274,41 +13375,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "애틀랜타 연고 ABL 팀. 제 색이 뚜렷하다."
+        "desc": "애틀랜타 연고 ABL 팀. 제 색이 뚜렷하다. 애틀랜타 피치트리팰컨스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문."
       },
       "history": {
         "founded": 1971,
-        "rival": "",
         "titleYears": [],
         "peakEra": "애틀랜타 피치트리팰컨스 팜 유망주 육성팀",
-        "summary": "애틀랜타 피치트리팰컨스 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "마이너리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "마이너리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "마이너리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "마이너리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1927,
         "titles": []
@@ -14341,11 +13413,10 @@
         "funding": "최상",
         "difficulty": "최상",
         "promoChance": "낮음",
-        "desc": "도쿄 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "도쿄 연고 JBL 팀. 제 색이 뚜렷하다. JBL 최다 우승 구단이자 일본 야구의 상징. 도쿄 연고로 전국구 팬덤과 막강한 재력 보유."
       },
       "history": {
         "founded": 1934,
-        "rival": "TEAM_JBL_CL_TEMPOSTINGS_1",
         "titleYears": [
           1936,
           1943,
@@ -14368,37 +13439,9 @@
           2002,
           2004,
           2012,
-          2020
+          2021
         ],
         "peakEra": "1960년대 V9 왕조: 9년 연속 리그 우승으로 JBL 역사상 가장 위대한 팀 기록",
-        "summary": "JBL 최다 우승 구단이자 일본 야구의 상징. 도쿄 연고로 전국구 팬덤과 막강한 재력 보유.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "센트럴리그 1위",
-            "national": "우승"
-          },
-          {
-            "year": 2022,
-            "regional": "센트럴리그 2위",
-            "national": "준우승"
-          },
-          {
-            "year": 2023,
-            "regional": "센트럴리그 1위",
-            "national": "우승"
-          },
-          {
-            "year": 2024,
-            "regional": "센트럴리그 1위",
-            "national": "4강"
-          },
-          {
-            "year": 2025,
-            "regional": "센트럴리그 1위",
-            "national": "우승"
-          }
-        ],
         "nationalTitles": 22,
         "budget": 139300000000,
         "parentCompany": "토와 신문",
@@ -14434,41 +13477,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "도쿄 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "도쿄 연고 JBL 팀. 제 색이 뚜렷하다. 도쿄 네온 크레인즈 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문."
       },
       "history": {
         "founded": 1939,
-        "rival": "",
         "titleYears": [],
         "peakEra": "도쿄 2군 유망주 육성 팜팀",
-        "summary": "도쿄 네온 크레인즈 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "2군리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "2군리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "2군리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1962,
         "titles": []
@@ -14501,48 +13515,19 @@
         "funding": "최상",
         "difficulty": "최상",
         "promoChance": "낮음",
-        "desc": "오사카 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "오사카 연고 JBL 팀. 제 색이 뚜렷하다. 오사카를 본거지로 하는 열정적 구단. 크레인즈와의 라이벌전은 JBL 최대 흥행."
       },
       "history": {
         "founded": 1936,
-        "rival": "TEAM_JBL_CL_NEONCRANES_1",
         "titleYears": [
           1964,
           1985,
-          2005,
+          2006,
           2023,
           2024,
           2025
         ],
         "peakEra": "1985년의 광기: 오사카 전체가 들끓은 첫 우승, 2020년대 왕조 재건",
-        "summary": "오사카를 본거지로 하는 열정적 구단. 크레인즈와의 라이벌전은 JBL 최대 흥행.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "센트럴리그 3위",
-            "national": "4강"
-          },
-          {
-            "year": 2022,
-            "regional": "센트럴리그 1위",
-            "national": "우승"
-          },
-          {
-            "year": 2023,
-            "regional": "센트럴리그 2위",
-            "national": "우승"
-          },
-          {
-            "year": 2024,
-            "regional": "센트럴리그 2위",
-            "national": "우승"
-          },
-          {
-            "year": 2025,
-            "regional": "센트럴리그 2위",
-            "national": "우승"
-          }
-        ],
         "nationalTitles": 6,
         "budget": 98700000000,
         "parentCompany": "한요 전철",
@@ -14578,41 +13563,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "오사카 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "오사카 연고 JBL 팀. 제 색이 뚜렷하다. 오사카 템포 스팅스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문."
       },
       "history": {
         "founded": 1941,
-        "rival": "",
         "titleYears": [],
         "peakEra": "오사카 2군 유망주 육성 팜팀",
-        "summary": "오사카 템포 스팅스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "2군리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "2군리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "2군리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1998,
         "titles": []
@@ -14645,44 +13601,15 @@
         "funding": "상",
         "difficulty": "상",
         "promoChance": "낮음",
-        "desc": "나고야 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "나고야 연고 JBL 팀. 제 색이 뚜렷하다. 도카이 지역 대표팀. 안정적 운영과 꾸준한 중상위권 전력 유지."
       },
       "history": {
         "founded": 1936,
-        "rival": "TEAM_JBL_CL_TIDERAVES_1",
         "titleYears": [
           1954,
           2007
         ],
         "peakEra": "2007년 52년 만의 우승: 인내의 역사를 끝낸 나고야의 축제",
-        "summary": "도카이 지역 대표팀. 안정적 운영과 꾸준한 중상위권 전력 유지.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "센트럴리그 2위",
-            "national": "준우승"
-          },
-          {
-            "year": 2022,
-            "regional": "센트럴리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "센트럴리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "센트럴리그 3위",
-            "national": "4강"
-          },
-          {
-            "year": 2025,
-            "regional": "센트럴리그 3위",
-            "national": "4강"
-          }
-        ],
         "nationalTitles": 2,
         "budget": 124400000000,
         "parentCompany": "주부 신문",
@@ -14718,41 +13645,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "나고야 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "나고야 연고 JBL 팀. 제 색이 뚜렷하다. 나고야 아이언 드레이크스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문."
       },
       "history": {
         "founded": 1941,
-        "rival": "",
         "titleYears": [],
         "peakEra": "나고야 2군 유망주 육성 팜팀",
-        "summary": "나고야 아이언 드레이크스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "2군리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "2군리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "2군리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1953,
         "titles": []
@@ -14785,45 +13683,16 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "낮음",
-        "desc": "요코하마 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "요코하마 연고 JBL 팀. 제 색이 뚜렷하다. 항구 도시 요코하마 대표팀. 도쿄 인근 연고로 팬덤 경쟁이 치열."
       },
       "history": {
         "founded": 1950,
-        "rival": "TEAM_JBL_CL_IRONDRAKES_1",
         "titleYears": [
           1960,
           1998,
-          2017
+          2008
         ],
         "peakEra": "1998년 우승: 강력한 외국인 타선과 에이스로 오랜 설움 털어내기",
-        "summary": "항구 도시 요코하마 대표팀. 도쿄 인근 연고로 팬덤 경쟁이 치열.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "센트럴리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "센트럴리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "센트럴리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "센트럴리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "센트럴리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 3,
         "budget": 104300000000,
         "parentCompany": "미나토 디지털",
@@ -14859,41 +13728,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "요코하마 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "요코하마 연고 JBL 팀. 제 색이 뚜렷하다. 요코하마 타이드 레이브스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문."
       },
       "history": {
         "founded": 1955,
-        "rival": "",
         "titleYears": [],
         "peakEra": "요코하마 2군 유망주 육성 팜팀",
-        "summary": "요코하마 타이드 레이브스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "2군리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "2군리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "2군리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1978,
         "titles": []
@@ -14926,43 +13766,14 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "낮음",
-        "desc": "고베 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "고베 연고 JBL 팀. 제 색이 뚜렷하다. 한신 지역의 오랜 전통팀. 재건을 거쳐 중위권 경쟁력 회복 중."
       },
       "history": {
         "founded": 1936,
-        "rival": "TEAM_JBL_CL_TEMPOSTINGS_1",
         "titleYears": [
           1992
         ],
         "peakEra": "1992년 황금기: 고베 대지진 이전 마지막 황금 시대",
-        "summary": "한신 지역의 오랜 전통팀. 재건을 거쳐 중위권 경쟁력 회복 중.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "센트럴리그 6위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "센트럴리그 6위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "센트럴리그 6위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "센트럴리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "센트럴리그 5위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 1,
         "budget": 93100000000,
         "parentCompany": "롯코 캐피탈",
@@ -14998,41 +13809,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "고베 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "고베 연고 JBL 팀. 제 색이 뚜렷하다. 고베 실버 울브스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문."
       },
       "history": {
         "founded": 1941,
-        "rival": "",
         "titleYears": [],
         "peakEra": "고베 2군 유망주 육성 팜팀",
-        "summary": "고베 실버 울브스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "2군리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "2군리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "2군리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1975,
         "titles": []
@@ -15065,45 +13847,16 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "낮음",
-        "desc": "히로시마 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "히로시마 연고 JBL 팀. 제 색이 뚜렷하다. 히로시마의 열정적 연고팀. 자체 선수 육성 전통으로 유명한 서민적 구단."
       },
       "history": {
         "founded": 1950,
-        "rival": "TEAM_JBL_CL_SILVERWOLVES_1",
         "titleYears": [
           1975,
           1979,
-          2016
+          2013
         ],
-        "peakEra": "2016년 25년 만의 부활: 자체 육성 선수 중심의 리빌딩 성공 모델",
-        "summary": "히로시마의 열정적 연고팀. 자체 선수 육성 전통으로 유명한 서민적 구단.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "센트럴리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "센트럴리그 3위",
-            "national": "4강"
-          },
-          {
-            "year": 2023,
-            "regional": "센트럴리그 3위",
-            "national": "4강"
-          },
-          {
-            "year": 2024,
-            "regional": "센트럴리그 6위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "센트럴리그 6위",
-            "national": ""
-          }
-        ],
+        "peakEra": "2013년 34년 만의 부활: 자체 육성 선수 중심의 리빌딩 성공 모델",
         "nationalTitles": 3,
         "budget": 131900000000,
         "parentCompany": "세토 자동차",
@@ -15139,41 +13892,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "히로시마 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "히로시마 연고 JBL 팀. 제 색이 뚜렷하다. 히로시마 아이언 스톰즈 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문."
       },
       "history": {
         "founded": 1955,
-        "rival": "",
         "titleYears": [],
         "peakEra": "히로시마 2군 유망주 육성 팜팀",
-        "summary": "히로시마 아이언 스톰즈 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "2군리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "2군리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "2군리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1952,
         "titles": []
@@ -15206,14 +13930,13 @@
         "funding": "최상",
         "difficulty": "최상",
         "promoChance": "낮음",
-        "desc": "후쿠오카 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "후쿠오카 연고 JBL 팀. 제 색이 뚜렷하다. JBL 퍼시픽리그 최강 구단. 체계적 육성과 FA 운영의 롤모델."
       },
       "history": {
         "founded": 1938,
-        "rival": "TEAM_JBL_PL_POLARBEARS_1",
         "titleYears": [
           2003,
-          2011,
+          2009,
           2014,
           2015,
           2017,
@@ -15222,34 +13945,6 @@
           2020
         ],
         "peakEra": "2010년대 퍼시픽 지배: 7년간 5회 우승의 현대판 왕조",
-        "summary": "JBL 퍼시픽리그 최강 구단. 체계적 육성과 FA 운영의 롤모델.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "퍼시픽리그 2위",
-            "national": "준우승"
-          },
-          {
-            "year": 2022,
-            "regional": "퍼시픽리그 1위",
-            "national": "준우승"
-          },
-          {
-            "year": 2023,
-            "regional": "퍼시픽리그 1위",
-            "national": "4강"
-          },
-          {
-            "year": 2024,
-            "regional": "퍼시픽리그 2위",
-            "national": "준우승"
-          },
-          {
-            "year": 2025,
-            "regional": "퍼시픽리그 2위",
-            "national": "4강"
-          }
-        ],
         "nationalTitles": 8,
         "budget": 42500000000,
         "parentCompany": "큐슈 텔레콤",
@@ -15285,41 +13980,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "후쿠오카 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "후쿠오카 연고 JBL 팀. 제 색이 뚜렷하다. 후쿠오카 썬더 팰컨즈 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문."
       },
       "history": {
         "founded": 1943,
-        "rival": "",
         "titleYears": [],
         "peakEra": "후쿠오카 2군 유망주 육성 팜팀",
-        "summary": "후쿠오카 썬더 팰컨즈 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "2군리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "2군리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "2군리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1942,
         "titles": []
@@ -15352,44 +14018,15 @@
         "funding": "상",
         "difficulty": "상",
         "promoChance": "낮음",
-        "desc": "삿포로 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "삿포로 연고 JBL 팀. 제 색이 뚜렷하다. 홋카이도 첫 프로팀. 지역 밀착 운영의 성공 사례, 꾸준한 강팀 이미지."
       },
       "history": {
         "founded": 2004,
-        "rival": "TEAM_JBL_PL_THUNDERFALCONS_1",
         "titleYears": [
           2016,
           2022
         ],
         "peakEra": "2016년 창단 12년 만의 첫 우승: 홋카이도 전체가 하나로 뭉친 역사",
-        "summary": "홋카이도 첫 프로팀. 지역 밀착 운영의 성공 사례, 꾸준한 강팀 이미지.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "퍼시픽리그 1위",
-            "national": "4강"
-          },
-          {
-            "year": 2022,
-            "regional": "퍼시픽리그 2위",
-            "national": "우승"
-          },
-          {
-            "year": 2023,
-            "regional": "퍼시픽리그 2위",
-            "national": "준우승"
-          },
-          {
-            "year": 2024,
-            "regional": "퍼시픽리그 1위",
-            "national": "4강"
-          },
-          {
-            "year": 2025,
-            "regional": "퍼시픽리그 1위",
-            "national": "준우승"
-          }
-        ],
         "nationalTitles": 2,
         "budget": 115500000000,
         "parentCompany": "홋카이 식품",
@@ -15425,41 +14062,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "삿포로 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "삿포로 연고 JBL 팀. 제 색이 뚜렷하다. 삿포로 폴라 베어스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문."
       },
       "history": {
         "founded": 2009,
-        "rival": "",
         "titleYears": [],
         "peakEra": "삿포로 2군 유망주 육성 팜팀",
-        "summary": "삿포로 폴라 베어스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "2군리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "2군리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "2군리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1986,
         "titles": []
@@ -15492,43 +14100,14 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "낮음",
-        "desc": "센다이 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "센다이 연고 JBL 팀. 제 색이 뚜렷하다. 도호쿠 지역의 희망. 대지진 이후 우승으로 지역 부흥의 상징이 된 팀."
       },
       "history": {
         "founded": 2005,
-        "rival": "TEAM_JBL_PL_SEAGULLS_1",
         "titleYears": [
           2011
         ],
         "peakEra": "2011년 동일본 대지진 속 우승: 도호쿠 지역에 희망을 전한 역사적 우승",
-        "summary": "도호쿠 지역의 희망. 대지진 이후 우승으로 지역 부흥의 상징이 된 팀.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "퍼시픽리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "퍼시픽리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "퍼시픽리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "퍼시픽리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "퍼시픽리그 3위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 1,
         "budget": 79000000000,
         "parentCompany": "도호쿠 커머스",
@@ -15564,41 +14143,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "센다이 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "센다이 연고 JBL 팀. 제 색이 뚜렷하다. 센다이 스피릿 버팔로스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문."
       },
       "history": {
         "founded": 2010,
-        "rival": "",
         "titleYears": [],
         "peakEra": "센다이 2군 유망주 육성 팜팀",
-        "summary": "센다이 스피릿 버팔로스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "2군리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "2군리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "2군리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1999,
         "titles": []
@@ -15631,44 +14181,15 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "낮음",
-        "desc": "나가사키 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "나가사키 연고 JBL 팀. 제 색이 뚜렷하다. 규슈 남서부 연고팀. 전통 있는 투수 운영과 수비 야구의 대명사."
       },
       "history": {
         "founded": 1950,
-        "rival": "TEAM_JBL_PL_THUNDERFALCONS_1",
         "titleYears": [
           2005,
           2010
         ],
         "peakEra": "2010년대 초 규슈 더비 연패: 후쿠오카와의 라이벌전을 압도한 전성기",
-        "summary": "규슈 남서부 연고팀. 전통 있는 투수 운영과 수비 야구의 대명사.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "퍼시픽리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "퍼시픽리그 3위",
-            "national": "4강"
-          },
-          {
-            "year": 2023,
-            "regional": "퍼시픽리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "퍼시픽리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "퍼시픽리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 2,
         "budget": 109900000000,
         "parentCompany": "히노데 제과",
@@ -15704,41 +14225,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "나가사키 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "나가사키 연고 JBL 팀. 제 색이 뚜렷하다. 나가사키 마린 솔저스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문."
       },
       "history": {
         "founded": 1955,
-        "rival": "",
         "titleYears": [],
         "peakEra": "나가사키 2군 유망주 육성 팜팀",
-        "summary": "나가사키 마린 솔저스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "2군리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "2군리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "2군리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1978,
         "titles": []
@@ -15771,41 +14263,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "낮음",
-        "desc": "니가타 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "니가타 연고 JBL 팀. 제 색이 뚜렷하다. 일본해 연안의 소도시팀. 재정 제약에도 지역 팬 지지를 바탕으로 분투."
       },
       "history": {
         "founded": 2009,
-        "rival": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
         "titleYears": [],
         "peakEra": "2018년 첫 CS 진출: 창단 이래 가장 높은 곳까지 올라간 기록",
-        "summary": "일본해 연안의 소도시팀. 재정 제약에도 지역 팬 지지를 바탕으로 분투.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "퍼시픽리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "퍼시픽리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "퍼시픽리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "퍼시픽리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "퍼시픽리그 5위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "budget": 74500000000,
         "parentCompany": "시라유키 유업",
@@ -15841,41 +14304,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "니가타 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "니가타 연고 JBL 팀. 제 색이 뚜렷하다. 니가타 씨걸스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문."
       },
       "history": {
         "founded": 2014,
-        "rival": "",
         "titleYears": [],
         "peakEra": "니가타 2군 유망주 육성 팜팀",
-        "summary": "니가타 씨걸스 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "2군리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "2군리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "2군리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1975,
         "titles": []
@@ -15908,41 +14342,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "낮음",
-        "desc": "오키나와 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "오키나와 연고 JBL 팀. 제 색이 뚜렷하다. 오키나와 첫 프로팀. 봄 훈련 명소로서의 위상과 함께 팀도 성장 중."
       },
       "history": {
         "founded": 2011,
-        "rival": "TEAM_JBL_PL_MARINESOLDIERS_1",
         "titleYears": [],
         "peakEra": "2019년 첫 퍼시픽리그 3위: 신생팀으로서의 빠른 성장세",
-        "summary": "오키나와 첫 프로팀. 봄 훈련 명소로서의 위상과 함께 팀도 성장 중.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "퍼시픽리그 6위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "퍼시픽리그 6위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "퍼시픽리그 6위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "퍼시픽리그 6위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "퍼시픽리그 6위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "budget": 83400000000,
         "parentCompany": "난세이 철도",
@@ -15978,41 +14383,12 @@
         "funding": "중",
         "difficulty": "중",
         "promoChance": "높음",
-        "desc": "오키나와 연고 JBL 팀. 제 색이 뚜렷하다."
+        "desc": "오키나와 연고 JBL 팀. 제 색이 뚜렷하다. 오키나와 선즈 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문."
       },
       "history": {
         "founded": 2016,
-        "rival": "",
         "titleYears": [],
         "peakEra": "오키나와 2군 유망주 육성 팜팀",
-        "summary": "오키나와 선즈 1군 산하 2군팀. 1군 콜업을 목표로 하는 유망주 등용문.",
-        "recentRecords": [
-          {
-            "year": 2021,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2022,
-            "regional": "2군리그 4위",
-            "national": ""
-          },
-          {
-            "year": 2023,
-            "regional": "2군리그 5위",
-            "national": ""
-          },
-          {
-            "year": 2024,
-            "regional": "2군리그 3위",
-            "national": ""
-          },
-          {
-            "year": 2025,
-            "regional": "2군리그 4위",
-            "national": ""
-          }
-        ],
         "nationalTitles": 0,
         "foundedYear": 1936,
         "titles": []

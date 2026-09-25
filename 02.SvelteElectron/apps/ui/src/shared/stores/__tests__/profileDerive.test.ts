@@ -224,6 +224,8 @@ describe("연혁 → prestige", () => {
       history?: {
         budget?: number;
         foundedYear?: number;
+        /** 해외 28팀만 들고 있는 둘째 창단 칸 — 연혁이 맞물리는 쪽이다(§8-4) */
+        founded?: number;
         titleYears?: number[];
         nationalTitles?: number;
         peakEra?: string;
@@ -403,8 +405,10 @@ describe("연혁 → prestige", () => {
   /**
    * 🔴 국내 연혁의 **데이터 제약** — `prestige` 식은 길이만 보므로 여기서만 잡힌다.
    *   한 해에 우승 팀은 하나고, 창단 전에는 못 이기고, `titles`(최근 5시즌)에
-   *   적힌 우승은 `titleYears` 에도 있어야 한다. 해외 28팀은 이 제약을 안 지켜
-   *   KBL 만 본다(`PLAN_OVERSEAS_CLUBS_2026-09-22.md` §8-4).
+   *   적힌 우승은 `titleYears` 에도 있어야 한다.
+   *
+   * ⚠ 국내만 보는 항은 **빈 해 없음**과 **`titles` 조인** 둘이다. 겹침·창단은
+   *   해외 두 리그도 아래에서 같이 본다(2026-09-26 · §8-4).
    */
   it("KBL 우승 연도는 겹치지 않고 창단 뒤이며 최근 5시즌과 맞는다", () => {
     const list = refs.teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1"));
@@ -448,5 +452,78 @@ describe("연혁 → prestige", () => {
       }
     }
     expect(checked, "최근 5시즌 우승이 하나도 안 잡혔다 — 잣대가 틀렸다").toBeGreaterThan(0);
+  });
+
+  /**
+   * 🔴 **같은 제약을 해외 두 리그에도 건다** (2026-09-26 · 사용자 확정 ·
+   *   §8-4). 전에는 이 자리에 "해외 28팀은 이 제약을 안 지켜 KBL 만 본다"고
+   *   적혀 있었다 — 안 지키는 것이 데이터 결함이었고, 겹침 15건을 정리했다.
+   *   **횟수는 한 팀도 안 바꿨다**(아래 파생 불변 검사가 그걸 못 박는다).
+   *
+   * ⚠ 창단의 기준은 `founded ?? foundedYear` 다. 해외 28팀은 창단 칸을 둘
+   *   들고 있고, `titleYears`·`peakEra` 가 맞물리는 쪽은 **`founded`** 다
+   *   (실측 2026-09-26: `founded` 기준 창단 전 우승 0건 · `foundedYear` 기준
+   *   23팀 위반). 한 칸으로 합치는 것은 화면에 뜨는 값이 바뀌어 사용자 결정
+   *   대기다 — 합쳐지면 `founded` 가 없어지고 이 식은 그대로 돈다.
+   * ⚠ 해외는 **빈 해가 남는다**(ABL 70회 · JBL 50회로 해 수보다 적다).
+   *   국내처럼 "매해 하나"를 걸지 않는다.
+   * ⚠ `nationalTitles` 는 길이와 **같거나 크다** — EMPIRE 만 11 vs 27 이다
+   *   (옛 우승에 해가 안 적혔다).
+   */
+  it("해외 두 리그도 한 해 한 팀이고 창단 뒤다", () => {
+    for (const [lg, n] of [
+      ["LEAGUE_ABL", 16],
+      ["LEAGUE_JBL", 12],
+    ] as const) {
+      const list = refs.teams.filter((t) => t.leagueId === lg && t.id.endsWith("_1"));
+      expect(list.length, lg).toBe(n);
+      const owner = new Map<number, string>();
+      let count = 0;
+      for (const t of list) {
+        const h = t.history!;
+        expect(h.titleYears, `${t.id} titleYears 없음`).toBeDefined();
+        expect(h.nationalTitles, `${t.id} nationalTitles 가 길이보다 작다`).toBeGreaterThanOrEqual(
+          h.titleYears!.length,
+        );
+        const born = h.founded ?? h.foundedYear!;
+        for (const y of h.titleYears!) {
+          expect(
+            owner.get(y),
+            `${lg} ${y}년 우승이 둘이다 (${owner.get(y)} · ${t.id})`,
+          ).toBeUndefined();
+          owner.set(y, t.id);
+          count++;
+          expect(y, `${t.id} 창단(${born}) 전 우승`).toBeGreaterThanOrEqual(born);
+          expect(y, `${t.id} 아직 안 온 해 우승`).toBeLessThanOrEqual(2025);
+        }
+      }
+      expect(owner.size, `${lg} 우승 해가 횟수보다 적다 — 겹친다`).toBe(count);
+    }
+  });
+
+  /**
+   * 🔴 **우승 해를 옮겨도 파생값이 한 칸도 안 움직인다.** `prestige` 는
+   *   `titleYears` 의 **길이**만 본다 — 09-26 에 해외 15팀의 우승 해를
+   *   옮기면서 횟수를 그대로 둔 근거가 이것이고, 여기서 못 박는다.
+   *   값(우승 횟수·위신 숫자)을 검사에 베끼지 않는다 — 베끼면 정본이 둘이 된다.
+   */
+  it("우승 해를 다 바꿔도 프로 38팀 파생값이 그대로다", () => {
+    for (const lg of ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]) {
+      const list = refs.teams.filter((t) => t.leagueId === lg && t.id.endsWith("_1"));
+      const avg = list.reduce((a, t) => a + (t.history?.budget ?? 0), 0) / list.length;
+      for (const t of list) {
+        const idx = (t.history?.budget ?? 0) / avg;
+        const real = deriveProfileFromBudgetIndex(idx, t.traits, t.history);
+        const moved = deriveProfileFromBudgetIndex(idx, t.traits, {
+          budget: t.history?.budget,
+          foundedYear: t.history?.foundedYear,
+          nationalTitles: t.history?.nationalTitles,
+          peakEra: t.history?.peakEra,
+          titles: t.history?.titles,
+          titleYears: (t.history?.titleYears ?? []).map((_, i) => 1900 + i),
+        });
+        expect(moved, `${t.id}`).toEqual(real);
+      }
+    }
   });
 });

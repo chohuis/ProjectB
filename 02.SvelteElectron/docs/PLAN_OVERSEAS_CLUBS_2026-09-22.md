@@ -338,15 +338,15 @@ KBL 은 한 칸도 안 움직였다. 그 셋을 채운다.
 | 칸 | KBL 10 | ABL 16 | JBL 12 | 누가 읽나 |
 |---|:--:|:--:|:--:|---|
 | `foundedYear` | **O** | O | O | 타입에 있다 · 화면은 `test:teamhistory` 가 막는다 |
-| `founded` | X | **O** | **O** | 🔴 **아무도 안 읽는다** — 타입에도 없다. 아래 8-4 |
+| `founded` | X | **O** | **O** | 🔴 코드는 안 읽는다 — 그런데 `titleYears`·`peakEra` 가 이쪽에 맞물린다. 8-4 ② |
 | `budget` | O | O | O | `profilesFromMaster` 예산 지수 |
 | `parentCompany` | O | O | O | 모기업 이름 |
 | `seasonRanks` | **O**(5칸) | X | X | 첫 시즌 대회 시드 |
 | `titles` | **O**(0~4칸) | O(**전부 빈 배열**) | O(**전부 빈 배열**) | 최근 5시즌 기록 |
 | `rivals` | **O**(배열 · `with`+`desc`) | X | X | — |
-| `rival` | X | **O**(문자열 하나) | **O** | 🔴 아무도 안 읽는다 |
-| `recentRecords` | X | **O**(5칸) | **O**(5칸) | 🔴 아무도 안 읽는다 · 타입에도 없다 |
-| `summary` | X | **O** | **O** | 🔴 아무도 안 읽는다 |
+| `rival` | X | ~~O~~ | ~~O~~ | 🔴 아무도 안 읽는다 → **09-26 삭제**(8-4 ②) |
+| `recentRecords` | X | ~~O~~ | ~~O~~ | 🔴 아무도 안 읽는다 → **09-26 삭제**(8-4 ②) |
+| `summary` | X | ~~O~~ | ~~O~~ | 🔴 아무도 안 읽는다 → **09-26 문안을 `profile.desc` 로 옮기고 삭제** |
 | **`titleYears`** | **X → 채운다** | O | O | **`prestige`** |
 | **`nationalTitles`** | **X → 채운다** | O | O | **`prestige`** |
 | **`peakEra`** | **X → 채운다** | O | O | **`prestige`** |
@@ -382,7 +382,7 @@ KBL 은 한 칸도 안 움직였다. 그 셋을 채운다.
 
 1. **한 해에 우승 팀은 하나.** 리그 최초 창단(ROYALS 1982)부터 직전 시즌
    (2025 · `BASE_SEASON_YEAR` 2026 의 S-1)까지 **44년에 44회**, 빈 해 없이
-   정확히 하나씩. 해외 데이터는 이 제약을 안 지킨다(8-4).
+   정확히 하나씩. 해외는 빈 해가 남지만 겹침 0 이다(8-4 ① · 09-26 정리).
 2. **창단 전에는 못 이긴다.** 팀마다 첫 우승이 `foundedYear` 이후다.
 3. **최근 5시즌과 어긋나지 않는다.** `titles` 에 적힌 우승 다섯
    (ROYALS 2021·2022·2025 · GUARDIANS 2023·2024)이 `titleYears` 에 그대로 있다.
@@ -406,20 +406,107 @@ KBL 은 한 칸도 안 움직였다. 그 셋을 채운다.
 창단 n년차 같은 「그 팀을 한 문장으로 말하는 해」다. 대전 팬텀스는 우승이 0 이라
 식이 `peakEra` 가산을 **안 준다**(해외 COASTALRAYS·SEAGULLS·SUNS 와 같은 자리).
 
-### 8-4. 해외 데이터의 어긋남 둘 — 여기서는 안 따라 했다
+### 8-4. 해외 데이터의 어긋남 둘 — **2026-09-26 에 정리했다**
 
-**① `founded` ≠ `foundedYear`.** 해외 28팀이 두 칸을 다 들고 있는데
-**28팀 전부 값이 다르다**(EMPIRE 1925 vs 1916 · HARBORHAWKS 1901 vs 1990 ·
-SUNS 2011 vs 1936). 타입(`TeamHistory`)에 있는 것은 `foundedYear` 하나다.
-국내는 `foundedYear` 만 두었다.
+> 09-25 에는 「여기서는 안 따라 했다」였다. 사용자 확정(09-26)으로 고쳤다.
+> **밸런스는 한 칸도 안 움직였다** — 우승 **횟수**·★·예산을 안 건드렸고,
+> 프로 38팀 `prestige` 파생값이 **전후 전부 같다**(기계 대조 38/38 · ③).
 
-**② 해외 `titleYears` 는 같은 해에 두 팀이 우승한다.** ABL 에서 LONESTARS
-2023·2024·2025 와 EMPIRE 의 `recentRecords` 2021·2023·2025 「우승」이 겹치고,
-BAYSEALS 2020 과 SUNDRAGONS 2020 이 겹친다. `prestige` 식은 **길이만** 보므로
-지금 값에는 영향이 없다. 국내는 처음부터 안 겹치게 넣었다.
+#### ① 같은 해에 두 팀이 우승 — **15건 → 0건**
 
-**둘 다 고치지 않았다** — 해외 값을 건드리는 것은 이 몫의 범위 밖이고,
-`titleYears` 길이를 바꾸면 `prestige` 가 같이 움직인다(밸런스 동결).
+`leagueId` 는 리그마다 하나다(`LEAGUE_ABL` 16팀 · `LEAGUE_JBL` 12팀). JBL 의
+`CL`/`PL` 은 **팀 ID 안의 글자일 뿐**이고 리그 칸은 `LEAGUE_JBL` 하나다
+(실측 `refs.json` · 순위표·시드도 하나로 돈다) — 그래서 **한 해 한 팀**이라는
+국내 잣대를 그대로 쓴다.
+
+**횟수는 팀마다 그대로 두고 겹치는 해만 빈 해로 옮겼다.** `prestige` 식은
+`titleYears` 의 **길이**만 보므로(`game.ts` `historyPrestigeShare`) 옮겨도 값이
+안 움직인다. 옮긴 해는 전부 원래 빈 해였고, 서로 새로 겹치지 않는다.
+
+| 리그 | 팀 | 전 → 후 | 왜 그쪽이 옮겼나 · 왜 그 해인가 |
+|---|---|---|---|
+| ABL | HARBORHAWKS | 1916 → **1917** | 겹친 WINDBEARS 쪽이 「1900년대 초 3연패」다. 1918 에 붙어 「1918 까지 왕조 → 2004 저주 종식」이 남는다 |
+| ABL | MOTORWOLVES | 1945 → **1947** | 상대는 같은 WINDBEARS. 최근접 빈 해이고 `foundedYear` 1947 위반도 하나 줄었다 |
+| ABL | RAINARROWS | 2001 → **2002** | 상대 DESERTSERPENTS 의 「창단 4년 만의 우승」은 창단 1998 과 산수가 맞아 못 옮긴다. 이쪽 `peakEra` 연도만 2001→2002 로 같이 고쳤다 |
+| ABL | HARBORHAWKS | 2007 → **2005** | 상대 MOUNTAINPEAKS 는 「2007년 고원의 기적」이다. 2004·2005 연패가 되어 「두 번의 우승으로 왕조 재건」이 더 맞는다 |
+| ABL | BAYSEALS | 2010 → **2008** | 상대 LONESTARS 는 「2010년대 초 연패」(2010·2011)라 못 쪼갠다 |
+| ABL | RIVERCARDINALS | 2011 → **1993** | 같은 이유. 이 팀 `peakEra` 는 연도를 안 적는다(「100년 역사」) |
+| ABL | SPACECOMETS | 2019 → **2015** | 상대 BAYSEALS 는 「2010년대 … 격년」 쪽이다. 「2017년 허리케인」은 그대로 |
+| ABL | SUNDRAGONS | 2020 → **1962** | 상대는 BAYSEALS. 「1960년대 투수 왕조」가 1959·1962·1963·1965·1966 으로 촘촘해지고 「2020년대 재건」은 2021 이 남아 성립한다 |
+| ABL | SUNDRAGONS | 2024 → **1966** | 상대 LONESTARS 는 2023·2024·2025 3연패다 |
+| ABL | PEACHTREEFALCONS | 2021 → **1994** | 상대 SUNDRAGONS 쪽을 남겼다. 1995 에 붙어 「1990년대 왕조 기반」이 더 맞는다 |
+| JBL | TEMPOSTINGS | 2005 → **2006** | 상대 MARINESOLDIERS 의 2005·2010 을 남겼다. 최근접 빈 해 |
+| JBL | THUNDERFALCONS | 2011 → **2009** | 상대 SPIRITBUFFALOS 의 2011 은 「동일본 대지진 속 우승」으로 해가 못 움직인다 |
+| JBL | IRONSTORMS | 2016 → **2013** | 상대 POLARBEARS 의 「창단 12년 만」은 창단 2004 와 산수가 맞는다. 이쪽 `peakEra` 는 원래 숫자가 틀려 있었고(1979→2016 은 37년인데 「25년 만」) **2013 = 34년**으로 같이 고쳤다 |
+| JBL | TIDERAVES | 2017 → **2008** | 상대 THUNDERFALCONS 는 「2010년대 퍼시픽 지배」다. 「1998년 우승」은 그대로 |
+| JBL | NEONCRANES | 2020 → **2021** | 같은 이유. 22회 중 하나이고 이 팀 `peakEra` 는 1960년대다 |
+
+우승 횟수 합은 그대로다 — ABL **70회** · JBL **50회**. 빈 해는 남는다(ABL 110해
+중 70 · JBL 90해 중 50) — 해외는 「매해 하나」를 걸지 않는다.
+
+#### ② 읽는 데가 0 인 칸 — **셋 삭제 · 넷째는 보류**
+
+전수 재확인(`apps/**` · `scripts/**` · `packages/**`(Rust 포함) · 검사):
+
+| 칸 | 읽는 곳 | 한 일 |
+|---|--:|---|
+| `rival`(단수) | **0** — 화면이 읽는 것은 `rivals`(복수)다 | 56팀에서 삭제(2군은 값이 `""` 였다) |
+| `recentRecords` | **0** — 타입에도 없다 | 56팀에서 삭제 |
+| `summary` | **0** | **문안을 `profile.desc` 로 옮기고** 칸을 삭제 |
+| `founded` | **0**(코드) | 🔴 **안 지웠다 — 사용자 결정 대기**(아래) |
+
+지운 칸 **168개**(56팀 × 셋). `recentRecords` 가 없어지면서 §8-4 가 09-25 에
+적은 「EMPIRE `recentRecords` 2021·2023·2025 우승이 LONESTARS 와 겹친다」도
+같이 사라진다 — 읽는 데가 없는 표였다.
+
+`summary` → `profile.desc`: 해외 `desc` 는 「뉴욕 연고 ABL 팀. 제 색이 뚜렷하다.」
+같은 틀 문장 하나였고 `summary` 의 말이 거기 없었다. `desc` 는 화면 둘이 읽는다
+(`TeamDetailModal` · `NewGamePage`). 그래서 **한 줄로 이어 붙였다** — 정본이
+하나가 되고 문안은 살아난다. `peakEra` 로 옮기지 않았다(그쪽은 `prestige` 가
+읽는 칸이라 뜻이 다르다). 1군·2군 `desc` 가 똑같던 것도 이때 갈렸다 — 2군은
+「… 산하 마이너팀. 메이저 콜업을 목표로 하는 유망주들의 등용문.」이 붙는다.
+
+#### 🔴 `founded` 는 안 지웠다 — 창단 칸을 합칠지가 사용자 결정이다
+
+지우려고 재 보니 **죽은 칸이 아니었다.** 해외 `titleYears`·`peakEra` 가
+맞물리는 쪽이 `founded` 다:
+
+| 잣대 | 창단 전 우승이 있는 팀 |
+|---|--:|
+| `founded` 기준 | **0팀** |
+| `foundedYear` 기준 | **23팀** (ABL 11 · JBL 12) |
+
+`peakEra` 산수도 `founded` 와 맞는다 — POLARBEARS 「2016년 창단 12년 만」은
+`founded` 2004(+12)고 `foundedYear` 는 1986 이다. DESERTSERPENTS 「창단 4년 만」
+은 1998, `foundedYear` 1969. WAVERIDERS 「창단 5년차」는 1993, `foundedYear`
+1974. SUNS 는 「신생팀」인데 `founded` 2011 · `foundedYear` 1936 이다.
+
+즉 Phase 5-1 에서 다시 만들어진 쪽이 `foundedYear` 고, `founded` 를 지우면
+**화면에 뜨는 창단 연도가 연혁·전성기 문구와 영구히 어긋난다.** 그래서 지우지
+않고 보고한다.
+
+**제안(확정 필요)**: `foundedYear` ← `founded` 로 **값을 옮기고** `founded` 를
+지운다 → 창단 칸 하나 · 창단 전 우승 0 · 문구와 맞는다. 막는 것 하나:
+`clubData.test.ts` 가 전 팀에 `foundedYear > 1900` 을 걸고 있고 WINDBEARS ·
+RIVERCARDINALS 의 `founded` 가 **1900** 이다(그 파일은 이 몫의 손댈 목록 밖).
+확정되면 그 한 줄을 `>= 1900` 으로 풀거나 두 팀만 1901 로 둔다.
+검사는 지금 창단을 `founded ?? foundedYear` 로 본다 — 합쳐지면 `founded` 가
+없어지고 식은 그대로 돈다(죽은 갈래가 안 남는다).
+
+#### ③ 검사 — 고치기 전 빨강 · 뒤 초록
+
+| 파일 | 넣은 것 | 고치기 전 |
+|---|---|---|
+| `profileDerive.test.ts` | 「해외 두 리그도 한 해 한 팀이고 창단 뒤다」 — 겹침 0 · 창단(`founded ?? foundedYear`) 뒤 · 2025 이하 · `nationalTitles ≥ 길이` | **빨강**(`LEAGUE_ABL 1916년 우승이 둘이다`) |
+| `profileDerive.test.ts` | 「우승 해를 다 바꿔도 프로 38팀 파생값이 그대로다」 — `titleYears` 를 같은 **길이**의 딴 연도로 바꿔 넣고 12항목 전부 대조 | 초록(구조상 참 · 이번 변경의 **근거**를 못 박는 자리다) |
+| `test-team-history.cjs` | 해외 56팀에 죽은 칸 넷(`proPlayers`·`recentRecords`·`summary`·`rival`) 0 · `profile.desc` 30자 초과 | **빨강**(죽은 칸 168개) |
+
+⚠ 값(우승 횟수·`prestige` 숫자)은 검사에 안 베꼈다 — 베끼면 정본이 둘이 된다.
+대신 **연도를 바꿔도 파생이 안 움직인다**를 구조로 못 박았다.
+
+돌린 것: `test:teamhistory` ALL PASS · `check:teamrefs` ok · `check:events` ok ·
+refs.json 을 읽는 vitest **17파일 184검사 초록** · `npx tsc --noEmit` 0 ·
+`npm run lint` 오류 0 · 손댄 두 파일 `prettier --check` 통과.
 
 ### 8-5. 위신 전 → 후 (기계 계산 · `prestige` 내림차순)
 
