@@ -204,3 +204,156 @@ describe("성향 → 구단 기질", () => {
     ).toBeGreaterThan(70);
   });
 });
+
+/**
+ * 연혁 → `prestige` 한 칸 (2026-09-25 · 제안값 · `BALANCE_BACKLOG`
+ * 「연혁이 `prestige` 에 안 들어간다」).
+ *
+ * 🔴 파생은 **지금 예산**만 봤다. 그래서 「몰락한 명문」이 무명 팀 아래로
+ *   내려갔다 — HARBORHAWKS 는 우승 9회인데 45 로, 우승 2회인
+ *   LAKESPIRITS(48) 아래였다.
+ */
+describe("연혁 → prestige", () => {
+  const ROOT = resolve(__dirname, "../../../../../..");
+  const refs = JSON.parse(
+    readFileSync(resolve(ROOT, "resource/data/master/entities/refs.json"), "utf8"),
+  ) as {
+    teams: {
+      leagueId: string;
+      id: string;
+      history?: {
+        budget?: number;
+        titleYears?: number[];
+        nationalTitles?: number;
+        peakEra?: string;
+      };
+      traits?: { philosophy?: string; resource?: string };
+    }[];
+  };
+
+  /** 그 리그 1군의 파생 성향 — 연혁을 넘기거나(`on`) 안 넘기거나(`off`) */
+  function leagueProfiles(leagueId: string, on: boolean) {
+    const list = refs.teams.filter((t) => t.leagueId === leagueId && t.id.endsWith("_1"));
+    const avg = list.reduce((a, t) => a + (t.history?.budget ?? 0), 0) / list.length;
+    return new Map(
+      list.map((t) => [
+        t.id,
+        deriveProfileFromBudgetIndex(
+          (t.history?.budget ?? 0) / avg,
+          t.traits,
+          on ? t.history : undefined,
+        ),
+      ]),
+    );
+  }
+
+  it("연혁을 안 넘기면 예전 그대로다 — 대조군", () => {
+    for (const idx of [0.5, 1.0, 1.5]) {
+      expect(deriveProfileFromBudgetIndex(idx).prestige).toBe(
+        Math.round(Math.max(5, Math.min(95, 50 + (idx - 1) * 40))),
+      );
+    }
+  });
+
+  it("🔴 열한 항목은 연혁에 한 칸도 안 움직인다 — 대조군", () => {
+    const hist = { titleYears: [1927, 1936, 1939], nationalTitles: 27, peakEra: "왕조" };
+    const plain = deriveProfileFromBudgetIndex(0.8, { philosophy: "전통/정통" });
+    const withHist = deriveProfileFromBudgetIndex(0.8, { philosophy: "전통/정통" }, hist);
+    for (const [k, v] of Object.entries(plain)) {
+      if (k === "prestige") continue;
+      expect(withHist[k as keyof typeof withHist], k).toBe(v);
+    }
+    expect(withHist.prestige).toBeGreaterThan(plain.prestige);
+  });
+
+  it("우승이 0 이면 가산도 정확히 0 이다 — 전성기 문구만으로는 안 오른다", () => {
+    const only = deriveProfileFromBudgetIndex(1.2, undefined, {
+      titleYears: [],
+      nationalTitles: 0,
+      peakEra: "첫 포스트시즌 진출",
+    });
+    expect(only.prestige).toBe(deriveProfileFromBudgetIndex(1.2).prestige);
+  });
+
+  it("우승이 많을수록 더 오른다 — 뒤집히면 이름값이 뜻을 잃는다", () => {
+    const at = (n: number) =>
+      deriveProfileFromBudgetIndex(0.8, undefined, { titleYears: [], nationalTitles: n }).prestige;
+    expect(at(9)).toBeGreaterThan(at(2));
+    expect(at(2)).toBeGreaterThan(at(0));
+  });
+
+  /**
+   * 🔴 **이게 이 변경의 목적이다.** 「몰락한 명문」 넷이 우승 0 인 팀
+   *   아래에 있지 않아야 한다. 잣대는 "같은 예산의 무명 팀" — 같은 지수로
+   *   연혁만 뺀 값이다.
+   */
+  it("몰락한 명문 넷이 같은 예산의 무명 팀 위로 온다", () => {
+    const abl = leagueProfiles("LEAGUE_ABL", true);
+    const ablOff = leagueProfiles("LEAGUE_ABL", false);
+    const jbl = leagueProfiles("LEAGUE_JBL", true);
+    const jblOff = leagueProfiles("LEAGUE_JBL", false);
+    for (const [id, on, off] of [
+      ["TEAM_ABL_WINDBEARS_1", abl, ablOff],
+      ["TEAM_ABL_SUNDRAGONS_1", abl, ablOff],
+      ["TEAM_ABL_HARBORHAWKS_1", abl, ablOff],
+      ["TEAM_JBL_PL_THUNDERFALCONS_1", jbl, jblOff],
+    ] as const) {
+      expect(on.get(id)!.prestige, `${id} 가 같은 예산의 무명 팀 위`).toBeGreaterThan(
+        off.get(id)!.prestige,
+      );
+    }
+    // 실제로 앞질러야 할 상대 — 전에는 밑에 있었다
+    expect(abl.get("TEAM_ABL_HARBORHAWKS_1")!.prestige).toBeGreaterThan(
+      abl.get("TEAM_ABL_LAKESPIRITS_1")!.prestige,
+    );
+    expect(ablOff.get("TEAM_ABL_HARBORHAWKS_1")!.prestige).toBeLessThan(
+      ablOff.get("TEAM_ABL_LAKESPIRITS_1")!.prestige,
+    );
+    // JBL — 예산이 75% 더 많은 무관 팀을 넘는다
+    expect(jbl.get("TEAM_JBL_PL_THUNDERFALCONS_1")!.prestige).toBeGreaterThan(
+      jbl.get("TEAM_JBL_PL_SEAGULLS_1")!.prestige,
+    );
+  });
+
+  it("부자 명문을 아무도 안 넘는다 — 리그 최고는 그대로다", () => {
+    for (const [lg, top] of [
+      ["LEAGUE_ABL", "TEAM_ABL_EMPIRE_1"],
+      ["LEAGUE_JBL", "TEAM_JBL_CL_NEONCRANES_1"],
+    ] as const) {
+      const m = leagueProfiles(lg, true);
+      const best = Math.max(...[...m.values()].map((p) => p.prestige));
+      expect(m.get(top)!.prestige, `${lg} 최고는 ${top}`).toBe(best);
+    }
+  });
+
+  /**
+   * ⚠ **지금 파생 분포 밖으로 나가지 않는다.** 나가면 관중·스폰서 산식이
+   *   보는 잣대가 이 변경 전후로 달라진다. 천장 70 은 SEOUL_ROYALS 의
+   *   파생값이고, 바닥은 가산이 음수가 안 되므로 그대로다.
+   */
+  it("프로 38팀이 전부 예전 분포(26~70) 안이다", () => {
+    for (const lg of ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]) {
+      const on = [...leagueProfiles(lg, true).values()].map((p) => p.prestige);
+      const off = [...leagueProfiles(lg, false).values()].map((p) => p.prestige);
+      for (const v of on) {
+        expect(v, `${lg} prestige`).toBeLessThanOrEqual(70);
+        expect(v, `${lg} prestige`).toBeGreaterThanOrEqual(26);
+      }
+      // 가산은 0 이상이다 — 연혁이 이름값을 깎지 않는다
+      on.forEach((v, i) => expect(v).toBeGreaterThanOrEqual(off[i]));
+    }
+  });
+
+  /**
+   * 🔴 **국내 10팀은 한 칸도 안 움직인다 — 데이터 사실이다.**
+   *   KBL `history` 에는 `titleYears`·`nationalTitles`·`peakEra` 가 아예 없다.
+   *   `titles`(과거 5시즌 기록)로 대신 세지 않았다 — 통산 우승과 뜻이 다른 표고,
+   *   두 잣대를 섞으면 리그끼리 비교가 깨진다. 국내 연혁을 채울지는 따로 정한다.
+   */
+  it("KBL 10팀은 연혁 칸이 없어 그대로다", () => {
+    const on = leagueProfiles("LEAGUE_KBL", true);
+    const off = leagueProfiles("LEAGUE_KBL", false);
+    expect(on.size).toBe(10);
+    for (const [id, p] of on) expect(p.prestige, id).toBe(off.get(id)!.prestige);
+  });
+});

@@ -1718,3 +1718,127 @@ ABL 배경 리그의 FA 이동·승강·방출이 파생 시작값에서 어떻�
 **재는 법**: `npm run test:rostergen` — 「실제예산」 줄의 「달라진 팀」이
 0/N 이 아니게 되면 닿기 시작한 것이다. 그 줄의 「(알려진 결함)」 검사가
 **빨강으로 바뀌면서** 알려 준다. 그때 이 절을 닫는다.
+
+## 연혁이 `prestige` 에 안 들어간다 — 머리 공간의 몫으로 더한다 (2026-09-25 · A · **제안값** · 사용자 지시로 적용)
+
+파생 성향(`deriveProfileFromBudgetIndex`)의 `prestige` 는 **지금 예산**의 1차식
+이었다. 그래서 「몰락한 명문」이 무명 팀 아래로 내려갔다 — 실측(전):
+
+| 팀 | 우승 | 예산지수 | `prestige`(전) | 그 아래에 있던 무명 팀 |
+|---|---:|---:|---:|---|
+| HARBORHAWKS | 9 | 0.888 | **45** | LAKESPIRITS(우승 2 · 48) 에게 **졌다** |
+| SUNDRAGONS | 7 | 0.795 | 42 | SPACECOMETS(우승 3 · 40) 와 2 차 |
+| WINDBEARS | 6 | 0.405 | **26** | 리그 최하 |
+| THUNDERFALCONS | 8 | 0.426 | **27** | SEAGULLS(우승 0 · 40) 에게 **졌다** |
+
+`prestige` 는 이름값이다. 살림이 나빠졌다고 100년 쌓은 이름이 같이 사라지지는
+않는다 — 0단계 확정 E 「연혁을 정본으로」와도 어긋나 있었다.
+
+### 값 — 절대값이 아니라 **남은 머리 공간의 몫**
+
+```
+우승횟수 = max(history.titleYears.length, history.nationalTitles ?? 0)
+몫 = min(0.5, 0.12 × √우승횟수 + (우승>0 이고 peakEra 있으면 0.03))
+prestige = round(예산파생값 + max(0, 70 − 예산파생값) × 몫)
+```
+
+| 상수 | 값 | 왜 |
+|---|---:|---|
+| `PRESTIGE_CEIL` | **70** | 지금 파생 `prestige` 분포의 **최대**(SEOUL_ROYALS). 밖으로 나가면 관중·스폰서 산식이 보는 잣대가 전후로 달라진다 |
+| `HISTORY_TITLE_WEIGHT` | **0.12** | √n 당. 제곱근이라 22회가 3회의 일곱 배가 아니라 **2.7배**다 |
+| `HISTORY_PEAK_WEIGHT` | **0.03** | 전성기 한 줄. **우승이 있을 때만** 더한다 — 우승 0 인 팀(COASTALRAYS · SEAGULLS · SUNS)은 명문이 아니라 「제일 높이 간 해」다 |
+| `HISTORY_SHARE_MAX` | **0.5** | 머리 공간의 절반까지. 우승 18회쯤에서 닿는다 |
+
+**왜 몫인가 — 자르기가 아니라.** ① 천장을 **구조적으로** 못 넘는다(자르기로
+막으면 우승 27회와 3회가 천장에서 같은 값이 된다). ② 몰락한 명문(예산이 낮아
+머리 공간이 크다)이 많이 오르고 부자 명문(이미 위)은 조금 오른다 — 그게
+「몰락한 명문」이라는 말의 뜻이다. **우승 0 이면 가산이 정확히 0** 이라
+"같은 예산의 무명 팀"이 비교 기준으로 성립한다.
+
+**`titleYears` 와 `nationalTitles` 는 더하지 않고 큰 쪽을 쓴다** — 28팀 중 27팀은
+두 값이 같다. EMPIRE 만 11 vs 27 인데(옛 우승에 해가 안 적혔다) 횟수는 27 이다.
+더하면 같은 우승을 두 번 센다.
+
+### 전후 — ABL 16 (`prestige` 내림차순 · 후 기준)
+
+| 팀 | 우승 | 전 | 후 | 차 |
+|---|---:|---:|---:|---:|
+| EMPIRE | 27 | 66 | **68** | +2 |
+| DESERTSERPENTS | 1 | 63 | 64 | +1 |
+| BAYSEALS | 5 | 57 | 61 | +4 |
+| RAINARROWS | 1 | 58 | 60 | +2 |
+| COASTALRAYS | **0** | 60 | 60 | **0** |
+| PEACHTREEFALCONS | 2 | 56 | 59 | +3 |
+| MOTORWOLVES | 4 | 52 | 57 | +5 |
+| LONESTARS | 5 | 50 | 56 | +6 |
+| MOUNTAINPEAKS | 1 | 54 | 56 | +2 |
+| **HARBORHAWKS** | 9 | 45 | **55** | **+10** |
+| LAKESPIRITS | 2 | 48 | 52 | +4 |
+| **SUNDRAGONS** | 7 | 42 | **52** | **+10** |
+| RIVERCARDINALS | 11 | 38 | 52 | +14 |
+| WAVERIDERS | 2 | 44 | 49 | +5 |
+| SPACECOMETS | 3 | 40 | 47 | +7 |
+| **WINDBEARS** | 6 | 26 | **40** | **+14** |
+
+퍼짐 26~66 → **40~68**. HARBORHAWKS 가 LAKESPIRITS 를 **앞질렀다**(45<48 → 55>52).
+
+### 전후 — JBL 12
+
+| 팀 | 우승 | 전 | 후 | 차 |
+|---|---:|---:|---:|---:|
+| CL_NEONCRANES | 22 | 66 | **68** | +2 |
+| CL_IRONSTORMS | 3 | 63 | 65 | +2 |
+| CL_IRONDRAKES | 2 | 60 | 62 | +2 |
+| PL_POLARBEARS | 2 | 56 | 59 | +3 |
+| PL_MARINESOLDIERS | 2 | 54 | 57 | +3 |
+| CL_TEMPOSTINGS | 6 | 50 | 56 | +6 |
+| CL_TIDERAVES | 3 | 52 | 56 | +4 |
+| CL_SILVERWOLVES | 1 | 47 | 50 | +3 |
+| PL_SPIRITBUFFALOS | 1 | 42 | 46 | +4 |
+| **PL_THUNDERFALCONS** | 8 | 27 | **43** | **+16** |
+| PL_SUNS | **0** | 43 | 43 | **0** |
+| PL_SEAGULLS | **0** | 40 | 40 | **0** |
+
+퍼짐 27~66 → **40~68**. THUNDERFALCONS 가 SEAGULLS(예산 75% 더 많은 무관 팀)를
+**앞질렀다**(27<40 → 43>40).
+
+### 전후 — KBL 10 : **한 칸도 안 움직인다**
+
+| 팀 | 전 = 후 |
+|---|---:|
+| SEOUL_ROYALS 70 · CHANGWON_STARS 67 · GWANGJU_PANTHERS 49 · SEOUL_GUARDIANS 49 · SUWON_KNIGHTS 49 | 그대로 |
+| BUSAN_WAVES 46 · DAEGU_SABERS 46 · INCHEON_SHARKS 46 · SEOUL_COBRAS 46 · DAEJEON_PHANTOMS 31 | 그대로 |
+
+🔴 **데이터 사실이다.** KBL `history` 에 `titleYears`·`nationalTitles`·`peakEra`
+칸이 **아예 없다**(실측 10/10팀 undefined). `titles`(과거 5시즌 기록)로 대신
+세지 않았다 — 통산 우승과 **뜻이 다른 표**고, 두 잣대를 섞으면 리그끼리
+비교가 깨진다. 국내 연혁을 채울지는 따로 정한다(**사용자 결정 대기**).
+⚠ 그래서 이 변경은 **해외 28팀만** 올린다. `prestige` 를 리그 건너 비교하는
+자리는 없다(관중·스폰서는 팀 단위 · FA 는 리그 안)는 것을 확인했다.
+
+### `prestige` 를 읽는 자리 — 갈래가 몇 팀 바뀌나
+
+| 자리 | 꼴 | 전 | 후 |
+|---|---|---|---|
+| `team_engine.rs:729` 무트레이드 — `prestige > 60 && stability > 60` | **갈래** | 3팀(ROYALS · EMPIRE · NEONCRANES) | **3팀 — 같다** |
+| `finance.rs:893` 관중 흥행률 — `(prestige−50)/50 × 0.10` | 연속 | — | 1점당 흥행률 +0.002. WINDBEARS +0.028 · THUNDERFALCONS +0.032 · EMPIRE +0.004 · KBL 0. `min 0.1`·`max 0.95` 에 닿는 팀 없음 |
+| `finance.rs:909` 스폰서 — `× (1 + (prestige−50)/50 × 0.30)` | 연속 | — | WINDBEARS ×1.084 · THUNDERFALCONS ×1.096 |
+| `player_agent.rs:232` FA 선호 점수 — `(prestige + clubhouseCulture)/200 × 10` | 연속 | — | 14점이면 +0.7점 |
+
+**갈래는 한 팀도 안 바뀌었다.** 움직인 것은 연속 항 셋이고, 방향은 전부
+「몰락한 명문이 관중·스폰서·FA 선호에서 조금 회복한다」다.
+
+### 재는 법
+
+```
+npx vitest run apps/ui/src/shared/stores/__tests__/profileDerive.test.ts
+PF_SEEDS=20260802,777,31337 PF_YEARS=3 npm run probe:overseas
+```
+
+`profileDerive.test.ts` 의 「연혁 → prestige」 절이 위 표의 **뒤집힘 둘**
+(HARBORHAWKS > LAKESPIRITS · THUNDERFALCONS > SEAGULLS)과 **전 상태**를
+같이 못 박는다. `probe:overseas` 는 관중 상관(3단계 §2-d 가 기준선)과
+FA 이동이 얼마나 따라 움직이는지를 본다 — **아직 안 쟀다.**
+
+자리: `apps/ui/src/shared/stores/game.ts` 의 `historyPrestigeShare` ·
+`PRESTIGE_CEIL` · `HISTORY_*`.

@@ -148,8 +148,14 @@ console.log("\n화면 소스");
   }
   const master = stripComments(fs.readFileSync(
     path.join(__dirname, "../apps/ui/src/shared/stores/master.ts"), "utf8"));
-  check("  TeamHistory 타입에 v1 필드 없음",
-    !/recentRecords|nationalTitles|titleYears|peakEra/.test(master));
+  // 🔴 **연혁 셋은 2026-09-25 에 타입으로 돌아왔다.** `titleYears`·`nationalTitles`·
+  //   `peakEra` 를 읽는 코드가 생겼다 — `game.ts` 의 `historyPrestigeShare` 가
+  //   `prestige` 한 칸을 그걸로 올린다. **읽는 코드가 있으면 타입에 적는다**
+  //   (안 적으면 그 자리에 `as any` 가 생기고, 그게 v1 때보다 나쁘다).
+  //   v1 때 이 셋을 뺀 이유는 "화면이 읽다 터졌다"였고, **화면 둘은 위에서
+  //   계속 막는다** — 그 금지는 그대로다.
+  // ⚠ `recentRecords` 는 아직 아무도 안 읽는다. 그건 그대로 막는다.
+  check("  TeamHistory 타입에 recentRecords 없음", !master.includes("recentRecords"));
 }
 
 // ── 연표 SQL — `season:getTeamHistory` 가 쓰는 그 문장 ──────────────

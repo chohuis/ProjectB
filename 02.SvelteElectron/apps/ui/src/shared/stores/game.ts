@@ -379,6 +379,53 @@ const TEMPERAMENT_MIN = 30;
 const TEMPERAMENT_MAX = 72;
 
 /**
+ * 연혁 → `prestige` **한 칸**의 가산 (제안값 · 2026-09-25 · A).
+ *
+ * 🔴 왜. 파생은 **지금 예산**만 본다. 그래서 「몰락한 명문」이 무명 팀 아래로
+ *   내려갔다 — HARBORHAWKS 는 우승 9회인데 `prestige` 45 로, 우승 2회인
+ *   LAKESPIRITS(48) 보다 낮았다. `prestige` 는 이름값이다. 살림이 나빠졌다고
+ *   100년 쌓은 이름이 같이 사라지지는 않는다.
+ *
+ * **머리 공간의 몫으로 더한다** — 절대값을 더하지 않는다. 이유 둘:
+ *   ① 천장(`PRESTIGE_CEIL`)을 **구조적으로** 못 넘는다. 자르기(clamp)로 막으면
+ *      우승 27회와 3회가 천장에서 같아진다.
+ *   ② 몰락한 명문(예산 낮음 = 머리 공간 큼)이 많이 오르고, 부자 명문(이미 위)은
+ *      조금 오른다. 그게 「몰락한 명문」이라는 말의 뜻이다.
+ *
+ * ⚠ **밸런스 값이다 — 제안이다.** 근거·전후·재는 법은
+ *   `docs/BALANCE_BACKLOG.md` 「연혁이 `prestige` 에 안 들어간다」 절.
+ * ⚠ 범위는 **지금 파생 분포 안**이다. 천장 70 은 SEOUL_ROYALS 의 파생값이고,
+ *   바닥은 안 건드린다(가산이 음수가 안 된다). 밖으로 나가면 관중·FA 산식이
+ *   보는 잣대가 이 변경 전후로 달라진다.
+ * ⚠ **우승이 0 이면 가산도 정확히 0 이다.** 그래야 "같은 예산의 무명 팀"이
+ *   비교 기준으로 성립한다 — 전성기 문구만 있고 우승이 없는 팀
+ *   (COASTALRAYS · SEAGULLS · SUNS)은 명문이 아니라 "제일 높이 간 해"다.
+ */
+const PRESTIGE_CEIL = 70;
+/** 우승 √n 당 몫. 제곱근이라 22회가 3회의 일곱 배가 아니라 2.7배다 */
+const HISTORY_TITLE_WEIGHT = 0.12;
+/** 전성기 한 줄이 있으면 — **우승이 있을 때만** 더한다 */
+const HISTORY_PEAK_WEIGHT = 0.03;
+/** 머리 공간의 절반까지. 우승 18회쯤에서 닿는다 */
+const HISTORY_SHARE_MAX = 0.5;
+
+/**
+ * 연혁이 가져가는 **머리 공간의 몫** (0 ~ `HISTORY_SHARE_MAX`). 순수 함수다.
+ *
+ * ⚠ 우승 횟수는 `titleYears.length` 와 `nationalTitles` 중 **큰 쪽**이다 —
+ *   두 칸을 더하면 같은 우승을 두 번 센다(28팀 중 27팀은 두 값이 같다).
+ *   EMPIRE 만 11 vs 27 로 갈리는데, 옛 우승에 해가 안 적혔을 뿐 횟수는 27 이다.
+ */
+export function historyPrestigeShare(h?: import("./master").TeamHistory | null): number {
+  const titles = Math.max(h?.titleYears?.length ?? 0, h?.nationalTitles ?? 0);
+  if (titles <= 0) return 0;
+  return Math.min(
+    HISTORY_SHARE_MAX,
+    HISTORY_TITLE_WEIGHT * Math.sqrt(titles) + (h?.peakEra ? HISTORY_PEAK_WEIGHT : 0),
+  );
+}
+
+/**
  * 예산 지수 + 성향 → 구단 성향. **순수 함수다** — 검사가 직접 부른다.
  *
  * 지수 1.0(리그 평균)이면 예산이 정하는 아홉 항목이 50으로 기본값과 같다.
@@ -391,8 +438,15 @@ const TEMPERAMENT_MAX = 72;
 export function deriveProfileFromBudgetIndex(
   idx: number,
   traits?: { philosophy?: string; resource?: string },
+  history?: import("./master").TeamHistory | null,
 ): import("./master").ProTeamProfile {
   const at = (span: number) => Math.round(Math.max(5, Math.min(95, 50 + (idx - 1) * span)));
+  // 🔴 **연혁은 `prestige` 한 칸에만 닿는다.** 이름값은 우승이 쌓아 주지만
+  //   스카우트·의료·육성은 지금 돈이 정한다 — 연혁이 아홉 항목까지 밀면
+  //   "예산이 정본"이라는 설계가 흐려진다
+  const histShare = historyPrestigeShare(history);
+  const prestigeOf = (base: number) =>
+    histShare <= 0 ? base : Math.round(base + Math.max(0, PRESTIGE_CEIL - base) * histShare);
   const phi = traits?.philosophy ? TEMPERAMENT_BY_PHILOSOPHY[traits.philosophy] : undefined;
   const res = traits?.resource ? TEMPERAMENT_BY_RESOURCE[traits.resource] : undefined;
   // ⚠ 둘 다 없으면 **손대지 않는다.** 0 을 더해도 같지만, "없으면 50"을
@@ -405,7 +459,8 @@ export function deriveProfileFromBudgetIndex(
   return {
         // 돈 쓰는 성향은 예산을 따라간다
         ownerSpendingWillingness: at(50),
-        prestige:                 at(40),
+        // 🔴 **여기 한 칸만 연혁을 본다** (2026-09-25). 나머지는 예산 그대로다
+        prestige:                 prestigeOf(at(40)),
         marketAppeal:             at(40),
         scoutingQuality:          at(30),
         medicalQuality:           at(30),
@@ -501,9 +556,10 @@ function profilesFromMaster(): Record<string, import("./master").ProTeamProfile>
     const avg = budgets.reduce((x, y) => x + y, 0) / budgets.length;
     if (avg <= 0) continue;
     for (const t of list) {
-      // 🔴 **성향을 같이 넘긴다.** 안 넘기면 기질 셋이 50 으로 굳는다 —
-      //   값도 표도 있는데 잇는 선이 없는 그 형태다
-      out[t.id] = deriveProfileFromBudgetIndex((t.history?.budget ?? 0) / avg, t.traits);
+      // 🔴 **성향과 연혁을 같이 넘긴다.** 안 넘기면 기질 셋이 50 으로 굳고
+      //   `prestige` 가 지금 예산만 본다 — 값도 표도 있는데 잇는 선이 없는 그 형태다
+      out[t.id] = deriveProfileFromBudgetIndex(
+        (t.history?.budget ?? 0) / avg, t.traits, t.history);
     }
   }
   // 2군은 1군 성향을 물려받는다 — **같은 구단이다.**

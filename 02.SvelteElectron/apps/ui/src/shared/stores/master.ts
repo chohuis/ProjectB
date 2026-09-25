@@ -193,6 +193,24 @@ export interface TeamHistory {
   seasonRanks?: { season: string; rank: number }[];
   titles?: { season: string; competition: string; result: string }[];
   rivals?: { with: string; desc: string }[];
+
+  // ── 연혁 셋 — **해외 28팀에만 있고, `prestige` 파생이 읽는다** (2026-09-25)
+  //
+  // 🔴 이 셋은 "v1 죽은 필드"로 분류돼 타입에서 빠져 있었다. 그때는 맞았다 —
+  //   아무도 안 읽었고 화면이 읽으려다 터졌다. **지금은 읽는 데가 하나 생겼다**:
+  //   `deriveProfileFromBudgetIndex` 의 `prestige` 한 칸이다(`game.ts`).
+  //   읽는 코드가 있으면 타입에 적는다 — 안 적으면 `as any` 가 생긴다.
+  // ⚠ **화면은 여전히 안 읽는다.** 게이트는 `test:teamhistory` 가 화면 소스
+  //   둘(`TeamDetailModal`·`NewGamePage`)에서 계속 막는다.
+  // ⚠ **국내 팀에는 이 셋이 없다**(실측 2026-09-25 · KBL 10팀 전부 undefined).
+  //   그래서 국내는 연혁 가산이 0 이다 — 데이터 사실이고, 억지로 `titles`
+  //   (과거 5시즌 기록)로 대신 세지 않았다. 뜻이 다른 표다.
+  /** 우승한 해 목록 — 길이가 우승 횟수다 */
+  titleYears?: number[] | null;
+  /** 우승 횟수 원값. `titleYears` 보다 클 수 있다(EMPIRE 11 vs 27 — 옛 우승은 해가 안 적혔다) */
+  nationalTitles?: number | null;
+  /** 전성기 한 줄 */
+  peakEra?: string | null;
 }
 
 export interface TeamRef {
