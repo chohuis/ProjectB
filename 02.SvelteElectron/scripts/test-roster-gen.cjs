@@ -363,23 +363,26 @@ console.log("\n외국인 선수");
 //    떨어지고, **층마다 값은 맞는데 잇는 선이 없다**(CLAUDE.md 함정 규칙).
 //
 // 🔴 **그래서 이 대조군이 결함을 하나 찾았다** (2026-09-22 실측).
-//    **지금 예산에서는 성향을 빼도 프로 3리그가 한 칸도 안 움직인다.**
-//    배선은 살아 있는데 작동점이 밖이다: `roster_gen.rs` 가 내는 정원
-//    원값이 KBL 58~208 · ABL 87~191 인데 `rosterMax` 가 34(JBL 32)라
-//    **전 팀이 상한에 붙는다.** `qualityBias` 는 1인당 인건비 추정을 통해
+//    **그때 예산에서는 성향을 빼도 프로 3리그가 한 칸도 안 움직였다.**
+//    배선은 살아 있는데 작동점이 밖이었다: `roster_gen.rs` 가 내는 정원
+//    원값이 KBL 58~209 · ABL 53~198 인데 `rosterMax` 가 34(JBL 32)라
+//    **전 팀이 상한에 붙었다.** `qualityBias` 는 1인당 인건비 추정을 통해
 //    **정원에만** 닿으므로(선수 OVR 자체는 안 건드린다) 정원이 상한에
 //    붙는 순간 성향이 통째로 무효가 된다.
-//    · 이건 아마추어에서 이미 한 번 밟은 형태의 **거울상**이다 —
-//      그쪽은 예산이 너무 작아 늘 `rosterMin` 에 붙었다(`roster_gen.rs` 주석).
-//    · **여기서 안 고친다.** 값을 움직이면 밸런스가 흔들린다(동결) —
-//      제안과 근거는 `docs/BALANCE_BACKLOG.md` 「예산이 프로 정원을 못 정한다」.
 //
-// ⚠ 그래서 검사는 둘로 나뉜다:
-//    ① **배선이 살아 있는가** — 예산을 작동점 안으로 줄여서 본다. 줄인 판에서
-//      성향 유/무가 갈리면 선은 이어져 있는 것이다(줄이는 것은 계측일 뿐
-//      게임 값이 아니다).
-//    ② **지금 작동점을 못 박는다** — 실제 예산에서는 전 팀이 상한이다.
-//      누가 이걸 고치면 ②가 빨강이 되어 "이제 성향이 닿는다"를 알려 준다.
+// ✅ **2026-09-25 에 고쳤다** — 정원을 예산의 **압축 사상**으로 낸다
+//    (γ · 사용자 확정 · `BALANCE_BACKLOG` 「예산이 프로 정원을 못 정한다」).
+//    배율 하나로는 원리적으로 못 고쳤다(배율은 전 팀을 같이 밀 뿐 퍼짐을
+//    안 줄인다) — 그래서 나누기를 버리고 리그 기하평균 대비 비율을 γ 로 눌렀다.
+//    `rosterMin` 도 26 → 29 로 올렸다(백업선과 같게).
+//
+// ⚠ 그래서 검사는 셋이다 — **전부 실제 예산에서** 본다(계측용 배율을 지웠다):
+//    ① **작동점** — 정원이 팀마다 갈리고, 하한~상한 안이고, 백업이 안 깨진다.
+//    ② **배선** — 성향을 빼면 편성이 달라지고, 질적인 팀이 인원이 적다.
+//    ③ **γ 가 데이터에서 온다** — γ 를 규칙 파일에서 읽어 기대 정원을 계산해
+//      맞춰 보고, γ 칸을 **빼면** 예전 동작(전 팀 상한)으로 돌아가는지 본다.
+//      (`serde(default)` 라 안 넘겨도 조용히 통과한다 — 대조군이 없으면
+//      데이터만 고치고 엔진엔 안 닿아도 초록이다.)
 //
 // ⚠ **표를 여기 다시 적지 않는다.** `squadPlanOf` 를 진입점으로 말아서
 //    번들해 부른다(`scripts/perf/squadPlanEntry.ts`). 손으로 베끼면
@@ -415,10 +418,13 @@ console.log("\n외국인 선수");
 
   /**
    * `withPlan=false` 가 **배선을 뺀 판**이다 — 예산만 넘기고 성향은 안 넘긴다.
-   * `budgetScale` 은 **계측용**이다. 게임 값이 아니라, 정원 산식의 작동점이
-   * 상한 밖이라 배선이 안 보일 때 안으로 끌어오려고만 쓴다.
+   * `rulesOverride` 는 **계측용**이다. 게임 값이 아니라, γ 를 바꿔 보거나
+   * (기대값 역산) 아예 빼 보는(대조군) 데만 쓴다.
+   *
+   * ⚠ 예산에 배율을 곱하던 인자를 지웠다 — γ 확정(2026-09-25) 뒤로는 실제
+   *   예산에서 정원이 갈려 **작동점 안으로 끌어올 필요가 없다.**
    */
-  function run(leagueId, teams, withPlan, budgetScale = 1) {
+  function run(leagueId, teams, withPlan, rulesOverride) {
     const out = JSON.parse(engine.generateLeagueRosterNative(JSON.stringify({
       leagueId, seasonYear: 2029, worldSeed: 4242,
       teams: teams.map((t) => {
@@ -428,11 +434,11 @@ console.log("\n외국인 선수");
           schoolId: t.schoolId ?? "",
           ...(salaryIndex.get(t.id) !== undefined ? { salaryIndex: salaryIndex.get(t.id) } : {}),
           ...(t.power !== undefined ? { power: t.power } : {}),
-          ...(b !== undefined ? { budget: Math.max(1, Math.round(b * budgetScale)) } : {}),
+          ...(b !== undefined ? { budget: b } : {}),
           ...(withPlan ? plan.squadPlanOf(t) : {}),
         };
       }),
-      rules: rulesFile.rosterRules[leagueId],
+      rules: rulesOverride ?? rulesFile.rosterRules[leagueId],
       salaryRules: rulesFile.salaryRules,
       powerRules: rulesFile.powerRules,
       talent: rulesFile.talentRules,
@@ -467,55 +473,43 @@ console.log("\n외국인 선수");
     if (teams.length === 0) { check(`${leagueId} 1군 팀 존재`, false, "0팀"); continue; }
 
     const rules = rulesFile.rosterRules[leagueId];
-    const max = rules.rosterMax ?? rules.rosterSize;
+    const size = rules.rosterSize;
+    const min = rules.rosterMin ?? size;
+    const max = rules.rosterMax ?? size;
     const mean = (xs, f) => xs.reduce((a, b) => a + f(b), 0) / xs.length;
     const spread = (xs) => `${Math.min(...xs)}~${Math.max(...xs)}`;
 
-    // ── ② 지금 작동점 — 실제 예산에서는 전 팀이 상한이다 ──────────────
+    // ── ① 작동점 — **실제 예산에서** 정원이 갈리는가 ───────────────────
     const on = run(leagueId, teams, true);
     const off = run(leagueId, teams, false);
     const moved = on.filter((r, i) => r.n !== off[i].n || Math.abs(r.ovr - off[i].ovr) > 0.01);
+    const sizes = [...new Set(on.map((r) => r.n))].sort((a, b) => a - b);
+    const thin = on.filter((r) => r.minField < 2);
 
-    console.log(`    ${leagueId.padEnd(12)} 실제예산: 성향O 인원 ${spread(on.map((r) => r.n))} · ` +
-      `성향X 인원 ${spread(off.map((r) => r.n))} · 달라진 팀 ${moved.length}/${teams.length}` +
-      (moved.length === 0 ? `  ← 전 팀이 상한 ${max} 에 붙어 성향이 무효다` : ""));
+    console.log(`    ${leagueId.padEnd(12)} 실제예산: 성향O 인원 ${spread(on.map((r) => r.n))} ` +
+      `(${sizes.length}종) · 성향X 인원 ${spread(off.map((r) => r.n))} · ` +
+      `달라진 팀 ${moved.length}/${teams.length} · 하한 ${on.filter((r) => r.n === min).length} · ` +
+      `상한 ${on.filter((r) => r.n === max).length} · 인구 ${on.reduce((a, r) => a + r.n, 0)}`);
 
-    // ⚠ **지금 상태를 못 박는다.** 고쳐지면 여기가 빨강이 되고, 그때
-    //   `BALANCE_BACKLOG` 의 「예산이 프로 정원을 못 정한다」를 닫으면 된다.
-    check(`${leagueId}: (알려진 결함) 실제 예산에서는 전 팀이 정원 상한 ${max} 이다`,
-      on.every((r) => r.n === max) && moved.length === 0,
-      `인원 ${spread(on.map((r) => r.n))} · 달라진 팀 ${moved.length}`);
+    check(`${leagueId}: 실제 예산에서 정원이 팀마다 갈린다`, sizes.length > 1,
+      `전 팀 ${sizes[0]}명 — 작동점이 다시 창 밖으로 나갔다`);
+    check(`${leagueId}: 전 팀이 상한 ${max} 에 붙어 있지 않다`,
+      on.some((r) => r.n < max), `전 팀 ${max}`);
+    check(`${leagueId}: 정원이 하한~상한(${min}~${max}) 안이다`,
+      on.every((r) => r.n >= min && r.n <= max), spread(on.map((r) => r.n)));
+    // 🔴 **백업선.** 정원이 줄면 야수 8자리의 두 번째가 먼저 빈다 —
+    //   `rosterMin` 이 백업선(29)과 같아야 여기가 0 으로 남는다.
+    check(`${leagueId}: 백업 미달 0 (야수 8자리에 두 명씩)`, thin.length === 0,
+      thin.slice(0, 5).map((r) => `${r.id}(최소 ${r.minField})`).join(" "));
 
-    // ── ① 배선이 살아 있는가 — 작동점 안으로 끌어와서 본다 ────────────
-    //   비율을 손으로 고르지 않는다. **절반 넘는 팀**이 상한 아래로 내려올
-    //   때까지 절반씩 줄여 가며 기계가 찾는다 — 예산·산식이 바뀌어도 따라온다.
-    //   ⚠ "한 팀이라도"로는 부족하다. 대부분이 아직 상한이면 아래 방향 검사가
-    //     상한끼리 비교하게 되어 아무것도 못 본다(ABL 에서 실제로 그랬다).
-    const half = Math.ceil(teams.length / 2);
-    let scale = 1, live = null;
-    for (let i = 0; i < 12; i++) {
-      scale /= 2;
-      const r = run(leagueId, teams, true, scale);
-      if (r.filter((x) => x.n < max).length >= half) { live = r; break; }
-    }
-    check(`${leagueId}: 절반 넘는 팀이 상한 아래로 내려오는 배율이 있다`, live !== null,
-      "12번 반으로 줄여도 대부분 상한 — 산식이 예산을 아예 안 본다");
-    if (!live) continue;
-
-    const liveOff = run(leagueId, teams, false, scale);
-    const liveMoved = live.filter((r, i) => r.n !== liveOff[i].n);
-    check(`${leagueId}: 성향을 빼면 편성이 달라진다 (배율 1/${Math.round(1 / scale)})`,
-      liveMoved.length > 0,
-      `${liveMoved.length}/${teams.length}팀만 움직였다 — 배선이 안 닿는다`);
-
-    const sizes = [...new Set(live.map((r) => r.n))];
-    check(`${leagueId}: 그 배율에서 정원이 팀마다 갈린다`, sizes.length > 1,
-      `전 팀 ${sizes[0]}명`);
+    // ── ② 배선 — 성향을 빼면 달라지는가 · 방향이 맞는가 ────────────────
+    check(`${leagueId}: 성향을 빼면 편성이 달라진다`, moved.length > 0,
+      `${moved.length}/${teams.length}팀만 움직였다 — 배선이 안 닿는다`);
 
     // **방향** — `qualityBias` 가 높은 철학일수록 인원이 적다.
     //   표는 코드에서 읽는다(여기 숫자를 안 적는다)
     const q = (r) => plan.QUALITY_BY_PHILOSOPHY[r.philosophy];
-    const rated = live.filter((r) => q(r) !== undefined);
+    const rated = on.filter((r) => q(r) !== undefined);
     if (rated.length >= 6) {
       const sorted = [...rated].sort((a, b) => q(a) - q(b));
       const lowQ = sorted.slice(0, 3);
@@ -525,49 +519,46 @@ console.log("\n외국인 선수");
         `질적 ${mean(highQ, (r) => r.n).toFixed(1)}명 vs 다인원 ${mean(lowQ, (r) => r.n).toFixed(1)}명`);
     }
 
-    console.log(`    ${" ".repeat(12)} 배율 1/${Math.round(1 / scale)}: 성향O 인원 ` +
-      `${spread(live.map((r) => r.n))} · 성향X 인원 ${spread(liveOff.map((r) => r.n))} · ` +
-      `달라진 팀 ${liveMoved.length}/${teams.length}`);
-
-    // ── ③ **한 배율이 창 안에 다 들어갈 수 있나** (2026-09-25 · A) ───────
+    // ── ③ **γ 가 데이터에서 와서 실제로 정원을 낸다** (2026-09-25 · A) ───
     //
-    // 🔴 ①은 "배선이 살아 있다"만 본다. 「1인당 인건비 추정 배율」로 이 결함을
-    //   고치려면 그보다 센 것이 필요하다 — **같은 배율 하나로 전 팀이
-    //   `rosterMax` 아래이면서 백업도 안 깨져야** 한다. 그게 되는지를 기계가
-    //   양끝을 찾아 본다. 숫자를 여기 적지 않는다.
-    //
-    //   · `mTop` — 전 팀이 상한에서 떨어지는 **가장 작은** 배율
-    //   · `mBot` — 백업(야수 8자리 두 명씩)이 한 팀도 안 깨지는 **가장 큰** 배율
-    //
-    //   `mBot < mTop` 이면 **그 사이에 쓸 수 있는 배율이 없다.** 지금이 그렇다:
-    //   리그 안 정원 원값의 퍼짐(3.5~3.7배)이 창(백업선~상한, 1.2배 남짓)보다
-    //   훨씬 크다. 예산 퍼짐만 2.9배라 **배율로는 못 줄인다** — 배율은 전 팀을
-    //   같이 밀 뿐 퍼짐을 안 건드린다.
-    //   · 고치는 쪽은 배율이 아니라 **정원을 예산의 압축 사상으로 내는 것**이다.
-    //     제안은 `BALANCE_BACKLOG` 「예산이 프로 정원을 못 정한다」.
-    //   · 누가 그걸 고치면 `mBot >= mTop` 이 되어 **여기가 빨강**이 된다.
+    // 🔴 두 가지를 같이 본다. 하나만 보면 둘 다 속는다:
+    //   ⓐ **기대값** — γ 를 규칙 파일에서 읽어 기대 정원을 계산해 맞춰 본다.
+    //     여기에 산식을 다시 적지 않으려고 **엔진에게 원값비를 되묻는다**:
+    //     γ=1 · 클램프를 연 판을 돌리면 출력이 `rosterSize × 원값비` 라
+    //     거기서 원값비를 역산할 수 있다(반올림 때문에 ±1 을 허용한다).
+    //   ⓑ **대조군** — γ 칸을 **빼면** 예전 동작(전 팀 상한)으로 돌아가야 한다.
+    //     `serde(default)` 라 안 넘겨도 조용히 통과한다. 이 검사가 없으면
+    //     데이터만 고쳐 놓고 엔진엔 안 닿아도 ①②가 초록일 수 있다 —
+    //     이 저장소가 제일 자주 밟은 형태다(CLAUDE.md 「잇는 선이 없다」).
     {
-      const thinOf = (rows) => rows.filter((r) => r.minField < 2).length;
-      const grid = [];
-      for (let m = 1; m <= 16.01; m *= 1.15) grid.push(m);
-      let mTop = null, mBot = null;
-      for (const m of grid) {
-        const rows = run(leagueId, teams, true, 1 / m);
-        if (mTop === null && rows.every((r) => r.n < max)) mTop = m;
-        if (thinOf(rows) === 0) mBot = m;
-        else break;   // 한 번 깨지면 더 줄일수록 더 깨진다 — 단조다
-      }
-      if (mTop === null) {
-        for (const m of grid) {
-          if (run(leagueId, teams, true, 1 / m).every((r) => r.n < max)) { mTop = m; break; }
+      const gamma = rules.budgetSizeGamma;
+      check(`${leagueId}: γ 가 규칙 파일에 있다`, typeof gamma === "number",
+        `budgetSizeGamma=${gamma}`);
+      if (typeof gamma === "number") {
+        // ⓐ 원값비를 엔진에서 받아 기대값을 계산한다
+        const probe = run(leagueId, teams, true,
+          { ...rules, budgetSizeGamma: 1, rosterMin: 1, rosterMax: 100000 });
+        const bad = [];
+        for (let i = 0; i < on.length; i++) {
+          const ratio = probe[i].n / size;
+          const want = Math.min(max, Math.max(min, Math.round(size * Math.pow(ratio, gamma))));
+          if (Math.abs(on[i].n - want) > 1) bad.push(`${on[i].id} ${on[i].n}≠${want}`);
         }
+        console.log(`    ${" ".repeat(12)} γ=${gamma}: 원값비 ` +
+          `${(Math.min(...probe.map((r) => r.n)) / size).toFixed(2)}~` +
+          `${(Math.max(...probe.map((r) => r.n)) / size).toFixed(2)}배 → 정원 ` +
+          `${spread(on.map((r) => r.n))}`);
+        check(`${leagueId}: 정원이 γ 기대값과 같다 (±1 반올림)`, bad.length === 0,
+          bad.slice(0, 5).join(" "));
+
+        // ⓑ γ 를 빼면 예전 동작 — 전 팀이 상한이다
+        const noGamma = { ...rules };
+        delete noGamma.budgetSizeGamma;
+        const ctrl = run(leagueId, teams, true, noGamma);
+        check(`${leagueId}: γ 를 빼면 예전 동작(전 팀 상한)으로 돌아간다`,
+          ctrl.every((r) => r.n === max),
+          `γ 없이도 ${spread(ctrl.map((r) => r.n))} — 데이터 칸이 엔진에 안 닿는다`);
       }
-      console.log(`    ${" ".repeat(12)} 창: 백업 안 깨지는 최대 배율 ` +
-        `${mBot ? mBot.toFixed(2) : "없음"} · 전 팀이 상한에서 떨어지는 최소 배율 ` +
-        `${mTop ? mTop.toFixed(2) : "없음"}`);
-      check(`${leagueId}: (알려진 결함) 배율 하나로는 창 안에 다 못 넣는다`,
-        mBot !== null && mTop !== null && mBot < mTop,
-        `백업한계 ${mBot} · 상한탈출 ${mTop} — 이제 쓸 수 있는 배율이 생겼다`);
     }
   }
 

@@ -56,6 +56,12 @@ export interface RosterRulesData {
   rosterMin?: number;
   rosterMax?: number;
   /**
+   * 예산 → 정원 **압축 지수 γ** (사용자 확정 2026-09-25).
+   * 정본은 규칙 파일이고 TS 는 해석하지 않는다 — `rules` 를 통째로 넘길 뿐이다.
+   * 없는 리그(2군·독립·아마추어)는 예전 산식 그대로다.
+   */
+  budgetSizeGamma?: number;
+  /**
    * 리그 이름 풀. **규칙 파일에 있는데 타입에 없어서 안 보였다** —
    * 그래서 호출부가 넘길 생각을 못 했고 해외가 한국 이름으로 찼다.
    */

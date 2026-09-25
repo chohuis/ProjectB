@@ -67,6 +67,13 @@ pub struct RosterRules {
     /// ⚠ 규칙 파일에 있는데 구조체가 안 받고 있었다(`roster_min` 과 같다).
     #[serde(default)]
     pub roster_max: Option<i32>,
+    /// 예산 → 정원 **압축 지수 γ** (사용자 확정 2026-09-25 · 제안 ④).
+    ///
+    /// 있으면 정원을 `roster_size × (원값/리그기하평균)^γ` 로 낸다.
+    /// ⚠ **없으면 예전 그대로** — 원값을 그대로 자른다(2군·독립·아마추어).
+    ///   죽은 갈래가 아니라 그 리그들이 지금 타는 갈래다.
+    #[serde(default)]
+    pub budget_size_gamma: Option<f64>,
     pub pitching_ovr_min: f64,
     pub pitching_ovr_max: f64,
     pub batting_ovr_min: f64,
@@ -585,6 +592,60 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
     // ⚠ 없으면 기준이 곧 상한이다(예전 동작).
     let roster_max = p.rules.roster_max.unwrap_or(roster).max(roster_min);
 
+    // 🔴 **정원 원값** — `예산 × 지출비율 ÷ 1인당 인건비 추정`.
+    //   아래 리그 기하평균과 팀별 계산이 **같은 값**을 봐야 해서 한 자리에 둔다.
+    //   (예전엔 팀 루프 안에만 있었고, 리그 전체를 볼 방법이 없었다.)
+    let raw_roster_of = |team: &TeamSpec| -> Option<f64> {
+        let b = team.budget?;
+        if b <= 0 || !budget_sizes_roster {
+            return None;
+        }
+        // 같은 돈을 **인원 많이**(0) 쓰나 **선수 좋게**(1) 쓰나
+        let qbias = team.quality_bias.unwrap_or(0.5).clamp(0.0, 1.0);
+        let spend = team.spend_ratio.unwrap_or(1.0).clamp(0.3, 1.0);
+        // 수준 이동폭 — 리그 OVR 범위의 얼마를 쓸지.
+        //
+        // ⚠ 0.35 였을 때 KBL 평균 OVR 이 69.1~72.2(**3.1 차**)뿐이었다.
+        //   예산이 120~350억으로 3배 차인데 그게 안 보였다. 0.60 이면
+        //   폭이 ±7.8 이라 부유한 팀과 가난한 팀이 실제로 갈린다.
+        // ⚠ 전 범위(1.0)를 쓰면 질적 팀이 리그 최고 대역만 뽑아 정원이
+        //   한 자리가 된다 — 연봉이 지수라 그렇다.
+        let ovr_span = (p.rules.batting_ovr_max - p.rules.batting_ovr_min) * 0.60;
+        let team_ovr =
+            (p.rules.batting_ovr_min + p.rules.batting_ovr_max) / 2.0 + (qbias - 0.5) * ovr_span;
+        let mult = salary_rules.league_mult.get(&p.league_id).copied().unwrap_or(1.0);
+        let floor = salary_rules.min_salary.get(&p.league_id).copied().unwrap_or(0.0);
+        let head_cost = (salary_rules.ovr_base
+            * salary_rules.ovr_growth.powf(team_ovr - salary_rules.ovr_pivot)
+            * mult)
+            .max(floor)
+            .max(1.0);
+        Some((b as f64 * spend) / head_cost)
+    };
+
+    // 🔴 **리그 기하평균** — γ 가 재는 기준점. **저장하지 않는다(파생).**
+    //
+    //   ⚠ 넘어온 팀들의 원값으로 낸다. 그래서 **리그 팀을 한 번에 넘겨야**
+    //     맞는다 — 한 팀만 넘기면 그 팀이 곧 평균이라 `roster_size` 가 나온다.
+    //     지금 호출부는 새 게임·리그 활성화 둘 다 리그 단위로 넘긴다.
+    //     (미리보기는 한 팀씩 넘기지만 고교 전용이고, 고교는 γ 가 없다.)
+    //   ⚠ 산술평균이 아니라 기하평균이다 — 비율을 다루는 값이라 그쪽이 맞고,
+    //     부자 한 팀이 평균을 끌어올려 나머지를 전부 하한에 붙이지 않는다.
+    let geo_mean: Option<f64> = {
+        let logs: Vec<f64> = p
+            .teams
+            .iter()
+            .filter_map(&raw_roster_of)
+            .filter(|v| *v > 0.0)
+            .map(|v| v.ln())
+            .collect();
+        if logs.is_empty() {
+            None
+        } else {
+            Some((logs.iter().sum::<f64>() / logs.len() as f64).exp())
+        }
+    };
+
     for team in &p.teams {
         // 전력★ → OVR 이동폭. 규칙이 없으면 0 (구 동작)
         let power_shift = match (&p.power_rules, team.power) {
@@ -599,30 +660,32 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
         //   가 그 총량을 인원 쪽으로 쓸지 수준 쪽으로 쓸지 가른다.
         //   ⚠ 수준을 올리면 1인 연봉이 **지수로** 뛴다(OVR 62 → 74 가 3배).
         //     그래서 질적 팀은 인원이 확 줄고, 그게 팀 색깔이 된다.
-        let qbias = team.quality_bias.unwrap_or(0.5).clamp(0.0, 1.0);
-        let spend = team.spend_ratio.unwrap_or(1.0).clamp(0.3, 1.0);
-        // 수준 이동폭 — 리그 OVR 범위의 얼마를 쓸지.
         //
-        // ⚠ 0.35 였을 때 KBL 평균 OVR 이 69.1~72.2(**3.1 차**)뿐이었다.
-        //   예산이 120~350억으로 3배 차인데 그게 안 보였다. 0.60 이면
-        //   폭이 ±7.8 이라 부유한 팀과 가난한 팀이 실제로 갈린다.
-        // ⚠ 전 범위(1.0)를 쓰면 질적 팀이 리그 최고 대역만 뽑아 정원이
-        //   한 자리가 된다 — 연봉이 지수라 그렇다.
-        let ovr_span = (p.rules.batting_ovr_max - p.rules.batting_ovr_min) * 0.60;
-        let team_ovr = (p.rules.batting_ovr_min + p.rules.batting_ovr_max) / 2.0
-            + (qbias - 0.5) * ovr_span;
-        let team_head_cost = {
-            let mult = salary_rules.league_mult.get(&p.league_id).copied().unwrap_or(1.0);
-            let floor = salary_rules.min_salary.get(&p.league_id).copied().unwrap_or(0.0);
-            (salary_rules.ovr_base
-                * salary_rules.ovr_growth.powf(team_ovr - salary_rules.ovr_pivot)
-                * mult).max(floor).max(1.0)
-        };
-        let roster = match team.budget {
-            Some(b) if b > 0 && budget_sizes_roster =>
-                (((b as f64 * spend) / team_head_cost).floor() as i32)
-                    .clamp(roster_min, roster_max),
-            _ => roster,
+        // 🔴 **나누는 대신 누른다** (γ · 사용자 확정 2026-09-25 · 제안 ④).
+        //
+        //   예전엔 원값을 그대로 잘랐다(`원값.floor().clamp(min, max)`). 그런데
+        //   리그 안에서 원값이 **3.5~3.7배**로 퍼지는데 쓸 수 있는 창(하한~상한)은
+        //   1.1~1.17배뿐이라 **전 팀이 상한에 붙었다** — 예산도 성향도 정원에
+        //   한 칸도 안 닿았다(2026-09-25 실측 · KBL 10/10 · ABL 16/16 · JBL 12/12).
+        //
+        //   ⚠ **1인당 인건비 추정 배율로는 못 고친다.** 배율은 전 팀을 같이 밀 뿐
+        //     퍼짐을 안 줄인다. 백업이 안 깨지는 최대 배율(1.75~2.31)이 전 팀이
+        //     상한에서 떨어지는 최소 배율(6.15~8.14)보다 작아서 **그 사이에 쓸 수
+        //     있는 값이 아예 없었다.** 그래서 산식을 바꿨다.
+        //
+        //   γ=0 이면 전 팀 `roster_size` · γ=1 이면 예전과 같은 모양이다.
+        //   근거·전후는 `BALANCE_BACKLOG` 「예산이 프로 정원을 못 정한다」.
+        let roster = match raw_roster_of(team) {
+            Some(raw) => match (p.rules.budget_size_gamma, geo_mean) {
+                (Some(gamma), Some(gm)) if gm > 0.0 => (roster as f64
+                    * (raw / gm).powf(gamma))
+                .round()
+                .clamp(roster_min as f64, roster_max as f64)
+                    as i32,
+                // γ 없는 리그 — 예전 그대로 자른다
+                _ => (raw.floor() as i32).clamp(roster_min, roster_max),
+            },
+            None => roster,
         };
         let raw_pitcher_n = ((roster as f64) * p.rules.pitcher_ratio).round() as i32;
         let pitcher_n = raw_pitcher_n.min((roster - BATTING_ORDER).max(0));

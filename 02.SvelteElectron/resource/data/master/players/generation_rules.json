@@ -59,8 +59,11 @@
       "ageMin": 20,
       "ageMax": 37,
       "withContract": true,
-      "rosterMin": 26,
-      "rosterMax": 34
+      "rosterMin": 29,
+      "rosterMax": 34,
+      "budgetSizeGamma": 0.2,
+      "_rosterMinNote": "26 → 29 (사용자 확정 2026-09-25). **백업선이 29다.** 생성기는 야수 8자리를 두 바퀴 돌아 백업 1명까지 보장하는데(결정 ⑬) 야수 16이 필요하고, pitcherRatio 0.45는 정원 29에서야 야수 16을 남긴다(28이면 15 — RF가 1명이 된다). 26은 그 아래라 닿는 순간 BALANCE_BACKLOG §8이 고친 결함이 돌아온다. 「백업선」이라는 별도 상수를 두지 않는다 — 정원 하한이 곧 백업선이다. ⚠ 이 값은 매 시즌 유지 하한으로도 쓰인다(market.ts 방출 하한 · draftSystem 수요 추정).",
+      "_budgetSizeGammaNote": "정원을 예산의 **압축 사상**으로 낸다 (사용자 확정 2026-09-25 · 제안 ④). 정원 = clamp(rosterMin, rosterMax, round(rosterSize × (원값/리그기하평균)^γ)) · 원값 = 예산 × 지출비율 ÷ 1인당인건비추정. γ=0이면 전 팀 rosterSize · γ=1이면 예전 산식과 같은 모양이다. ⚠ 왜 나누기를 버렸나 — 리그 안 원값 퍼짐이 3.5~3.7배인데 쓸 수 있는 창(백업선~rosterMax)은 1.1~1.17배뿐이라 **전 팀이 상한에 붙어** 예산도 성향도 정원에 한 칸도 안 닿았다. 배율 하나로는 못 고친다(배율은 전 팀을 같이 밀 뿐 퍼짐을 안 줄인다 — 2026-09-25 실측). ⚠ 기하평균은 저장하지 않는다(파생) — 넘어온 리그 팀들의 원값으로 매 생성 때 낸다. ⚠ γ가 없는 리그(2군·독립·아마추어)는 예전 그대로다."
     },
     "LEAGUE_KBL_FARM": {
       "rosterSize": 34,
@@ -91,8 +94,10 @@
       "ageMax": 38,
       "withContract": true,
       "nationality": "USA",
-      "rosterMin": 26,
+      "rosterMin": 29,
       "rosterMax": 34,
+      "budgetSizeGamma": 0.2,
+      "_rosterMinNote": "26 → 29 · γ 둘 다 LEAGUE_KBL 의 같은 칸과 같은 이유·같은 값이다 (사용자 확정 2026-09-25). 근거는 그쪽 _rosterMinNote · _budgetSizeGammaNote.",
       "namePool": {
         "western": true,
         "surnames": [
@@ -324,8 +329,10 @@
       "ageMax": 37,
       "withContract": true,
       "nationality": "JPN",
-      "rosterMin": 26,
+      "rosterMin": 29,
       "rosterMax": 32,
+      "budgetSizeGamma": 0.2,
+      "_rosterMinNote": "26 → 29 · γ 둘 다 LEAGUE_KBL 의 같은 칸과 같은 이유·같은 값이다 (사용자 확정 2026-09-25). 근거는 그쪽 _rosterMinNote · _budgetSizeGammaNote.",
       "namePool": {
         "western": false,
         "sep": " ",
