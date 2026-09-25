@@ -443,12 +443,17 @@ console.log("\n외국인 선수");
       byTeam.get(n.currentTeam).push(n);
     }
     const rows = [];
+    const FIELD8 = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
     for (const t of teams) {
       const r = byTeam.get(t.id) ?? [];
       const ovrs = r.map(ovrOf2);
+      // 백업선 — 야수 8자리에 **두 명씩** 있나. 정원이 줄면 여기가 먼저 깨진다
+      const cnt = {};
+      for (const x of r) cnt[x.position] = (cnt[x.position] ?? 0) + 1;
       rows.push({
         id: t.id,
         n: r.length,
+        minField: Math.min(...FIELD8.map((f) => cnt[f] ?? 0)),
         ovr: ovrs.length ? ovrs.reduce((a, b) => a + b, 0) / ovrs.length : 0,
         philosophy: t.traits?.philosophy ?? "-",
         resource: t.traits?.resource ?? "-",
@@ -523,6 +528,47 @@ console.log("\n외국인 선수");
     console.log(`    ${" ".repeat(12)} 배율 1/${Math.round(1 / scale)}: 성향O 인원 ` +
       `${spread(live.map((r) => r.n))} · 성향X 인원 ${spread(liveOff.map((r) => r.n))} · ` +
       `달라진 팀 ${liveMoved.length}/${teams.length}`);
+
+    // ── ③ **한 배율이 창 안에 다 들어갈 수 있나** (2026-09-25 · A) ───────
+    //
+    // 🔴 ①은 "배선이 살아 있다"만 본다. 「1인당 인건비 추정 배율」로 이 결함을
+    //   고치려면 그보다 센 것이 필요하다 — **같은 배율 하나로 전 팀이
+    //   `rosterMax` 아래이면서 백업도 안 깨져야** 한다. 그게 되는지를 기계가
+    //   양끝을 찾아 본다. 숫자를 여기 적지 않는다.
+    //
+    //   · `mTop` — 전 팀이 상한에서 떨어지는 **가장 작은** 배율
+    //   · `mBot` — 백업(야수 8자리 두 명씩)이 한 팀도 안 깨지는 **가장 큰** 배율
+    //
+    //   `mBot < mTop` 이면 **그 사이에 쓸 수 있는 배율이 없다.** 지금이 그렇다:
+    //   리그 안 정원 원값의 퍼짐(3.5~3.7배)이 창(백업선~상한, 1.2배 남짓)보다
+    //   훨씬 크다. 예산 퍼짐만 2.9배라 **배율로는 못 줄인다** — 배율은 전 팀을
+    //   같이 밀 뿐 퍼짐을 안 건드린다.
+    //   · 고치는 쪽은 배율이 아니라 **정원을 예산의 압축 사상으로 내는 것**이다.
+    //     제안은 `BALANCE_BACKLOG` 「예산이 프로 정원을 못 정한다」.
+    //   · 누가 그걸 고치면 `mBot >= mTop` 이 되어 **여기가 빨강**이 된다.
+    {
+      const thinOf = (rows) => rows.filter((r) => r.minField < 2).length;
+      const grid = [];
+      for (let m = 1; m <= 16.01; m *= 1.15) grid.push(m);
+      let mTop = null, mBot = null;
+      for (const m of grid) {
+        const rows = run(leagueId, teams, true, 1 / m);
+        if (mTop === null && rows.every((r) => r.n < max)) mTop = m;
+        if (thinOf(rows) === 0) mBot = m;
+        else break;   // 한 번 깨지면 더 줄일수록 더 깨진다 — 단조다
+      }
+      if (mTop === null) {
+        for (const m of grid) {
+          if (run(leagueId, teams, true, 1 / m).every((r) => r.n < max)) { mTop = m; break; }
+        }
+      }
+      console.log(`    ${" ".repeat(12)} 창: 백업 안 깨지는 최대 배율 ` +
+        `${mBot ? mBot.toFixed(2) : "없음"} · 전 팀이 상한에서 떨어지는 최소 배율 ` +
+        `${mTop ? mTop.toFixed(2) : "없음"}`);
+      check(`${leagueId}: (알려진 결함) 배율 하나로는 창 안에 다 못 넣는다`,
+        mBot !== null && mTop !== null && mBot < mTop,
+        `백업한계 ${mBot} · 상한탈출 ${mTop} — 이제 쓸 수 있는 배율이 생겼다`);
+    }
   }
 
   fs.rmSync(tmp, { recursive: true, force: true });
