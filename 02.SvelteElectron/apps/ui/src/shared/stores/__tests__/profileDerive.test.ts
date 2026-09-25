@@ -350,6 +350,20 @@ describe("연혁 → prestige", () => {
    *   `titles`(과거 5시즌 기록)로 대신 세지 않았다 — 통산 우승과 뜻이 다른 표고,
    *   두 잣대를 섞으면 리그끼리 비교가 깨진다. 국내 연혁을 채울지는 따로 정한다.
    */
+  /**
+   * 🔴 **배선 대조군.** 위 검사들은 전부 순수 함수를 직접 부른다 — 실제
+   *   게임이 `history` 를 안 넘기면 전부 초록인 채로 아무 일도 안 일어난다.
+   *   이 저장소가 제일 자주 밟은 형태다("층마다 맞는데 잇는 선이 없다").
+   *   `profilesFromMaster` 는 export 가 아니라 소스로 본다 —
+   *   `proTeamProfilePersist.test.ts` 가 쓰는 방식과 같다.
+   */
+  it("`profilesFromMaster` 가 연혁을 실제로 넘긴다 — 배선", () => {
+    const src = readFileSync(resolve(__dirname, "../game.ts"), "utf8");
+    expect(src, "파생 호출부가 세 번째 인자를 안 넘긴다").toContain(
+      "(t.history?.budget ?? 0) / avg, t.traits, t.history)",
+    );
+  });
+
   it("KBL 10팀은 연혁 칸이 없어 그대로다", () => {
     const on = leagueProfiles("LEAGUE_KBL", true);
     const off = leagueProfiles("LEAGUE_KBL", false);
