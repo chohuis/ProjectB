@@ -174,37 +174,24 @@ describe("옛 세이브의 성향 — 세이브가 이긴다", () => {
   /**
    * 🔴 **정본이 넷이 아니라 다섯이었다** (2026-09-22 · 계획 §5-6 b).
    *   `resource/data/master/teams/pro_usa/*.json` 16개에 같은 12항목이
-   *   **또 한 벌** 있었다. 게임은 이 파일들을 한 번도 안 읽는다 —
-   *   `_manifest.json` 에 `teams/` 가 없어 런타임 로드 대상이 아니다.
+   *   **또 한 벌** 있었다. 2026-09-22 에 그 칸을 지웠고, **2026-09-25 에
+   *   `teams/` 62파일을 통째로 지웠다** — `_manifest.json` 에 없어 게임이
+   *   한 번도 안 읽었고 `colors` 를 읽던 둘도 정본(`refs.json`)으로 옮겨
+   *   소비처가 0 이었다(`DATA_POLICY §7`).
    *
-   * ⚠ `teams/` 아래를 통째로 본다. `pro_korea` 8팀에도 12항목이 남아 있지만
-   *   그쪽 `teamId` 는 Phase 5 ID 교체 뒤 `refs.json` 에 **하나도 없는**
-   *   죽은 팀이라 성격이 다르다 — 지울지는 사용자가 정한다(보고에 적었다).
-   *   그래서 여기서는 **살아 있는 팀의 파일만** 본다.
+   * ⚠ 예전 이 자리에는 「살아 있는 팀에 12항목이 다시 안 생겼다」가 있었다.
+   *   폴더가 없으니 그 훑기는 **아무것도 안 보는 초록**이 된다 —
+   *   그래서 더 센 것으로 바꾼다: **폴더 자체가 돌아오면 빨강이다.**
+   *   다시 만들 이유가 생기면 이 검사를 보고 여기서 정하게 된다.
    */
-  it("`master/teams/` 의 살아 있는 팀에 12항목이 다시 안 생겼다", () => {
+  it("`master/teams/` 는 폐기됐다 — 폴더가 돌아오면 여기서 막는다", () => {
     const teamsRoot = join(__dirname, "../../../../../../resource/data/master/teams");
-    const refs = JSON.parse(
-      readFileSync(
-        join(__dirname, "../../../../../../resource/data/master/entities/refs.json"),
-        "utf8",
-      ),
-    ) as { teams: { id: string }[] };
-    const alive = new Set(refs.teams.map((t) => t.id));
-    const bad: string[] = [];
-    const walk = (d: string) => {
-      for (const e of readdirSync(d, { withFileTypes: true })) {
-        const p = join(d, e.name);
-        if (e.isDirectory()) {
-          walk(p);
-          continue;
-        }
-        if (!e.name.endsWith(".json")) continue;
-        const j = JSON.parse(readFileSync(p, "utf8")) as { teamId?: string; teamProfile?: unknown };
-        if (j.teamProfile && j.teamId && alive.has(j.teamId)) bad.push(`${e.name}(${j.teamId})`);
-      }
-    };
-    walk(teamsRoot);
-    expect(bad, `성향 12항목이 되살아난 파일: ${bad.slice(0, 6).join(" ")}`).toEqual([]);
+    let entries: string[] | null = null;
+    try {
+      entries = readdirSync(teamsRoot);
+    } catch {
+      entries = null;
+    }
+    expect(entries, `되살아난 것: ${(entries ?? []).slice(0, 6).join(" ")}`).toBeNull();
   });
 });

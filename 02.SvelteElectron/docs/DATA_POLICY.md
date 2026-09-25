@@ -181,3 +181,4 @@ OVR · 팀 현재 전력 · 순위표 정렬 · 화면 집계는 **매번 ①②
 | `_index.json` · `_manifest.json` 수동 동기화 | Phase 4-5 | 100회 커밋된 핫스팟 |
 | `resource/data/seeds/v1/` · `runtime/` | Phase 4-5 | v1 시절 잔재, 참조 0건 |
 | 사후 패치 스크립트 23개 | Phase 4-5 | "결과물을 스크립트로 땜질"하는 패턴 그 자체 |
+| `resource/data/master/teams/**` (62파일) | 2026-09-25 | 팀 정본은 `entities/refs.json` 하나다. `_manifest.json` 에 없어 게임이 한 번도 안 읽었고, `teamProfile` 12항목(2026-09-22)과 `colors`(같은 날)를 정본으로 옮기고 나니 소비처가 **0**이 됐다. 살아 있던 것은 `pro_usa` 16팀뿐이고 나머지 46팀의 `teamId` 는 Phase 5 ID 교체 뒤 `refs.json` 에 하나도 없다. 돌아오면 `proTeamProfilePersist.test.ts` 가 빨강 |

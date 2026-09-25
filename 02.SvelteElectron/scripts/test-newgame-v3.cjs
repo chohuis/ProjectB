@@ -165,22 +165,10 @@ console.log("\n유령 팀 (refs 단일 정본)");
   check("팀 목록이 refs에서만 온다", /refsData\?\.teams/.test(assign?.[1] ?? ""),
     (assign?.[1] ?? "(못 찾음)").trim());
 
-  // 구 index.json이 아직 파일로 남아 있다면 refs와 얼마나 어긋났는지 보고만 한다
-  const refsIds = new Set(refs.teams.map((t) => t.id));
-  let ghosts = 0;
-  for (const [label, rel] of Object.entries({
-    대학: "../resource/data/master/teams/university/index.json",
-    독립: "../resource/data/master/teams/independent/index.json",
-    고교: "../resource/data/master/teams/highschool/index.json",
-  })) {
-    const f = path.join(__dirname, rel);
-    if (!fs.existsSync(f)) continue;
-    const list = JSON.parse(fs.readFileSync(f, "utf8")).activeTeamIds ?? [];
-    const g = list.filter((id) => !refsIds.has(id));
-    ghosts += g.length;
-    if (g.length) console.log(`    ${label} index.json: refs에 없는 팀 ${g.length}개 (읽지 않으므로 무해)`);
-  }
-  console.log(`    구 index.json의 유령 후보 ${ghosts}개 — 코드가 안 읽으면 화면에 안 뜬다`);
+  // 🔴 여기 있던 「구 index.json 의 유령 후보」 보고를 지웠다 (2026-09-25).
+  //   `resource/data/master/teams/` 62파일을 통째로 지웠으므로 그 블록은
+  //   `existsSync` 에서 늘 빠져 **영원히 0 을 찍는 죽은 갈래**가 됐다.
+  //   폴더가 돌아오는지는 `proTeamProfilePersist.test.ts` 가 본다.
 }
 
 // ── 빈 로스터가 실제로 어떻게 나오는지 (회귀 근거 고정) ─────────
