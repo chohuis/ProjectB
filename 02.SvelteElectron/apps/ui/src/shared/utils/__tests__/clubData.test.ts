@@ -149,9 +149,15 @@ describe("문사 데이터", () => {
     for (const t of R.teams) expect(t.profile?.desc, `${t.id}`).toBeTruthy();
   });
 
+  /**
+   * ⚠ 하한이 **1900 포함**이다 (2026-09-26 · 창단 칸을 하나로 합치면서).
+   *   해외 `founded` 를 `foundedYear` 로 옮겼고 WINDBEARS · RIVERCARDINALS 의
+   *   창단이 1900 이다 — 두 팀만 1901 로 밀면 데이터가 검사에 맞춰 휘므로
+   *   잣대를 푼다.
+   */
   it("238팀 전부 창단 연도가 있다", () => {
     for (const t of R.teams) {
-      expect(t.history?.foundedYear, `${t.id}`).toBeGreaterThan(1900);
+      expect(t.history?.foundedYear, `${t.id}`).toBeGreaterThanOrEqual(1900);
     }
   });
 

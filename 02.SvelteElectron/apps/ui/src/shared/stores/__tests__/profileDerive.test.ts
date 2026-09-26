@@ -224,8 +224,6 @@ describe("연혁 → prestige", () => {
       history?: {
         budget?: number;
         foundedYear?: number;
-        /** 해외 28팀만 들고 있는 둘째 창단 칸 — 연혁이 맞물리는 쪽이다(§8-4) */
-        founded?: number;
         titleYears?: number[];
         nationalTitles?: number;
         peakEra?: string;
@@ -460,11 +458,10 @@ describe("연혁 → prestige", () => {
    *   적혀 있었다 — 안 지키는 것이 데이터 결함이었고, 겹침 15건을 정리했다.
    *   **횟수는 한 팀도 안 바꿨다**(아래 파생 불변 검사가 그걸 못 박는다).
    *
-   * ⚠ 창단의 기준은 `founded ?? foundedYear` 다. 해외 28팀은 창단 칸을 둘
-   *   들고 있고, `titleYears`·`peakEra` 가 맞물리는 쪽은 **`founded`** 다
-   *   (실측 2026-09-26: `founded` 기준 창단 전 우승 0건 · `foundedYear` 기준
-   *   23팀 위반). 한 칸으로 합치는 것은 화면에 뜨는 값이 바뀌어 사용자 결정
-   *   대기다 — 합쳐지면 `founded` 가 없어지고 이 식은 그대로 돈다.
+   * ⚠ 창단의 기준은 **`foundedYear` 하나**다 (2026-09-26 · 사용자 확정).
+   *   해외 28팀이 들고 있던 둘째 칸 `founded` 는 값을 `foundedYear` 로 옮기고
+   *   지웠다 — `titleYears`·`peakEra` 가 맞물리는 쪽이 그쪽이었다. 전에 여기
+   *   있던 `founded ?? foundedYear` 폴백은 죽은 갈래라 없앴다.
    * ⚠ 해외는 **빈 해가 남는다**(ABL 70회 · JBL 50회로 해 수보다 적다).
    *   국내처럼 "매해 하나"를 걸지 않는다.
    * ⚠ `nationalTitles` 는 길이와 **같거나 크다** — EMPIRE 만 11 vs 27 이다
@@ -485,7 +482,7 @@ describe("연혁 → prestige", () => {
         expect(h.nationalTitles, `${t.id} nationalTitles 가 길이보다 작다`).toBeGreaterThanOrEqual(
           h.titleYears!.length,
         );
-        const born = h.founded ?? h.foundedYear!;
+        const born = h.foundedYear!;
         for (const y of h.titleYears!) {
           expect(
             owner.get(y),
