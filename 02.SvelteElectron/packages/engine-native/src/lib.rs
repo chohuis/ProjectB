@@ -161,6 +161,94 @@ fn parse_err(fn_name: &str, e: serde_json::Error) -> String {
     serde_json::json!({ "error": format!("[engine-native] {}: {}", fn_name, e) }).to_string()
 }
 
+// ── 파싱 실패는 **어느 칸이었는지** 같이 적는다 (2026-09-26 · A) ─────────────
+//
+// 🔴 **줄·칸만으로는 아무것도 못 찾았다.** 09-25 24판 다섯 번째 #8 이
+//   `matchToSimResultNative: control character (U+0000~U+001F) found while
+//   parsing a string` 로 죽었는데, 남은 것은 그 한 줄뿐이었다. payload 는
+//   4만 바이트가 넘고(실측: 평균 42KB · 자유 문자열 칸 410개) 프로세스는
+//   이미 끝나 있어서, 어느 이름·어느 로그 줄이 깨졌는지 알 길이 없었다.
+//   같은 씨앗 재실행에 재현도 안 됐다 —
+//   **한 번 나고 사라지는 결함은 메시지가 곧 증거다.**
+//
+// 그래서 파싱 실패 자리는 serde 가 말한 위치를 입력에서 **도려내** 같이 싣는다.
+//   · 가장 가까운 앞쪽 `"키":` → 어느 칸이었나
+//   · 그 앞뒤 바이트 → 무엇이 들어 있었나
+//   · 제어문자는 `\uXXXX` 로 적는다 — 메시지에 **생 제어문자를 남기지 않는다**
+//     (09-25 보고서가 그 바이트 둘을 그대로 먹어 파일이 깨졌다 · `6def47067`)
+//
+// ⚠ **`parse_err` 와 갈라 쓴다.** 입력을 들고 있는 자리(역직렬화)는 `parse_err_at`,
+//   입력이 없는 자리(`/serialize`)는 `parse_err` 다. 새 `#[napi]` 입구를 만들면
+//   파싱 쪽은 `parse_err_at` 을 쓴다 — 서식은 한 곳(`parse_err`)에서만 만든다.
+
+/// 역직렬화 실패 — 입력의 그 자리를 함께 적는다.
+fn parse_err_at(fn_name: &str, e: serde_json::Error, input: &str) -> String {
+    let site = failure_site(input, &e);
+    serde_json::json!({
+        "error": format!("[engine-native] {}: {} · {}", fn_name, e, site)
+    }).to_string()
+}
+
+/// serde 가 말한 줄·칸을 입력의 바이트 위치로 바꾸고 그 자리를 도려낸다.
+fn failure_site(input: &str, e: &serde_json::Error) -> String {
+    let b = input.as_bytes();
+    // serde_json 의 `line()` 은 1부터, `column()` 은 그 줄에서 읽은 바이트 수다.
+    let mut off = 0usize;
+    let mut line = 1usize;
+    while line < e.line() && off < b.len() {
+        if b[off] == b'\n' {
+            line += 1;
+        }
+        off += 1;
+    }
+    let off = off.saturating_add(e.column().saturating_sub(1)).min(b.len());
+    let from = off.saturating_sub(60);
+    let to = off.saturating_add(20).min(b.len());
+    format!(
+        "칸 `{}` · {}바이트째(전체 {}) · …{}⟪여기⟫{}…",
+        nearest_key(b, off),
+        off,
+        b.len(),
+        escape_ctrl(&b[from..off]),
+        escape_ctrl(&b[off..to]),
+    )
+}
+
+/// 그 위치보다 앞에서 가장 가까운 `"키":` 의 키 이름. 못 찾으면 `?`.
+///
+/// ⚠ 배열 안에서 깨지면 **그 배열을 물고 있는 키**가 나온다 — `logs` 처럼
+///   같은 칸이 여럿일 때 몇 번째인지는 아래 바이트 창으로 본다.
+fn nearest_key(b: &[u8], off: usize) -> String {
+    let mut i = off.min(b.len());
+    while i >= 2 {
+        if b[i - 1] == b':' && b[i - 2] == b'"' {
+            let end = i - 2;
+            let mut s = end;
+            while s > 0 && b[s - 1] != b'"' {
+                s -= 1;
+            }
+            return String::from_utf8_lossy(&b[s..end]).into_owned();
+        }
+        i -= 1;
+    }
+    "?".to_string()
+}
+
+/// 제어문자를 `\uXXXX` 로 적는다. 깨진 UTF-8 은 대체 문자로 흘린다
+/// (바이트 창을 자르면 글자 가운데가 갈릴 수 있다 — 그래도 보여 주는 게 낫다).
+fn escape_ctrl(bytes: &[u8]) -> String {
+    let mut out = String::with_capacity(bytes.len() + 8);
+    for ch in String::from_utf8_lossy(bytes).chars() {
+        let c = ch as u32;
+        if c < 0x20 || c == 0x7f {
+            out.push_str(&format!("\\u{:04x}", c));
+        } else {
+            out.push(ch);
+        }
+    }
+    out
+}
+
 /// 초기 경기 상태 생성
 /// 계측 전용 — contact_q 밴드 분포를 읽는다 (릴리스 동작에 영향 없음)
 #[napi]
@@ -260,7 +348,7 @@ pub fn match_to_sim_result_native(params_json: String) -> String {
     }
     let p: P = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("matchToSimResultNative", e),
+        Err(e) => return parse_err_at("matchToSimResultNative", e, &params_json),
     };
     let r = match_engine::to_sim_game_result(&p.state, &p.home_team_id, &p.away_team_id,
         p.week, &p.conditions, p.home_rot_idx, p.away_rot_idx);
@@ -276,7 +364,7 @@ pub fn match_to_result_native(params_json: String) -> String {
     struct P { state: types::MatchState, home_team_id: String, away_team_id: String }
     let p: P = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("matchToResultNative", e),
+        Err(e) => return parse_err_at("matchToResultNative", e, &params_json),
     };
     let r = match_engine::to_match_result(&p.state, &p.home_team_id, &p.away_team_id);
     serde_json::to_string(&r).unwrap_or_else(|e| parse_err("matchToResultNative/serialize", e))
@@ -328,7 +416,7 @@ fn seeded<T>(
 pub fn start_match_native(options_json: String) -> String {
     let opts: MatchStartOptions = match serde_json::from_str(&options_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("startMatchNative", e),
+        Err(e) => return parse_err_at("startMatchNative", e, &options_json),
     };
     // ⚠ **0은 "씨앗 없음"이다.** `MatchState.rng_seed`가 0을 그 뜻으로 쓰므로
     // 여기서도 같게 본다 — 안 그러면 씨앗 0을 준 경기가 상태에선 씨앗 없음이
@@ -355,11 +443,11 @@ pub fn start_match_native(options_json: String) -> String {
 pub fn step_pitch_native(state_json: String, decision_json: String) -> String {
     let state: MatchState = match serde_json::from_str(&state_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("stepPitchNative/state", e),
+        Err(e) => return parse_err_at("stepPitchNative/state", e, &state_json),
     };
     let decision: PitchDecision = match serde_json::from_str(&decision_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("stepPitchNative/decision", e),
+        Err(e) => return parse_err_at("stepPitchNative/decision", e, &decision_json),
     };
     if !match_engine::is_protagonist_pitching(&state) {
         return serde_json::json!({ "error": "현재 주인공 투구 차례가 아닙니다." }).to_string();
@@ -378,7 +466,7 @@ pub fn step_pitch_native(state_json: String, decision_json: String) -> String {
 pub fn finish_match_native(state_json: String) -> String {
     let state: MatchState = match serde_json::from_str(&state_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("finishMatchNative", e),
+        Err(e) => return parse_err_at("finishMatchNative", e, &state_json),
     };
     let result = match_engine::finish_match(&state);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("finishMatchNative/serialize", e))
@@ -399,7 +487,7 @@ pub fn is_protagonist_pitching_native(state_json: String) -> bool {
 pub fn advance_game_phase_native(state_json: String) -> String {
     let state: MatchState = match serde_json::from_str(&state_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("advanceGamePhaseNative", e),
+        Err(e) => return parse_err_at("advanceGamePhaseNative", e, &state_json),
     };
     // 상태가 든 씨앗을 이어받는다 — 0이면 예전 그대로 `thread_rng`(실제 플레이).
     // ⚠ 상태를 돌려주는 갈래에만 다음 씨앗을 심는다(→ `seeded` 머리말)
@@ -422,7 +510,7 @@ pub fn advance_game_phase_native(state_json: String) -> String {
 pub fn sim_until_entry(state_json: String) -> String {
     let state: MatchState = match serde_json::from_str(&state_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("simUntilEntry", e),
+        Err(e) => return parse_err_at("simUntilEntry", e, &state_json),
     };
     // 🔴 **여기가 주인공 경기의 큰 구멍이었다** — 등판 전 이닝을 통째로
     //    돌리면서 `thread_rng`였다. `simToGameEnd`만 씨앗을 이어받고 있었다.
@@ -439,7 +527,7 @@ pub fn sim_until_entry(state_json: String) -> String {
 pub fn sim_to_game_end(state_json: String) -> String {
     let state: MatchState = match serde_json::from_str(&state_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("simToGameEnd", e),
+        Err(e) => return parse_err_at("simToGameEnd", e, &state_json),
     };
     // 상태가 씨앗을 들고 있으면 이어받는다 — `startMatchNative`가 심어 둔다.
     // 0이면 예전 그대로 `thread_rng`다
@@ -456,7 +544,7 @@ pub fn sim_to_game_end(state_json: String) -> String {
 pub fn sim_half_inning(state_json: String) -> String {
     let state: MatchState = match serde_json::from_str(&state_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("simHalfInning", e),
+        Err(e) => return parse_err_at("simHalfInning", e, &state_json),
     };
     let result = seeded(
         state.rng_seed,
@@ -471,7 +559,7 @@ pub fn sim_half_inning(state_json: String) -> String {
 pub fn auto_mound_visit_native(state_json: String) -> String {
     let state: MatchState = match serde_json::from_str(&state_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("autoMoundVisitNative", e),
+        Err(e) => return parse_err_at("autoMoundVisitNative", e, &state_json),
     };
     let result = match_engine::auto_mound_visit_if_needed(&state);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("autoMoundVisitNative/serialize", e))
@@ -482,7 +570,7 @@ pub fn auto_mound_visit_native(state_json: String) -> String {
 pub fn request_mound_visit_native(state_json: String) -> String {
     let state: MatchState = match serde_json::from_str(&state_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("requestMoundVisitNative", e),
+        Err(e) => return parse_err_at("requestMoundVisitNative", e, &state_json),
     };
     let result = match_engine::request_mound_visit(&state);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("requestMoundVisitNative/serialize", e))
@@ -493,7 +581,7 @@ pub fn request_mound_visit_native(state_json: String) -> String {
 pub fn should_protagonist_exit_native(state_json: String) -> String {
     let state: MatchState = match serde_json::from_str(&state_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("shouldProtagonistExitNative", e),
+        Err(e) => return parse_err_at("shouldProtagonistExitNative", e, &state_json),
     };
     let result = match_engine::should_protagonist_exit(&state);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("shouldProtagonistExitNative/serialize", e))
@@ -504,7 +592,7 @@ pub fn should_protagonist_exit_native(state_json: String) -> String {
 pub fn run_simple_game(params_json: String) -> String {
     let params: RunSimpleGameParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("runSimpleGame", e),
+        Err(e) => return parse_err_at("runSimpleGame", e, &params_json),
     };
     // ⚠ **0은 「씨앗 없음」이다** — `startMatchNative` 와 같은 규약이다
     let result = match params.seed.filter(|s| *s != 0) {
@@ -527,7 +615,7 @@ pub fn run_simple_game(params_json: String) -> String {
 pub fn sim_game_native(params_json: String) -> String {
     let params: SimGameParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("simGameNative", e),
+        Err(e) => return parse_err_at("simGameNative", e, &params_json),
     };
     let result = npc_sim::sim_game(&params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("simGameNative/serialize", e))
@@ -538,7 +626,7 @@ pub fn sim_game_native(params_json: String) -> String {
 pub fn run_offseason_native(params_json: String) -> String {
     let params: OffseasonParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("runOffseasonNative", e),
+        Err(e) => return parse_err_at("runOffseasonNative", e, &params_json),
     };
     let result = npc_sim::run_offseason(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("runOffseasonNative/serialize", e))
@@ -549,7 +637,7 @@ pub fn run_offseason_native(params_json: String) -> String {
 pub fn advance_grades_native(params_json: String) -> String {
     let params: AdvanceGradesParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("advanceGradesNative", e),
+        Err(e) => return parse_err_at("advanceGradesNative", e, &params_json),
     };
     let result = npc_sim::advance_grades(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("advanceGradesNative/serialize", e))
@@ -560,7 +648,7 @@ pub fn advance_grades_native(params_json: String) -> String {
 pub fn npc_calc_weekly_growth(params_json: String) -> String {
     let params: MonthlyNpcGrowthParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("npcCalcWeeklyGrowth", e),
+        Err(e) => return parse_err_at("npcCalcWeeklyGrowth", e, &params_json),
     };
     let result = npc_sim::calc_weekly_npc_growth(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("npcCalcWeeklyGrowth/serialize", e))
@@ -571,7 +659,7 @@ pub fn npc_calc_weekly_growth(params_json: String) -> String {
 pub fn generate_freshmen_native(params_json: String) -> String {
     let params: GenerateFreshmenParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("generateFreshmenNative", e),
+        Err(e) => return parse_err_at("generateFreshmenNative", e, &params_json),
     };
     let result = npc_sim::generate_freshmen(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateFreshmenNative/serialize", e))
@@ -582,7 +670,7 @@ pub fn generate_freshmen_native(params_json: String) -> String {
 pub fn resolve_fa_market_native(params_json: String) -> String {
     let params: free_agency::FaMarketParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("resolveFaMarketNative", e),
+        Err(e) => return parse_err_at("resolveFaMarketNative", e, &params_json),
     };
     let result = free_agency::resolve_market(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("resolveFaMarketNative/serialize", e))
@@ -597,7 +685,7 @@ pub fn resolve_fa_market_native(params_json: String) -> String {
 #[napi]
 pub fn calc_club_expense_native(params_json: String) -> String {
     let params: finance::ClubExpenseParams = match serde_json::from_str(&params_json) {
-        Ok(v) => v, Err(e) => return parse_err("calcClubExpenseNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("calcClubExpenseNative", e, &params_json),
     };
     serde_json::to_string(&finance::calc_club_expense(params))
         .unwrap_or_else(|e| parse_err("calcClubExpenseNative/serialize", e))
@@ -606,7 +694,7 @@ pub fn calc_club_expense_native(params_json: String) -> String {
 #[napi]
 pub fn calc_club_revenue_native(params_json: String) -> String {
     let params: finance::ClubRevenueParams = match serde_json::from_str(&params_json) {
-        Ok(v) => v, Err(e) => return parse_err("calcClubRevenueNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("calcClubRevenueNative", e, &params_json),
     };
     serde_json::to_string(&finance::calc_club_revenue(params))
         .unwrap_or_else(|e| parse_err("calcClubRevenueNative/serialize", e))
@@ -616,7 +704,7 @@ pub fn calc_club_revenue_native(params_json: String) -> String {
 pub fn calc_weekly_finance_native(params_json: String) -> String {
     let params: finance::WeeklyFinanceParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcWeeklyFinanceNative", e),
+        Err(e) => return parse_err_at("calcWeeklyFinanceNative", e, &params_json),
     };
     serde_json::to_string(&finance::calc_weekly_finance(params))
         .unwrap_or_else(|e| parse_err("calcWeeklyFinanceNative/serialize", e))
@@ -627,7 +715,7 @@ pub fn calc_weekly_finance_native(params_json: String) -> String {
 pub fn calc_sponsor_offers_native(params_json: String) -> String {
     let params: finance::SponsorOfferParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcSponsorOffersNative", e),
+        Err(e) => return parse_err_at("calcSponsorOffersNative", e, &params_json),
     };
     serde_json::to_string(&finance::calc_sponsor_offers(params))
         .unwrap_or_else(|e| parse_err("calcSponsorOffersNative/serialize", e))
@@ -638,7 +726,7 @@ pub fn calc_sponsor_offers_native(params_json: String) -> String {
 pub fn calc_training_bonus_native(params_json: String) -> String {
     let params: finance::TrainingBonusParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcTrainingBonusNative", e),
+        Err(e) => return parse_err_at("calcTrainingBonusNative", e, &params_json),
     };
     serde_json::to_string(&finance::calc_training_bonus(params))
         .unwrap_or_else(|e| parse_err("calcTrainingBonusNative/serialize", e))
@@ -649,7 +737,7 @@ pub fn calc_training_bonus_native(params_json: String) -> String {
 pub fn resolve_investment_native(params_json: String) -> String {
     let params: finance::InvestmentParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("resolveInvestmentNative", e),
+        Err(e) => return parse_err_at("resolveInvestmentNative", e, &params_json),
     };
     serde_json::to_string(&finance::resolve_investment(params))
         .unwrap_or_else(|e| parse_err("resolveInvestmentNative/serialize", e))
@@ -660,7 +748,7 @@ pub fn resolve_investment_native(params_json: String) -> String {
 pub fn calc_luxury_native(params_json: String) -> String {
     let params: finance::LuxuryParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcLuxuryNative", e),
+        Err(e) => return parse_err_at("calcLuxuryNative", e, &params_json),
     };
     serde_json::to_string(&finance::calc_luxury(params))
         .unwrap_or_else(|e| parse_err("calcLuxuryNative/serialize", e))
@@ -672,7 +760,7 @@ pub fn calc_luxury_native(params_json: String) -> String {
 #[napi]
 pub fn run_showcase_native(params_json: String) -> String {
     let params: campus_events::ShowcaseParams = match serde_json::from_str(&params_json) {
-        Ok(v) => v, Err(e) => return parse_err("runShowcaseNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("runShowcaseNative", e, &params_json),
     };
     serde_json::to_string(&campus_events::run_showcase(params))
         .unwrap_or_else(|e| parse_err("runShowcaseNative/serialize", e))
@@ -682,7 +770,7 @@ pub fn run_showcase_native(params_json: String) -> String {
 #[napi]
 pub fn run_allstar_native(params_json: String) -> String {
     let params: campus_events::AllStarParams = match serde_json::from_str(&params_json) {
-        Ok(v) => v, Err(e) => return parse_err("runAllstarNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("runAllstarNative", e, &params_json),
     };
     serde_json::to_string(&campus_events::run_allstar(params))
         .unwrap_or_else(|e| parse_err("runAllstarNative/serialize", e))
@@ -693,7 +781,7 @@ pub fn run_allstar_native(params_json: String) -> String {
 pub fn select_national_squad_native(params_json: String) -> String {
     let params: national_team::SelectSquadParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("selectNationalSquadNative", e),
+        Err(e) => return parse_err_at("selectNationalSquadNative", e, &params_json),
     };
     let result = national_team::select_squad(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("selectNationalSquadNative/serialize", e))
@@ -704,7 +792,7 @@ pub fn select_national_squad_native(params_json: String) -> String {
 pub fn simulate_tournament_native(params_json: String) -> String {
     let params: national_team::TournamentParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("simulateTournamentNative", e),
+        Err(e) => return parse_err_at("simulateTournamentNative", e, &params_json),
     };
     let result = national_team::simulate_tournament(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("simulateTournamentNative/serialize", e))
@@ -715,7 +803,7 @@ pub fn simulate_tournament_native(params_json: String) -> String {
 pub fn select_draft_candidates_native(params_json: String) -> String {
     let params: draft::SelectCandidatesParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("selectDraftCandidatesNative", e),
+        Err(e) => return parse_err_at("selectDraftCandidatesNative", e, &params_json),
     };
     let result = draft::select_candidates(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("selectDraftCandidatesNative/serialize", e))
@@ -726,7 +814,7 @@ pub fn select_draft_candidates_native(params_json: String) -> String {
 pub fn run_draft_native(params_json: String) -> String {
     let params: DraftSimParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("runDraftNative", e),
+        Err(e) => return parse_err_at("runDraftNative", e, &params_json),
     };
     let result = npc_sim::run_draft(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("runDraftNative/serialize", e))
@@ -737,7 +825,7 @@ pub fn run_draft_native(params_json: String) -> String {
 pub fn apply_draft_native(params_json: String) -> String {
     let params: ApplyDraftParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("applyDraftNative", e),
+        Err(e) => return parse_err_at("applyDraftNative", e, &params_json),
     };
     let result = npc_sim::apply_draft(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("applyDraftNative/serialize", e))
@@ -749,7 +837,7 @@ pub fn apply_draft_native(params_json: String) -> String {
 pub fn determine_protagonist_draft_native(params_json: String) -> String {
     let params: ProtagonistDraftParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("determineProtagonistDraftNative", e),
+        Err(e) => return parse_err_at("determineProtagonistDraftNative", e, &params_json),
     };
     let result = npc_sim::determine_protagonist_draft(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("determineProtagonistDraftNative/serialize", e))
@@ -761,7 +849,7 @@ pub fn determine_protagonist_draft_native(params_json: String) -> String {
 pub fn advance_protagonist_grade_native(params_json: String) -> String {
     let params: ProtagonistGradeParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("advanceProtagonistGradeNative", e),
+        Err(e) => return parse_err_at("advanceProtagonistGradeNative", e, &params_json),
     };
     let result = npc_sim::advance_protagonist_grade(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("advanceProtagonistGradeNative/serialize", e))
@@ -772,7 +860,7 @@ pub fn advance_protagonist_grade_native(params_json: String) -> String {
 pub fn advance_all_grades_native(params_json: String) -> String {
     let params: AdvanceGradesParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("advanceAllGradesNative", e),
+        Err(e) => return parse_err_at("advanceAllGradesNative", e, &params_json),
     };
     let result = npc_sim::advance_all_grades(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("advanceAllGradesNative/serialize", e))
@@ -783,7 +871,7 @@ pub fn advance_all_grades_native(params_json: String) -> String {
 pub fn advance_all_ages_native(params_json: String) -> String {
     let params: AdvanceAllAgesParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("advanceAllAgesNative", e),
+        Err(e) => return parse_err_at("advanceAllAgesNative", e, &params_json),
     };
     let result = npc_sim::advance_all_ages(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("advanceAllAgesNative/serialize", e))
@@ -796,7 +884,7 @@ pub fn advance_all_ages_native(params_json: String) -> String {
 pub fn calc_training_growth_native(params_json: String) -> String {
     let params: TrainingGrowthParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcTrainingGrowthNative", e),
+        Err(e) => return parse_err_at("calcTrainingGrowthNative", e, &params_json),
     };
     let result = growth_engine::calc_training_growth(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcTrainingGrowthNative/serialize", e))
@@ -811,7 +899,7 @@ pub fn calc_training_growth_native(params_json: String) -> String {
 pub fn preview_training_native(params_json: String) -> String {
     let params: growth_engine::TrainingPreviewParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("previewTrainingNative", e),
+        Err(e) => return parse_err_at("previewTrainingNative", e, &params_json),
     };
     let result = growth_engine::preview_training(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("previewTrainingNative/serialize", e))
@@ -831,7 +919,7 @@ pub fn preview_training_native(params_json: String) -> String {
 pub fn training_efficiency_native(params_json: String) -> String {
     let params: growth_engine::TrainingEfficiencyParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("trainingEfficiencyNative", e),
+        Err(e) => return parse_err_at("trainingEfficiencyNative", e, &params_json),
     };
     let result = growth_engine::training_efficiency(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("trainingEfficiencyNative/serialize", e))
@@ -843,7 +931,7 @@ pub fn training_efficiency_native(params_json: String) -> String {
 pub fn injury_chance_native(params_json: String) -> String {
     let p: week_engine::InjuryPayload = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("injuryChanceNative", e),
+        Err(e) => return parse_err_at("injuryChanceNative", e, &params_json),
     };
     // 유예 주는 "임계를 넘은 첫 주"라 화면 미리보기에서는 알 수 없다 — 안전하게 false
     let chance = week_engine::injury_trigger_chance(&p, false);
@@ -860,7 +948,7 @@ pub fn form_penalty_native(params_json: String) -> String {
     struct P { difficulty: f64, control: f64 }
     let p: P = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("formPenaltyNative", e),
+        Err(e) => return parse_err_at("formPenaltyNative", e, &params_json),
     };
     let (cmd, ctl) = tuning::form_penalty(p.difficulty, p.control);
     serde_json::to_string(&serde_json::json!({ "command": cmd, "control": ctl }))
@@ -872,7 +960,7 @@ pub fn form_penalty_native(params_json: String) -> String {
 pub fn calc_game_growth_native(params_json: String) -> String {
     let params: GameGrowthParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcGameGrowthNative", e),
+        Err(e) => return parse_err_at("calcGameGrowthNative", e, &params_json),
     };
     let result = growth_engine::calc_game_growth(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcGameGrowthNative/serialize", e))
@@ -883,7 +971,7 @@ pub fn calc_game_growth_native(params_json: String) -> String {
 pub fn calc_protagonist_aging_native(params_json: String) -> String {
     let params: growth_engine::ProtagonistAgingParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcProtagonistAgingNative", e),
+        Err(e) => return parse_err_at("calcProtagonistAgingNative", e, &params_json),
     };
     let result = growth_engine::calc_protagonist_aging(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcProtagonistAgingNative/serialize", e))
@@ -896,7 +984,7 @@ pub fn calc_protagonist_aging_native(params_json: String) -> String {
 pub fn resolve_career_choice_native(params_json: String) -> String {
     let params: ResolveChoiceParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("resolveCareerChoiceNative", e),
+        Err(e) => return parse_err_at("resolveCareerChoiceNative", e, &params_json),
     };
     let result = player_engine::resolve_career_choice(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("resolveCareerChoiceNative/serialize", e))
@@ -907,7 +995,7 @@ pub fn resolve_career_choice_native(params_json: String) -> String {
 pub fn assign_highschool_position_native(params_json: String) -> String {
     let params: AssignHighschoolPositionParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("assignHighschoolPositionNative", e),
+        Err(e) => return parse_err_at("assignHighschoolPositionNative", e, &params_json),
     };
     let result = player_engine::assign_highschool_position(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("assignHighschoolPositionNative/serialize", e))
@@ -919,7 +1007,7 @@ pub fn assign_highschool_position_native(params_json: String) -> String {
 pub fn recommend_pitcher_role_native(params_json: String) -> String {
     let params: pitcher_role::RecommendRoleParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("recommendPitcherRoleNative", e),
+        Err(e) => return parse_err_at("recommendPitcherRoleNative", e, &params_json),
     };
     let result = pitcher_role::recommend_pitcher_role(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("recommendPitcherRoleNative/serialize", e))
@@ -930,7 +1018,7 @@ pub fn recommend_pitcher_role_native(params_json: String) -> String {
 pub fn assign_protagonist_role_native(params_json: String) -> String {
     let params: AssignRoleParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("assignProtagonistRoleNative", e),
+        Err(e) => return parse_err_at("assignProtagonistRoleNative", e, &params_json),
     };
     let result = player_engine::assign_protagonist_role(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("assignProtagonistRoleNative/serialize", e))
@@ -941,7 +1029,7 @@ pub fn assign_protagonist_role_native(params_json: String) -> String {
 pub fn reliever_would_pitch_native(params_json: String) -> String {
     let params: RelieverPitchParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("relieverWouldPitchNative", e),
+        Err(e) => return parse_err_at("relieverWouldPitchNative", e, &params_json),
     };
     let result = player_engine::reliever_would_pitch(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("relieverWouldPitchNative/serialize", e))
@@ -952,7 +1040,7 @@ pub fn reliever_would_pitch_native(params_json: String) -> String {
 pub fn starter_would_start_native(params_json: String) -> String {
     let params: player_engine::StarterStartParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("starterWouldStartNative", e),
+        Err(e) => return parse_err_at("starterWouldStartNative", e, &params_json),
     };
     let result = player_engine::starter_would_start(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("starterWouldStartNative/serialize", e))
@@ -963,7 +1051,7 @@ pub fn starter_would_start_native(params_json: String) -> String {
 pub fn calc_season_rating_native(params_json: String) -> String {
     let params: CalcSeasonRatingParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcSeasonRatingNative", e),
+        Err(e) => return parse_err_at("calcSeasonRatingNative", e, &params_json),
     };
     let result = player_engine::calc_season_rating(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcSeasonRatingNative/serialize", e))
@@ -974,7 +1062,7 @@ pub fn calc_season_rating_native(params_json: String) -> String {
 pub fn calc_market_salary_native(params_json: String) -> String {
     let params: CalcMarketSalaryParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcMarketSalaryNative", e),
+        Err(e) => return parse_err_at("calcMarketSalaryNative", e, &params_json),
     };
     let result = player_engine::calc_market_salary(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcMarketSalaryNative/serialize", e))
@@ -985,7 +1073,7 @@ pub fn calc_market_salary_native(params_json: String) -> String {
 pub fn calc_offered_salary_native(params_json: String) -> String {
     let params: CalcOfferedSalaryParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcOfferedSalaryNative", e),
+        Err(e) => return parse_err_at("calcOfferedSalaryNative", e, &params_json),
     };
     let result = player_engine::calc_offered_salary(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcOfferedSalaryNative/serialize", e))
@@ -996,7 +1084,7 @@ pub fn calc_offered_salary_native(params_json: String) -> String {
 pub fn calc_offered_salary_for_protagonist_native(params_json: String) -> String {
     let params: CalcOfferedSalaryForProtagonistParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcOfferedSalaryForProtagonistNative", e),
+        Err(e) => return parse_err_at("calcOfferedSalaryForProtagonistNative", e, &params_json),
     };
     let result = player_engine::calc_offered_salary_for_protagonist(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcOfferedSalaryForProtagonistNative/serialize", e))
@@ -1007,7 +1095,7 @@ pub fn calc_offered_salary_for_protagonist_native(params_json: String) -> String
 pub fn calc_npc_renewal_salary_native(params_json: String) -> String {
     let params: player_engine::CalcNpcRenewalSalaryParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcNpcRenewalSalaryNative", e),
+        Err(e) => return parse_err_at("calcNpcRenewalSalaryNative", e, &params_json),
     };
     let result = player_engine::calc_npc_renewal_salary(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcNpcRenewalSalaryNative/serialize", e))
@@ -1034,7 +1122,7 @@ pub fn form_score_native(params_json: String) -> String {
     }
     let p: P = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("formScoreNative", e),
+        Err(e) => return parse_err_at("formScoreNative", e, &params_json),
     };
     let rules = p.rules.unwrap_or_default();
     let v = team_engine::form_score(p.perf.as_ref(), p.is_pitcher, &rules);
@@ -1078,7 +1166,7 @@ pub fn fix_jersey_numbers_native(params_json: String) -> String {
     struct R { changes: Vec<Change> }
     let mut p: P = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("fixJerseyNumbersNative", e),
+        Err(e) => return parse_err_at("fixJerseyNumbersNative", e, &params_json),
     };
     let before: Vec<i32> = p.npcs.iter().map(|n| n.jersey_number).collect();
     npc_sim::fix_jersey_numbers(&mut p.npcs, &p.retired_numbers);
@@ -1109,7 +1197,7 @@ pub fn fix_position_gaps_native(params_json: String) -> String {
     struct R { changes: Vec<Change> }
     let mut p: P = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("fixPositionGapsNative", e),
+        Err(e) => return parse_err_at("fixPositionGapsNative", e, &params_json),
     };
     let before: Vec<String> = p.npcs.iter().map(|n| n.position.clone()).collect();
     npc_sim::fix_position_gaps(&mut p.npcs, p.season_year);
@@ -1133,7 +1221,7 @@ pub fn fix_position_gaps_native(params_json: String) -> String {
 pub fn calc_npc_contract_years_native(params_json: String) -> String {
     let params: player_engine::CalcNpcContractYearsParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcNpcContractYearsNative", e),
+        Err(e) => return parse_err_at("calcNpcContractYearsNative", e, &params_json),
     };
     let result = player_engine::calc_npc_contract_years(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcNpcContractYearsNative/serialize", e))
@@ -1144,7 +1232,7 @@ pub fn calc_npc_contract_years_native(params_json: String) -> String {
 pub fn generate_fa_offers_native(params_json: String) -> String {
     let params: GenerateFaOffersParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("generateFaOffersNative", e),
+        Err(e) => return parse_err_at("generateFaOffersNative", e, &params_json),
     };
     let result = player_engine::generate_fa_offers(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateFaOffersNative/serialize", e))
@@ -1155,7 +1243,7 @@ pub fn generate_fa_offers_native(params_json: String) -> String {
 pub fn calc_draft_rank_native(params_json: String) -> String {
     let params: CalcDraftRankParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcDraftRankNative", e),
+        Err(e) => return parse_err_at("calcDraftRankNative", e, &params_json),
     };
     let result = player_engine::calc_draft_rank(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcDraftRankNative/serialize", e))
@@ -1166,7 +1254,7 @@ pub fn calc_draft_rank_native(params_json: String) -> String {
 pub fn calc_sports_unit_candidates_native(params_json: String) -> String {
     let params: SportsUnitCandidatesParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcSportsUnitCandidatesNative", e),
+        Err(e) => return parse_err_at("calcSportsUnitCandidatesNative", e, &params_json),
     };
     let result = npc_sim::calc_sports_unit_candidates(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcSportsUnitCandidatesNative/serialize", e))
@@ -1182,7 +1270,7 @@ pub fn calc_sports_unit_candidates_native(params_json: String) -> String {
 pub fn calc_prospect_rank_native(params_json: String) -> String {
     let params: player_engine::ProspectRankParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcProspectRankNative", e),
+        Err(e) => return parse_err_at("calcProspectRankNative", e, &params_json),
     };
     let result = player_engine::calc_prospect_rank(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcProspectRankNative/serialize", e))
@@ -1197,7 +1285,7 @@ pub fn calc_prospect_rank_native(params_json: String) -> String {
 pub fn gen_protagonist_hidden_native(params_json: String) -> String {
     let params: roster_gen::ProtagonistHiddenParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("genProtagonistHiddenNative", e),
+        Err(e) => return parse_err_at("genProtagonistHiddenNative", e, &params_json),
     };
     let result = roster_gen::gen_protagonist_hidden(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("genProtagonistHiddenNative/serialize", e))
@@ -1215,7 +1303,7 @@ pub fn gen_protagonist_hidden_native(params_json: String) -> String {
 pub fn calc_pitcher_decision_native(params_json: String) -> String {
     let params: npc_sim::PitcherDecisionParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcPitcherDecisionNative", e),
+        Err(e) => return parse_err_at("calcPitcherDecisionNative", e, &params_json),
     };
     let result = npc_sim::calc_pitcher_decision(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcPitcherDecisionNative/serialize", e))
@@ -1226,7 +1314,7 @@ pub fn calc_pitcher_decision_native(params_json: String) -> String {
 pub fn calc_sports_unit_selection_native(params_json: String) -> String {
     let params: SportsUnitSelectionParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcSportsUnitSelectionNative", e),
+        Err(e) => return parse_err_at("calcSportsUnitSelectionNative", e, &params_json),
     };
     let result = npc_sim::calc_sports_unit_selection(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcSportsUnitSelectionNative/serialize", e))
@@ -1237,7 +1325,7 @@ pub fn calc_sports_unit_selection_native(params_json: String) -> String {
 pub fn pick_general_enlistees_native(params_json: String) -> String {
     let params: PickGeneralEnlisteesParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("pickGeneralEnlisteesNative", e),
+        Err(e) => return parse_err_at("pickGeneralEnlisteesNative", e, &params_json),
     };
     let result = npc_sim::pick_general_enlistees(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("pickGeneralEnlisteesNative/serialize", e))
@@ -1248,7 +1336,7 @@ pub fn pick_general_enlistees_native(params_json: String) -> String {
 pub fn calc_early_enlist_decisions_native(params_json: String) -> String {
     let params: CalcEarlyEnlistParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcEarlyEnlistDecisionsNative", e),
+        Err(e) => return parse_err_at("calcEarlyEnlistDecisionsNative", e, &params_json),
     };
     let result = npc_sim::calc_early_enlist_decisions(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcEarlyEnlistDecisionsNative/serialize", e))
@@ -1259,7 +1347,7 @@ pub fn calc_early_enlist_decisions_native(params_json: String) -> String {
 pub fn calc_indie_scout_offer_native(params_json: String) -> String {
     let params: player_engine::IndieScoutOfferParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("calcIndieScoutOfferNative", e),
+        Err(e) => return parse_err_at("calcIndieScoutOfferNative", e, &params_json),
     };
     let result = player_engine::calc_indie_scout_offer(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcIndieScoutOfferNative/serialize", e))
@@ -1271,7 +1359,7 @@ pub fn calc_indie_scout_offer_native(params_json: String) -> String {
 #[napi]
 pub fn generate_regional_schedule_native(p: String) -> String {
     let params: GenerateRegionalScheduleParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateRegionalScheduleNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("generateRegionalScheduleNative", e, &p),
     };
     serde_json::to_string(&schedule_engine::generate_regional_schedule(params))
         .unwrap_or_else(|e| parse_err("generateRegionalScheduleNative/serialize", e))
@@ -1283,7 +1371,7 @@ pub fn generate_regional_schedule_native(p: String) -> String {
 #[napi]
 pub fn select_tournament_entrants_native(p: String) -> String {
     let params: tournament::SelectEntrantsParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("selectTournamentEntrantsNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("selectTournamentEntrantsNative", e, &p),
     };
     serde_json::to_string(&tournament::select_tournament_entrants(params))
         .unwrap_or_else(|e| parse_err("selectTournamentEntrantsNative/serialize", e))
@@ -1293,7 +1381,7 @@ pub fn select_tournament_entrants_native(p: String) -> String {
 #[napi]
 pub fn generate_tournament_bracket_native(p: String) -> String {
     let params: tournament::GenerateTournamentParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateTournamentBracketNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("generateTournamentBracketNative", e, &p),
     };
     serde_json::to_string(&tournament::generate_tournament_bracket(params))
         .unwrap_or_else(|e| parse_err("generateTournamentBracketNative/serialize", e))
@@ -1303,7 +1391,7 @@ pub fn generate_tournament_bracket_native(p: String) -> String {
 #[napi]
 pub fn advance_tournament_round_native(p: String) -> String {
     let params: tournament::AdvanceTournamentParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("advanceTournamentRoundNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("advanceTournamentRoundNative", e, &p),
     };
     serde_json::to_string(&tournament::advance_tournament_round(params))
         .unwrap_or_else(|e| parse_err("advanceTournamentRoundNative/serialize", e))
@@ -1320,7 +1408,7 @@ struct BracketRoundQuery {
 #[napi]
 pub fn tournament_round_schedule_native(p: String) -> String {
     let q: BracketRoundQuery = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("tournamentRoundScheduleNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("tournamentRoundScheduleNative", e, &p),
     };
     serde_json::to_string(&tournament::bracket_to_schedule(&q.bracket, q.round))
         .unwrap_or_else(|e| parse_err("tournamentRoundScheduleNative/serialize", e))
@@ -1330,7 +1418,7 @@ pub fn tournament_round_schedule_native(p: String) -> String {
 #[napi]
 pub fn build_farm_bracket_native(p: String) -> String {
     let params: postseason_engine::BuildBracketParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("buildFarmBracketNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("buildFarmBracketNative", e, &p),
     };
     serde_json::to_string(&postseason_engine::build_farm_bracket(params))
         .unwrap_or_else(|e| parse_err("buildFarmBracketNative/serialize", e))
@@ -1342,7 +1430,7 @@ pub fn build_farm_bracket_native(p: String) -> String {
 #[napi]
 pub fn generate_staff_native(p: String) -> String {
     let params: staff_gen::GenerateStaffParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateStaffNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("generateStaffNative", e, &p),
     };
     serde_json::to_string(&staff_gen::generate_staff(params))
         .unwrap_or_else(|e| parse_err("generateStaffNative/serialize", e))
@@ -1352,7 +1440,7 @@ pub fn generate_staff_native(p: String) -> String {
 #[napi]
 pub fn advance_staff_season_native(p: String) -> String {
     let params: staff_lifecycle::AdvanceStaffParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("advanceStaffSeasonNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("advanceStaffSeasonNative", e, &p),
     };
     serde_json::to_string(&staff_lifecycle::advance_staff_season(params))
         .unwrap_or_else(|e| parse_err("advanceStaffSeasonNative/serialize", e))
@@ -1364,7 +1452,7 @@ pub fn advance_staff_season_native(p: String) -> String {
 #[napi]
 pub fn generate_military_roster_native(p: String) -> String {
     let params: military_roster::GenerateMilitaryRosterParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateMilitaryRosterNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("generateMilitaryRosterNative", e, &p),
     };
     serde_json::to_string(&military_roster::generate_military_roster(params))
         .unwrap_or_else(|e| parse_err("generateMilitaryRosterNative/serialize", e))
@@ -1376,7 +1464,7 @@ pub fn generate_military_roster_native(p: String) -> String {
 #[napi]
 pub fn generate_career_history_native(p: String) -> String {
     let params: career_history::GenerateCareerHistoryParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateCareerHistoryNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("generateCareerHistoryNative", e, &p),
     };
     serde_json::to_string(&career_history::generate_career_history(params))
         .unwrap_or_else(|e| parse_err("generateCareerHistoryNative/serialize", e))
@@ -1388,7 +1476,7 @@ pub fn generate_career_history_native(p: String) -> String {
 #[napi]
 pub fn init_relations_native(p: String) -> String {
     let params: relationship::InitRelationParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("initRelationsNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("initRelationsNative", e, &p),
     };
     serde_json::to_string(&relationship::init_relations(params))
         .unwrap_or_else(|e| parse_err("initRelationsNative/serialize", e))
@@ -1398,7 +1486,7 @@ pub fn init_relations_native(p: String) -> String {
 #[napi]
 pub fn weekly_relations_native(p: String) -> String {
     let params: relationship::WeeklyRelationParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weeklyRelationsNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("weeklyRelationsNative", e, &p),
     };
     serde_json::to_string(&relationship::weekly_relations(params))
         .unwrap_or_else(|e| parse_err("weeklyRelationsNative/serialize", e))
@@ -1408,7 +1496,7 @@ pub fn weekly_relations_native(p: String) -> String {
 #[napi]
 pub fn season_relations_native(p: String) -> String {
     let params: relationship::SeasonRelationParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("seasonRelationsNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("seasonRelationsNative", e, &p),
     };
     serde_json::to_string(&relationship::season_relations(params))
         .unwrap_or_else(|e| parse_err("seasonRelationsNative/serialize", e))
@@ -1418,7 +1506,7 @@ pub fn season_relations_native(p: String) -> String {
 #[napi]
 pub fn relation_move_decay_native(p: String) -> String {
     let params: relationship::MoveDecayParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("relationMoveDecayNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("relationMoveDecayNative", e, &p),
     };
     serde_json::to_string(&relationship::move_decay(params))
         .unwrap_or_else(|e| parse_err("relationMoveDecayNative/serialize", e))
@@ -1428,7 +1516,7 @@ pub fn relation_move_decay_native(p: String) -> String {
 #[napi]
 pub fn relation_effects_native(p: String) -> String {
     let params: relationship::RelationEffectParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("relationEffectsNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("relationEffectsNative", e, &p),
     };
     serde_json::to_string(&relationship::relation_effects(params))
         .unwrap_or_else(|e| parse_err("relationEffectsNative/serialize", e))
@@ -1447,7 +1535,7 @@ pub fn relation_label_table_native() -> String {
 #[napi]
 pub fn check_pitcher_rest_native(p: String) -> String {
     let params: rest_rules::RestCheckParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("checkPitcherRestNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("checkPitcherRestNative", e, &p),
     };
     serde_json::to_string(&rest_rules::check_rest(params))
         .unwrap_or_else(|e| parse_err("checkPitcherRestNative/serialize", e))
@@ -1461,7 +1549,7 @@ struct PitchLimitQuery { league_id: String }
 #[napi]
 pub fn league_pitch_limit_native(p: String) -> String {
     let q: PitchLimitQuery = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("leaguePitchLimitNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("leaguePitchLimitNative", e, &p),
     };
     serde_json::to_string(&serde_json::json!({
         "hard": tuning::league_pitch_limit(&q.league_id),
@@ -1475,7 +1563,7 @@ pub fn league_pitch_limit_native(p: String) -> String {
 #[napi]
 pub fn generate_survival_stage_native(p: String) -> String {
     let params: survival::SurvivalStageParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateSurvivalStageNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("generateSurvivalStageNative", e, &p),
     };
     serde_json::to_string(&survival::generate_survival_stage(params))
         .unwrap_or_else(|e| parse_err("generateSurvivalStageNative/serialize", e))
@@ -1485,7 +1573,7 @@ pub fn generate_survival_stage_native(p: String) -> String {
 #[napi]
 pub fn survival_cutoff_native(p: String) -> String {
     let params: survival::SurvivalCutoffParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("survivalCutoffNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("survivalCutoffNative", e, &p),
     };
     serde_json::to_string(&survival::survival_cutoff(params))
         .unwrap_or_else(|e| parse_err("survivalCutoffNative/serialize", e))
@@ -1495,7 +1583,7 @@ pub fn survival_cutoff_native(p: String) -> String {
 #[napi]
 pub fn build_ind_ladder_native(p: String) -> String {
     let params: survival::BuildIndLadderParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("buildIndLadderNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("buildIndLadderNative", e, &p),
     };
     serde_json::to_string(&survival::build_ind_ladder(params))
         .unwrap_or_else(|e| parse_err("buildIndLadderNative/serialize", e))
@@ -1507,7 +1595,7 @@ pub fn build_ind_ladder_native(p: String) -> String {
 #[napi]
 pub fn build_group_stage_native(p: String) -> String {
     let params: group_stage::BuildGroupStageParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("buildGroupStageNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("buildGroupStageNative", e, &p),
     };
     serde_json::to_string(&group_stage::build_group_stage(params))
         .unwrap_or_else(|e| parse_err("buildGroupStageNative/serialize", e))
@@ -1517,7 +1605,7 @@ pub fn build_group_stage_native(p: String) -> String {
 #[napi]
 pub fn apply_group_results_native(p: String) -> String {
     let params: group_stage::ApplyGroupResultsParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("applyGroupResultsNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("applyGroupResultsNative", e, &p),
     };
     serde_json::to_string(&group_stage::apply_group_results(params))
         .unwrap_or_else(|e| parse_err("applyGroupResultsNative/serialize", e))
@@ -1527,7 +1615,7 @@ pub fn apply_group_results_native(p: String) -> String {
 #[napi]
 pub fn group_stage_qualifiers_native(p: String) -> String {
     let stage: group_stage::GroupStage = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("groupStageQualifiersNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("groupStageQualifiersNative", e, &p),
     };
     serde_json::to_string(&group_stage::group_stage_qualifiers(&stage))
         .unwrap_or_else(|e| parse_err("groupStageQualifiersNative/serialize", e))
@@ -1537,7 +1625,7 @@ pub fn group_stage_qualifiers_native(p: String) -> String {
 #[napi]
 pub fn tournament_champion_native(p: String) -> String {
     let b: tournament::TournamentBracket = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("tournamentChampionNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("tournamentChampionNative", e, &p),
     };
     serde_json::to_string(&tournament::tournament_champion(&b))
         .unwrap_or_else(|e| parse_err("tournamentChampionNative/serialize", e))
@@ -1546,7 +1634,7 @@ pub fn tournament_champion_native(p: String) -> String {
 #[napi]
 pub fn generate_schedule_native(p: String) -> String {
     let params: GenerateScheduleParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateScheduleNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("generateScheduleNative", e, &p),
     };
     serde_json::to_string(&schedule_engine::generate_schedule(params))
         .unwrap_or_else(|e| parse_err("generateScheduleNative/serialize", e))
@@ -1555,7 +1643,7 @@ pub fn generate_schedule_native(p: String) -> String {
 #[napi]
 pub fn generate_kbl_schedule_native(p: String) -> String {
     let params: GenerateProScheduleParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateKblScheduleNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("generateKblScheduleNative", e, &p),
     };
     serde_json::to_string(&schedule_engine::generate_kbl_schedule(params))
         .unwrap_or_else(|e| parse_err("generateKblScheduleNative/serialize", e))
@@ -1564,7 +1652,7 @@ pub fn generate_kbl_schedule_native(p: String) -> String {
 #[napi]
 pub fn generate_abl_schedule_native(p: String) -> String {
     let params: GenerateProScheduleParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateAblScheduleNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("generateAblScheduleNative", e, &p),
     };
     serde_json::to_string(&schedule_engine::generate_abl_schedule(params))
         .unwrap_or_else(|e| parse_err("generateAblScheduleNative/serialize", e))
@@ -1573,7 +1661,7 @@ pub fn generate_abl_schedule_native(p: String) -> String {
 #[napi]
 pub fn generate_jbl_schedule_native(p: String) -> String {
     let params: GenerateProScheduleParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateJblScheduleNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("generateJblScheduleNative", e, &p),
     };
     serde_json::to_string(&schedule_engine::generate_jbl_schedule(params))
         .unwrap_or_else(|e| parse_err("generateJblScheduleNative/serialize", e))
@@ -1582,7 +1670,7 @@ pub fn generate_jbl_schedule_native(p: String) -> String {
 #[napi]
 pub fn generate_league_schedule_native(p: String) -> String {
     let params: GenerateLeagueScheduleParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateLeagueScheduleNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("generateLeagueScheduleNative", e, &p),
     };
     serde_json::to_string(&schedule_engine::generate_league_schedule(params))
         .unwrap_or_else(|e| parse_err("generateLeagueScheduleNative/serialize", e))
@@ -1591,7 +1679,7 @@ pub fn generate_league_schedule_native(p: String) -> String {
 #[napi]
 pub fn generate_all_league_schedules_native(p: String) -> String {
     let params: GenerateAllLeagueSchedulesParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateAllLeagueSchedulesNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("generateAllLeagueSchedulesNative", e, &p),
     };
     serde_json::to_string(&schedule_engine::generate_all_league_schedules(params))
         .unwrap_or_else(|e| parse_err("generateAllLeagueSchedulesNative/serialize", e))
@@ -1602,7 +1690,7 @@ pub fn generate_all_league_schedules_native(p: String) -> String {
 #[napi]
 pub fn build_kbl_bracket_native(p: String) -> String {
     let params: BuildBracketParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("buildKblBracketNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("buildKblBracketNative", e, &p),
     };
     serde_json::to_string(&postseason_engine::build_kbl_bracket(params))
         .unwrap_or_else(|e| parse_err("buildKblBracketNative/serialize", e))
@@ -1611,7 +1699,7 @@ pub fn build_kbl_bracket_native(p: String) -> String {
 #[napi]
 pub fn build_abl_bracket_native(p: String) -> String {
     let params: BuildAblBracketParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("buildAblBracketNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("buildAblBracketNative", e, &p),
     };
     serde_json::to_string(&postseason_engine::build_abl_bracket(params))
         .unwrap_or_else(|e| parse_err("buildAblBracketNative/serialize", e))
@@ -1620,7 +1708,7 @@ pub fn build_abl_bracket_native(p: String) -> String {
 #[napi]
 pub fn build_jbl_bracket_native(p: String) -> String {
     let params: BuildBracketParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("buildJblBracketNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("buildJblBracketNative", e, &p),
     };
     serde_json::to_string(&postseason_engine::build_jbl_bracket(params))
         .unwrap_or_else(|e| parse_err("buildJblBracketNative/serialize", e))
@@ -1629,7 +1717,7 @@ pub fn build_jbl_bracket_native(p: String) -> String {
 #[napi]
 pub fn apply_game_to_series_native(p: String) -> String {
     let params: ApplyGameToSeriesParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("applyGameToSeriesNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("applyGameToSeriesNative", e, &p),
     };
     serde_json::to_string(&postseason_engine::apply_game_to_series(params))
         .unwrap_or_else(|e| parse_err("applyGameToSeriesNative/serialize", e))
@@ -1638,7 +1726,7 @@ pub fn apply_game_to_series_native(p: String) -> String {
 #[napi]
 pub fn fill_next_series_native(p: String) -> String {
     let params: FillNextSeriesParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("fillNextSeriesNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("fillNextSeriesNative", e, &p),
     };
     serde_json::to_string(&postseason_engine::fill_next_series(params))
         .unwrap_or_else(|e| parse_err("fillNextSeriesNative/serialize", e))
@@ -1647,7 +1735,7 @@ pub fn fill_next_series_native(p: String) -> String {
 #[napi]
 pub fn resolve_non_protagonist_series_native(p: String) -> String {
     let params: ResolveNpcSeriesParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("resolveNonProtagonistSeriesNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("resolveNonProtagonistSeriesNative", e, &p),
     };
     serde_json::to_string(&postseason_engine::resolve_non_protagonist_series(params))
         .unwrap_or_else(|e| parse_err("resolveNonProtagonistSeriesNative/serialize", e))
@@ -1656,7 +1744,7 @@ pub fn resolve_non_protagonist_series_native(p: String) -> String {
 #[napi]
 pub fn make_series_game_native(p: String) -> String {
     let params: MakeSeriesGameParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("makeSeriesGameNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("makeSeriesGameNative", e, &p),
     };
     serde_json::to_string(&postseason_engine::make_series_game(params))
         .unwrap_or_else(|e| parse_err("makeSeriesGameNative/serialize", e))
@@ -1665,7 +1753,7 @@ pub fn make_series_game_native(p: String) -> String {
 #[napi]
 pub fn shuffle_abl_conferences_native(p: String) -> String {
     let params: ShuffleAblConferencesParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("shuffleAblConferencesNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("shuffleAblConferencesNative", e, &p),
     };
     serde_json::to_string(&postseason_engine::shuffle_abl_conferences(params))
         .unwrap_or_else(|e| parse_err("shuffleAblConferencesNative/serialize", e))
@@ -1676,7 +1764,7 @@ pub fn shuffle_abl_conferences_native(p: String) -> String {
 #[napi]
 pub fn week_calc_facility_eff_native(p: String) -> String {
     let params: week_engine::FacilityEffPayload = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weekCalcFacilityEffNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("weekCalcFacilityEffNative", e, &p),
     };
     serde_json::to_string(&week_engine::calc_facility_eff(params))
         .unwrap_or_else(|e| parse_err("weekCalcFacilityEffNative/serialize", e))
@@ -1685,7 +1773,7 @@ pub fn week_calc_facility_eff_native(p: String) -> String {
 #[napi]
 pub fn week_calc_injury_native(p: String) -> String {
     let params: week_engine::InjuryPayload = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weekCalcInjuryNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("weekCalcInjuryNative", e, &p),
     };
     serde_json::to_string(&week_engine::calc_injury(params))
         .unwrap_or_else(|e| parse_err("weekCalcInjuryNative/serialize", e))
@@ -1694,7 +1782,7 @@ pub fn week_calc_injury_native(p: String) -> String {
 #[napi]
 pub fn week_calc_hs_admissions_native(p: String) -> String {
     let params: week_engine::HsAdmissionsPayload = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weekCalcHsAdmissionsNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("weekCalcHsAdmissionsNative", e, &p),
     };
     serde_json::to_string(&week_engine::calc_hs_admissions(params))
         .unwrap_or_else(|e| parse_err("weekCalcHsAdmissionsNative/serialize", e))
@@ -1704,7 +1792,7 @@ pub fn week_calc_hs_admissions_native(p: String) -> String {
 #[napi]
 pub fn week_calc_exam_result_native(p: String) -> String {
     let params: week_engine::ExamPayload = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weekCalcExamResultNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("weekCalcExamResultNative", e, &p),
     };
     serde_json::to_string(&week_engine::calc_exam_result(params))
         .unwrap_or_else(|e| parse_err("weekCalcExamResultNative/serialize", e))
@@ -1713,7 +1801,7 @@ pub fn week_calc_exam_result_native(p: String) -> String {
 #[napi]
 pub fn week_calc_weekly_study_native(p: String) -> String {
     let params: week_engine::WeeklyStudyPayload = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weekCalcWeeklyStudyNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("weekCalcWeeklyStudyNative", e, &p),
     };
     serde_json::to_string(&week_engine::calc_weekly_study(params))
         .unwrap_or_else(|e| parse_err("weekCalcWeeklyStudyNative/serialize", e))
@@ -1722,7 +1810,7 @@ pub fn week_calc_weekly_study_native(p: String) -> String {
 #[napi]
 pub fn week_calc_semester_result_native(p: String) -> String {
     let params: week_engine::SemesterPayload = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weekCalcSemesterResultNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("weekCalcSemesterResultNative", e, &p),
     };
     serde_json::to_string(&week_engine::calc_semester_result(params))
         .unwrap_or_else(|e| parse_err("weekCalcSemesterResultNative/serialize", e))
@@ -1732,7 +1820,7 @@ pub fn week_calc_semester_result_native(p: String) -> String {
 #[napi]
 pub fn week_calc_military_life_native(p: String) -> String {
     let params: week_engine::MilitaryLifeWeekPayload = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weekCalcMilitaryLifeNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("weekCalcMilitaryLifeNative", e, &p),
     };
     serde_json::to_string(&week_engine::calc_military_life_week(params))
         .unwrap_or_else(|e| parse_err("weekCalcMilitaryLifeNative/serialize", e))
@@ -1741,7 +1829,7 @@ pub fn week_calc_military_life_native(p: String) -> String {
 #[napi]
 pub fn week_calc_military_native(p: String) -> String {
     let params: week_engine::MilitaryWeekPayload = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weekCalcMilitaryNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("weekCalcMilitaryNative", e, &p),
     };
     serde_json::to_string(&week_engine::calc_military_week(params))
         .unwrap_or_else(|e| parse_err("weekCalcMilitaryNative/serialize", e))
@@ -1750,7 +1838,7 @@ pub fn week_calc_military_native(p: String) -> String {
 #[napi]
 pub fn week_calc_npc_fallback_native(p: String) -> String {
     let params: week_engine::NpcFallbackPayload = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weekCalcNpcFallbackNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("weekCalcNpcFallbackNative", e, &p),
     };
     serde_json::to_string(&week_engine::calc_npc_fallback(params))
         .unwrap_or_else(|e| parse_err("weekCalcNpcFallbackNative/serialize", e))
@@ -1765,7 +1853,7 @@ pub fn week_roll_random_batch_native(count: u32, seed: u32) -> String {
 #[napi]
 pub fn week_calc_npc_injuries_native(p: String) -> String {
     let params: week_engine::NpcInjuriesPayload = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weekCalcNpcInjuriesNative", e),
+        Ok(v) => v, Err(e) => return parse_err_at("weekCalcNpcInjuriesNative", e, &p),
     };
     serde_json::to_string(&week_engine::calc_npc_injuries(params))
         .unwrap_or_else(|e| parse_err("weekCalcNpcInjuriesNative/serialize", e))
@@ -1778,7 +1866,7 @@ pub fn week_calc_npc_injuries_native(p: String) -> String {
 pub fn generate_league_roster_native(params_json: String) -> String {
     let params: roster_gen::GenerateLeagueRosterParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("generateLeagueRosterNative", e),
+        Err(e) => return parse_err_at("generateLeagueRosterNative", e, &params_json),
     };
     let result = roster_gen::generate_league_roster(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateLeagueRosterNative/serialize", e))
@@ -1790,7 +1878,7 @@ pub fn generate_league_roster_native(params_json: String) -> String {
 pub fn generate_foreign_players_native(params_json: String) -> String {
     let params: roster_gen::GenerateForeignParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("generateForeignPlayersNative", e),
+        Err(e) => return parse_err_at("generateForeignPlayersNative", e, &params_json),
     };
     let result = roster_gen::generate_foreign_players(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateForeignPlayersNative/serialize", e))
@@ -1801,7 +1889,7 @@ pub fn generate_foreign_players_native(params_json: String) -> String {
 pub fn synthetic_weekly_perf_native(params_json: String) -> String {
     let params: synthetic_trajectory::SyntheticWeeklyPerfParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
-        Err(e) => return parse_err("syntheticWeeklyPerfNative", e),
+        Err(e) => return parse_err_at("syntheticWeeklyPerfNative", e, &params_json),
     };
     let result = synthetic_trajectory::synthetic_weekly_perf(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("syntheticWeeklyPerfNative/serialize", e))
@@ -1809,50 +1897,172 @@ pub fn synthetic_weekly_perf_native(params_json: String) -> String {
 
 // ── scouting_engine ───────────────────────────────────────────────────────────
 
+// 🔴 **여기 열여섯 자리가 JSON 을 손으로 이었다** (2026-09-26 고침 · A).
+//
+//   `Err(e) => format!(r#"{{"error":"{}"}}"#, e)` 였다. serde 의 오류 메시지는
+//   **깨진 데이터를 그대로 물고 온다** — 실측으로 확인했다
+//   (`scripts/probe-a-jsonctrl.cjs` ②: `unknown variant \`P<개행>제어\``).
+//   그 메시지에 `"` 나 제어문자가 있으면 이 `format!` 은 **JSON 이 아닌 문자열**을
+//   내고, TS 쪽 `JSON.parse` 가 「Bad control character in string literal」로
+//   죽는다. 엔진이 보낸 진짜 이유는 그 자리에서 사라진다.
+//
+//   `serde_json::json!`(→ `parse_err`)은 이스케이프를 해 준다. **서식은 한
+//   곳에서만 만든다** — 손으로 잇는 자리를 남기면 언젠가 그 하나가 터진다.
+//
+//   ⚠ `unwrap_or_default()` 도 같이 걷었다. 직렬화가 실패하면 **빈 문자열**을
+//     돌려줘서 TS 가 「Unexpected end of JSON input」을 봤다 — 어느 함수가
+//     무엇에 실패했는지 한 글자도 안 남았다.
+
 #[napi]
 pub fn apply_scouting_noise_native(params_json: String) -> String {
     match serde_json::from_str(&params_json) {
-        Ok(p) => serde_json::to_string(&scouting_engine::apply_scouting_noise(p)).unwrap_or_default(),
-        Err(e) => format!(r#"{{"error":"{}"}}"#, e),
+        Ok(p) => serde_json::to_string(&scouting_engine::apply_scouting_noise(p))
+            .unwrap_or_else(|e| parse_err("applyScoutingNoiseNative/serialize", e)),
+        Err(e) => parse_err_at("applyScoutingNoiseNative", e, &params_json),
     }
 }
 
 // ── team_engine ───────────────────────────────────────────────────────────────
 
+/// ⚠ `$js_name` 은 TS 가 부르는 이름이다 — 메시지가 나머지 240 자리와 같은
+///   이름을 말해야 그 한 줄만 보고 호출부를 찾을 수 있다.
 macro_rules! napi_team {
-    ($fn_name:ident, $rust_fn:expr) => {
+    ($fn_name:ident, $js_name:literal, $rust_fn:expr) => {
         #[napi]
         pub fn $fn_name(params_json: String) -> String {
             match serde_json::from_str(&params_json) {
-                Ok(p) => serde_json::to_string(&$rust_fn(p)).unwrap_or_default(),
-                Err(e) => format!(r#"{{"error":"{}"}}"#, e),
+                Ok(p) => serde_json::to_string(&$rust_fn(p))
+                    .unwrap_or_else(|e| parse_err(concat!($js_name, "/serialize"), e)),
+                Err(e) => parse_err_at($js_name, e, &params_json),
             }
         }
     };
 }
 
-napi_team!(eval_callup_candidates_native,        team_engine::eval_callup_candidates);
-napi_team!(eval_calldown_candidates_native,      team_engine::eval_calldown_candidates);
-napi_team!(eval_release_priority_native,         team_engine::eval_release_priority);
-napi_team!(eval_fa_bid_native,                   team_engine::eval_fa_bid);
-napi_team!(eval_retirement_suggestion_native,    team_engine::eval_retirement_suggestion);
-napi_team!(generate_trade_proposals_native,      team_engine::generate_trade_proposals);
-napi_team!(eval_trade_value_native,              team_engine::eval_trade_value);
-napi_team!(eval_medical_test_native,             team_engine::eval_medical_test);
-napi_team!(calc_win_now_pressure_update_native,  team_engine::calc_win_now_pressure_update);
-napi_team!(calc_scouting_improvement_native,     team_engine::calc_scouting_improvement);
+napi_team!(eval_callup_candidates_native,     "evalCallupCandidatesNative",     team_engine::eval_callup_candidates);
+napi_team!(eval_calldown_candidates_native,   "evalCalldownCandidatesNative",   team_engine::eval_calldown_candidates);
+napi_team!(eval_release_priority_native,      "evalReleasePriorityNative",      team_engine::eval_release_priority);
+napi_team!(eval_fa_bid_native,                "evalFaBidNative",                team_engine::eval_fa_bid);
+napi_team!(eval_retirement_suggestion_native, "evalRetirementSuggestionNative", team_engine::eval_retirement_suggestion);
+napi_team!(generate_trade_proposals_native,   "generateTradeProposalsNative",   team_engine::generate_trade_proposals);
+napi_team!(eval_trade_value_native,           "evalTradeValueNative",           team_engine::eval_trade_value);
+napi_team!(eval_medical_test_native,          "evalMedicalTestNative",          team_engine::eval_medical_test);
+napi_team!(calc_win_now_pressure_update_native, "calcWinNowPressureUpdateNative", team_engine::calc_win_now_pressure_update);
+napi_team!(calc_scouting_improvement_native,  "calcScoutingImprovementNative",  team_engine::calc_scouting_improvement);
 
 // ── player_agent ──────────────────────────────────────────────────────────────
 
-napi_team!(player_eval_fa_decision_native,           player_agent::player_eval_fa_decision);
-napi_team!(player_eval_trade_response_native,        player_agent::player_eval_trade_response);
-napi_team!(player_eval_retirement_response_native,   player_agent::player_eval_retirement_response);
-napi_team!(player_rank_fa_offers_native,             player_agent::player_rank_fa_offers);
+napi_team!(player_eval_fa_decision_native,         "playerEvalFaDecisionNative",         player_agent::player_eval_fa_decision);
+napi_team!(player_eval_trade_response_native,      "playerEvalTradeResponseNative",      player_agent::player_eval_trade_response);
+napi_team!(player_eval_retirement_response_native, "playerEvalRetirementResponseNative", player_agent::player_eval_retirement_response);
+napi_team!(player_rank_fa_offers_native,           "playerRankFaOffersNative",           player_agent::player_rank_fa_offers);
 
 #[napi]
 pub fn update_player_loyalty_native(params_json: String) -> String {
     match serde_json::from_str::<player_agent::UpdateLoyaltyParams>(&params_json) {
-        Ok(p) => serde_json::to_string(&player_agent::update_player_loyalty(p)).unwrap_or_default(),
-        Err(e) => format!(r#"{{"error":"{}"}}"#, e),
+        Ok(p) => serde_json::to_string(&player_agent::update_player_loyalty(p))
+            .unwrap_or_else(|e| parse_err("updatePlayerLoyaltyNative/serialize", e)),
+        Err(e) => parse_err_at("updatePlayerLoyaltyNative", e, &params_json),
+    }
+}
+
+// ── 재현 검사 — JSON 제어문자 (2026-09-26 · A) ────────────────────────────────
+//
+// 🔴 **가설과 실측**. 09-25 24판 다섯 번째 #8 이 `matchToSimResultNative` 에서
+//   `control character (U+0000~U+001F) found while parsing a string` 로 죽었고
+//   같은 씨앗 재실행엔 재현되지 않았다. 세운 가설은 둘이었다:
+//
+//     ① 자유 문자열 칸(이름·팀 id·로그 문안)에 제어문자가 들어 있었다
+//     ② 그 문자열을 **이스케이프 없이 이은 자리**가 있다
+//
+//   ①은 **틀렸다.** `JSON.stringify`·`serde_json::to_string` 둘 다 U+0000~U+001F
+//   를 반드시 이스케이프한다 — 실제 경로 60경기(payload 평균 42KB · 자유 문자열
+//   칸 410개)에 여섯 가지 제어문자를 심고 재도 **생 제어문자 0건 · 예외 0건**
+//   이었다(`scripts/probe-a-jsonctrl.cjs` ①②).
+//   ②는 **맞았다** — `napi_team!` 매크로를 포함한 열여섯 자리가
+//   `format!(r#"{{"error":"{}"}}"#, e)` 로 JSON 을 손으로 이었다.
+//
+//   아래 검사가 그 둘을 못박는다. `parse_err_at` 이 **어느 칸이었는지**
+//   말하는지도 같이 본다 — 다시 한 번 나고 사라지면 그 한 줄이 유일한 증거다.
+#[cfg(test)]
+mod json_ctrl_tests {
+    use super::*;
+
+    /// 이 크레이트가 내는 오류 JSON 은 **언제나 파싱된다.** 손으로 이으면 깨진다
+    fn err_message(raw: &str) -> String {
+        let v: serde_json::Value =
+            serde_json::from_str(raw).expect("오류 JSON 자체가 파싱돼야 한다");
+        v["error"].as_str().unwrap_or_default().to_string()
+    }
+
+    /// ① 이름에 제어문자가 있어도 **정상 직렬화 경로는 멀쩡하다**
+    #[test]
+    fn 제어문자가_든_이름은_이스케이프돼_통과한다() {
+        for c in ['\u{0}', '\u{1f}', '\n', '\u{8}'] {
+            let payload = serde_json::json!({
+                "state": { "matchId": format!("M{}끝", c) },
+                "homeTeamId": format!("TEAM_A{}", c),
+            })
+            .to_string();
+            // 직렬화가 생 제어문자를 남기지 않는다
+            assert!(
+                !payload.bytes().any(|b| b < 0x20),
+                "serde_json 이 제어문자를 그대로 냈다: {:?}",
+                c
+            );
+            // 그래서 되읽기도 된다
+            let back: serde_json::Value = serde_json::from_str(&payload).unwrap();
+            assert_eq!(back["homeTeamId"].as_str().unwrap(), format!("TEAM_A{}", c));
+        }
+    }
+
+    /// ② 생 제어문자가 낀 입력 — 옛 결함의 재현. 메시지가 **어느 칸**인지 말해야 한다
+    #[test]
+    fn 생_제어문자는_어느_칸이었는지_말한다() {
+        // 손으로 이은 JSON — `format!` 로 잇던 자리가 정확히 이 꼴을 만들었다
+        let broken = "{\"homeTeamId\":\"TEAM_A\u{1f}B\",\"week\":3}";
+        let e = serde_json::from_str::<serde_json::Value>(broken).unwrap_err();
+        let raw = parse_err_at("matchToSimResultNative", e, broken);
+        let msg = err_message(&raw);
+
+        assert!(msg.contains("control character"), "옛 예외와 같은 꼴이어야 한다: {msg}");
+        assert!(msg.contains("칸 `homeTeamId`"), "어느 칸인지 말해야 한다: {msg}");
+        // 메시지에 생 제어문자를 남기지 않는다 — 09-25 보고서가 그 바이트를 먹었다
+        assert!(
+            !msg.bytes().any(|b| b < 0x20),
+            "메시지에 생 제어문자가 남았다: {msg:?}"
+        );
+        assert!(msg.contains("\\u001f"), "그 바이트를 글자로 적어야 한다: {msg}");
+    }
+
+    /// ③ 깊은 자리에서 깨져도 칸 이름을 짚는다 — 옛 payload 는 4만 바이트였다
+    #[test]
+    fn 깊은_자리도_칸_이름을_짚는다() {
+        let mut broken = String::from("{\"state\":{\"logs\":[\"1회 플레이볼\",\"2회 ");
+        broken.push('\u{3}');
+        broken.push_str("헛스윙\"]}}");
+        let e = serde_json::from_str::<serde_json::Value>(&broken).unwrap_err();
+        let msg = err_message(&parse_err_at("simToGameEnd", e, &broken));
+        assert!(msg.contains("칸 `logs`"), "로그 칸을 짚어야 한다: {msg}");
+        assert!(msg.contains("2회"), "그 앞 글자를 보여 줘야 한다: {msg}");
+    }
+
+    /// ④ 오류 메시지가 깨진 데이터를 물고 와도 **오류 JSON 은 파싱된다**
+    ///
+    /// 손으로 잇던 열여섯 자리가 깨졌던 지점이다 — serde 는 `unknown variant`
+    /// 같은 메시지에 원본 글자를 그대로 넣는다.
+    #[test]
+    fn 오류_메시지가_따옴표를_물어도_결과는_멀쩡하다() {
+        let broken = "{\"position\":\"P\\\"괄호\"}";
+        #[derive(serde::Deserialize, Debug)]
+        struct P {
+            #[allow(dead_code)]
+            position: types::FieldPosition,
+        }
+        let e = serde_json::from_str::<P>(broken).unwrap_err();
+        let raw = parse_err_at("evalTradeValueNative", e, broken);
+        // 손으로 이었으면 여기서 깨졌다
+        let msg = err_message(&raw);
+        assert!(msg.contains("evalTradeValueNative"), "{msg}");
     }
 }
