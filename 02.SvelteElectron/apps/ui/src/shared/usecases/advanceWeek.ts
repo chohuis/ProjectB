@@ -1335,6 +1335,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         + " grade=" + p.grade + " avgPct=" + avgPct.toFixed(1) + " academicGrade=" + aGrade
         + " hsBaseballScore=" + hsBaseballScore + " ovr=" + p.pitching.ovr
         + " drafted=" + draftOutcome.drafted
+        + " round=" + (draftOutcome.round ?? "-") + " pick=" + (draftOutcome.pick ?? "-")
+        + " team=" + (draftOutcome.teamId ?? "-")
         + " univPassed=" + admissionsCalc.univPassed.length
         + " indiePassed=" + admissionsCalc.indiePassed.length
         + " 고교성적=[" + 고교성적 + "]"
