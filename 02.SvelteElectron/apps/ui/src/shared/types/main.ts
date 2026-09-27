@@ -221,6 +221,13 @@ export interface DecisionEffect {
    *   것은 세계가 하는 일이지 주사위가 할 일이 아니므로 `STATE_EFFECT_KEYS`
    *   에 넣어 **통지에서만** 먹게 했다. 감독 관계는 그 통지가 뜨는 **조건**
    *   자리에서 본다(`relation_gte` manager) — 그것이 결정 2번의 뜻이다.
+   *
+   * ⚠ **2026-09-27 재확인 · 쓸 자리 없음.** B 가 통지 13종을 전수했는데 자리를
+   *   주는 것은 하나도 없고, 빼앗는 것이 하나 있다(`EVT_PRO_ROLE_DEMOTE`).
+   *   위 셋은 여전히 감독 관계 +6 을 준다. **「죽은 갈래」가 아니라 「아직 안
+   *   부른 것」이다** — 배선 넷(부여·깊이·반영·차감)이 다 이어져 있고
+   *   `rewardKeys.test.ts` 가 누적까지 잰다. 통지가 생기면 그날 데이터만
+   *   적으면 된다. 자세한 것은 `CONTENT_DEAD_SLOTS_2026-09-09.md` 2번.
    */
   startGuarantee?: { games: number };
   /**
