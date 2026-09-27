@@ -71,17 +71,21 @@ export interface MatchEngineTuning {
 }
 
 export const DEFAULT_MATCH_ENGINE_TUNING: MatchEngineTuning = {
+  // ⚠ **정본은 `packages/engine-native/src/tuning.rs pitch_base` 다.** 여기는
+  //   그 거울이고, 이 파일 머리말이 「Rust 값과 동기」라고 못박고 있다 —
+  //   한쪽만 고치면 이 프로젝트가 여러 번 당한 「표가 둘」이 된다.
+  //   폭 9 → 5 (2026-09-27 · 결정 ⑤ · 평균 54.4 불변 · 근거는 Rust 쪽 주석).
   pitchBase: {
-    fastball: 59,
-    sinker: 57,
-    cutter: 56,
-    slider: 56,
+    fastball: 57,
+    sinker: 56,
+    cutter: 55.5,
+    slider: 55.5,
     curve: 54,
-    changeup: 53,
+    changeup: 53.5,
     splitter: 54,
-    forkball: 53,
-    screwball: 52,
-    knuckleball: 50,
+    forkball: 53.5,
+    screwball: 53,
+    knuckleball: 52,
   },
   strategyBonus: { aggressive: 2, balanced: 0, safe: -2 },
   powerBonus: { low: -1.5, normal: 0, high: 2.8 },

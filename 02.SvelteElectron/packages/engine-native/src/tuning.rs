@@ -52,18 +52,43 @@ pub fn form_penalty(difficulty: f64, control: f64) -> (f64, f64) {
     ((cmd * 10.0).round() / 10.0, (ctl * 10.0).round() / 10.0)
 }
 
+/// 구종의 **바탕 품질**. 숙련도(`grade_quality_bonus`)와 더해져 공 하나의
+/// 품질이 된다.
+///
+/// 🔴 **폭이 9 → 5 다** (2026-09-27 · A 제안값 · 결정 ⑤ · 실측
+/// `docs/SIM_103_PITCH_DRAFT_2026-09-27.md`). 예전엔 직구 59 ~ 너클 50 이었다.
+///
+/// **왜 좁혔나.** 폭이 넓으면 구종을 하나 더 배울 때 **개수가 느는 동시에
+/// 평균 바탕이 내려간다** — 둘이 반대 방향이라 「넓힐수록 나빠진다」가 됐다.
+/// 2,700경기/칸 실측(`probe:a:read`)에서 등급 가중 평균 바탕이 2.42점 내려가는
+/// 사다리는 피안타율 **+.018**(구종 2→5), 1.70점만 내려가는 사다리는 **−.002**
+/// 였다. 즉 희석이 2.4점이면 개수 이득이 지고 1.7점이면 비긴다.
+/// 결정 ⑩(타자 노림수)이 구종을 넓힐 이유를 산식에 넣어 놨는데
+/// (읽히는 몫 2개 1.849 → 5개 1.446) 이 폭이 그걸 덮고 있었다.
+///
+/// ⚠ **폭만 줄였다. 수준은 안 건드렸다** — 열 값의 평균이 54.4 로 **같다**.
+///   `new = 52 + (old − 50) × 5/9` 를 0.5 격자로 반올림한 값이고 순서도 전부
+///   그대로다. 위나 아래에 붙였으면 폭과 수준이 같이 움직여 **한 변수가
+///   아니게 된다**(그러면 리그 난이도 변화가 폭 때문인지 수준 때문인지 못 가른다).
+///
+/// ⚠ **거울이 하나 있다** — `packages/core/src/domain/matchEngineTuning.ts`
+///   `DEFAULT_MATCH_ENGINE_TUNING.pitchBase`. 지금 읽는 코드는 없지만 이 파일
+///   머리말이 「그 값과 동기」라고 못박고 있다. **정본은 여기다** — 고칠 때
+///   둘 다 고친다.
+///
+/// 되돌리려면 위 옛 값(59/57/56/56/54/53/54/53/52/50)을 그대로 쓴다.
 pub fn pitch_base(t: PitchType) -> f64 {
     match t {
-        PitchType::Fastball   => 59.0,
-        PitchType::Sinker     => 57.0,
-        PitchType::Cutter     => 56.0,
-        PitchType::Slider     => 56.0,
+        PitchType::Fastball   => 57.0,
+        PitchType::Sinker     => 56.0,
+        PitchType::Cutter     => 55.5,
+        PitchType::Slider     => 55.5,
         PitchType::Curve      => 54.0,
-        PitchType::Changeup   => 53.0,
+        PitchType::Changeup   => 53.5,
         PitchType::Splitter   => 54.0,
-        PitchType::Forkball   => 53.0,
-        PitchType::Screwball  => 52.0,
-        PitchType::Knuckleball=> 50.0,
+        PitchType::Forkball   => 53.5,
+        PitchType::Screwball  => 53.0,
+        PitchType::Knuckleball=> 52.0,
     }
 }
 
