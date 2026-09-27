@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { readAttendanceTally, resetAttendanceTally } from "../clubFinance";
@@ -37,9 +38,9 @@ describe("관중 계측 칸", () => {
   });
 
   it("세이브에도 화면에도 안 간다 — 소비처는 계측뿐이다", () => {
-    for (const p of ["apps/ui/src/shared/types/save.ts", "apps/ui/src/shared/stores/game.ts"]) {
-      expect(read(p)).not.toContain("attendanceTally");
-    }
+    expect(read("apps/ui/src/shared/types/save.ts")).not.toContain("attendanceTally");
+    // 스토어 경로 전체 — Ⅱ-2 로 덩이가 나가도 「없다」가 그대로 지켜져야 한다
+    expect(gamePathSrc()).not.toContain("attendanceTally");
   });
 
   it("vitest 는 계측 모드가 아니다 — 누적이 비어 있다", () => {

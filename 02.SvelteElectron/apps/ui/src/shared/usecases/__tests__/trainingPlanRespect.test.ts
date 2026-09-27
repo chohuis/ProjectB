@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -31,7 +32,7 @@ describe("자동 진행이 플레이어 계획을 존중한다", () => {
   });
 
   it("스토어가 누가 썼는지 구분한다", () => {
-    const s = read("stores/game.ts");
+    const s = gamePathSrc();
     expect(s).toMatch(
       /setTrainingPlan\(plan: Partial<TrainingPlanState>, opts\?: \{ auto\?: boolean \}\)/,
     );

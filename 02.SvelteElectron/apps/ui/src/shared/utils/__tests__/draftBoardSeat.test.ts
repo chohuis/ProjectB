@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -22,7 +23,7 @@ const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 describe("주인공 드래프트 좌석", () => {
-  const store = read("apps/ui/src/shared/stores/game.ts");
+  const store = gamePathSrc();
   const rust = read("packages/engine-native/src/npc_sim.rs");
   const modal = read("apps/ui/src/features/career/ui/DraftBoardModal.svelte");
   const ds = read("apps/ui/src/shared/utils/draftSystem.ts");

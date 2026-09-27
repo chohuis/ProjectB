@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -23,7 +24,7 @@ describe("드래프트 스카우팅", () => {
   const rust = read("packages/engine-native/src/npc_sim.rs");
   const types = read("packages/engine-native/src/sim_types.rs");
   const ds = strip(read("apps/ui/src/shared/utils/draftSystem.ts"));
-  const store = strip(read("apps/ui/src/shared/stores/game.ts"));
+  const store = strip(gamePathSrc());
 
   it("규칙 파일에 값이 있다", () => {
     expect(rules.draftScoutingRules?.span).toBeGreaterThan(0);

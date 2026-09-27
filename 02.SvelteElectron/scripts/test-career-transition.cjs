@@ -150,7 +150,8 @@ const files = {
   "진로 신청 허브": "../apps/ui/src/features/career/ui/CareerChoiceHubModal.svelte",
 };
 {
-  const g = fs.readFileSync(path.join(__dirname, files["game.ts applyDraftDecision"]), "utf8");
+  // 스토어 경로 **전체** — Ⅱ-2 로 덩이가 `usecases/gameStore/` 로 나가도 안 깨진다
+  const g = require("./game-path-src.cjs").gamePathSrc();
   check("  applyDraftDecision 이 거부 시 상태를 안 건드린다",
     /transitionReason[\s\S]{0,400}return s;/.test(g),
     "거부 경로가 return s 로 끝나지 않는다");

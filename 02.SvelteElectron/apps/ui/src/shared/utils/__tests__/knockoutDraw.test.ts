@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { knockoutMatchIds, winnerById, allScheduleEntries } from "../scheduleView";
@@ -114,7 +115,7 @@ describe("대회 소식 id 는 주차를 담는다", () => {
 
   /** 버려진 사본을 **센다** — 안 세면 소식 한 통이 조용히 사라진다 */
   it("소식함이 걷어낸 사본을 센다", () => {
-    const G = read("apps/ui/src/shared/stores/game.ts");
+    const G = gamePathSrc();
     expect(G).toContain("export const mailboxDupStats = {");
     expect(G).toContain("mailboxDupStats.dropped++;");
   });

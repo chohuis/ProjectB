@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll } from "vitest";
+import { gamePathSrc } from "./gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { applyEffectToProtagonist } from "../game";
@@ -213,7 +214,7 @@ describe("선발 보장이 자리 깊이를 0 으로 본다", () => {
   });
 
   it("쓰는 자리가 있다 — 없으면 보장이 영구가 된다", () => {
-    const src = readFileSync(resolve("apps/ui/src/shared/stores/game.ts"), "utf8");
+    const src = gamePathSrc();
     expect(src).toContain("p.started && guard > 0 ? guard - 1 : guard");
     const app = readFileSync(resolve("apps/ui/src/shared/usecases/applyGameOutcome.ts"), "utf8");
     expect(app).toContain('started: role === "SP"');

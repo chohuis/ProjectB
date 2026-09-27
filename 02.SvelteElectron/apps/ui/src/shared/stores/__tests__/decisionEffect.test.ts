@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "./gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { applyEffectToProtagonist } from "../game";
@@ -120,7 +121,9 @@ describe("효과 적용 경로가 하나인가", () => {
     // 정본(`applyEffectToProtagonist`)을 부르기만 해야 한다
     // ⚠ 2026-09-09 에 인자가 둘이 되며(구종 보상 등급 문지기 · R1) 서명이
     //   여러 줄로 나뉘었다 — 열린 괄호까지만 짚는다
-    const src = read("../game.ts");
+    // ⚠ 스토어 경로 **전체**를 읽는다(`gamePathSrc`) — Ⅱ-2 로 덩이가
+    //   `usecases/gameStore/` 로 나가도 검사 문장이 안 바뀐다
+    const src = gamePathSrc();
     const body = src.slice(src.indexOf("applyEventEffect("));
     const fn = body.slice(0, body.indexOf("\n    },"));
     expect(fn).toContain("applyEffectToProtagonist");

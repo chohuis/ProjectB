@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "./gamePathSrc";
 import { makeSaveGame, type SaveGame } from "../../types/save";
 import { deriveProfileFromBudgetIndex } from "../game";
 import { readFileSync, readdirSync } from "node:fs";
@@ -109,7 +110,7 @@ describe("구단 성향 저장", () => {
   it("복원 경로가 저장된 값을 읽는다 — 소스 확인", () => {
     // ⚠ 소스를 훑는 검사라 배선까지는 못 본다. 다만 `fromSaveGame`이
     // `saved.proTeamProfiles`를 아예 안 읽으면 여기서 잡힌다
-    const src = readFileSync(join(__dirname, "../game.ts"), "utf8");
+    const src = gamePathSrc();
     expect(src, "fromSaveGame이 저장된 성향을 안 읽는다").toContain("saved.proTeamProfiles");
     expect(src, "toSaveGame이 성향을 안 싣는다").toContain("proTeamProfiles: s.proTeamProfiles");
   });
@@ -134,7 +135,7 @@ describe("구단 성향 저장", () => {
  *   그래서 "손수 값이 남은 세이브"는 이 저장소에 실물이 없고, 규칙만 못 박는다.
  */
 describe("옛 세이브의 성향 — 세이브가 이긴다", () => {
-  const src = readFileSync(join(__dirname, "../game.ts"), "utf8");
+  const src = gamePathSrc();
 
   it("빈 자리만 파생으로 채운다 — 있는 값은 안 덮는다", () => {
     expect(src, "`?? {}` 로 떨어지면 옛 세이브가 전 팀 50이 된다").toContain(

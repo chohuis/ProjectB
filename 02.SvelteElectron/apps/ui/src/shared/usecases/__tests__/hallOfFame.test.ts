@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { evaluateHof, scoreOfHighlight, awardLabelsFrom, type HofRules } from "../hallOfFame";
@@ -99,7 +100,7 @@ describe("명예의 전당 배선", () => {
   const strip = (s: string) => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 
   const rollover = strip(read("apps/ui/src/shared/usecases/seasonRollover.ts"));
-  const store = strip(read("apps/ui/src/shared/stores/game.ts"));
+  const store = strip(gamePathSrc());
   const week = strip(read("apps/ui/src/shared/usecases/weekPhases/jerseyNumbers.ts"));
   const rust = read("packages/engine-native/src/npc_sim.rs");
   const libRs = read("packages/engine-native/src/lib.rs");

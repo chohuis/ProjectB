@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { ContractIncentive, PitcherSeasonStats } from "../../types/save";
@@ -31,7 +32,7 @@ const copyFile = JSON.parse(read(resolve(MASTER, "messages/contract_terms.json")
 const SRC_ENGINE = resolve(__dirname, "../incentiveEngine.ts");
 const SRC_USECASE = resolve(__dirname, "../../usecases/incentiveSettlement.ts");
 const SRC_ROLLOVER = resolve(__dirname, "../../usecases/seasonRollover.ts");
-const SRC_STORE = resolve(__dirname, "../../stores/game.ts");
+// 스토어는 `gamePathSrc()` 로 읽는다 — Ⅱ-2 로 덩이가 나가도 안 깨진다
 
 beforeAll(() => {
   // 게임과 **같은 파일**을 싣는다 — 폴백을 재면 규칙 파일이 안 걸린다
@@ -268,7 +269,7 @@ describe("중복 지급 방지", () => {
   });
 
   it("스토어가 같은 열쇠(incentiveKey)로 찍는다 — 식이 둘이면 자물쇠가 안 맞는다", () => {
-    const src = read(SRC_STORE);
+    const src = gamePathSrc();
     expect(src.includes("markIncentivesSettled(")).toBe(true);
     expect(src.includes("incentiveKey(i)")).toBe(true);
   });

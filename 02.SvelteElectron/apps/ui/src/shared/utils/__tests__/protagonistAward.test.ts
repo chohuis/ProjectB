@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -44,7 +45,7 @@ describe("주인공 수상 후보", () => {
   // `s.npcs`만 훑는데 주인공은 npc 목록에 없어서 그대로 버려졌다.
   // 실측으로 확인했다 — 후보 수정만 넣고 30회 돌렸더니 수상 0/30.
   describe("주인공 수상 저장", () => {
-    const store = read("apps/ui/src/shared/stores/game.ts");
+    const store = gamePathSrc();
 
     it("주인공 전용 기록 경로가 있다", () => {
       expect(store).toMatch(/addProtagonistAwards\(seasonYear: number, awards: CareerAward\[\]\)/);

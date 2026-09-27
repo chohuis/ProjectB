@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "./gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -25,12 +26,12 @@ const read = (p: string) => readFileSync(resolve(__dirname, "../../../", p), "ut
 
 describe("병역은 미필일 때만 진행된다", () => {
   it("스토어가 미필이 아니면 입대를 거부한다", () => {
-    const s = read("shared/stores/game.ts");
+    const s = gamePathSrc();
     expect(s).toMatch(/if \(now\.militaryStatus !== "미필"\) return s;/);
   });
 
   it("입대 처리보다 가드가 먼저 온다 — 뒤에 있으면 이미 바뀐 뒤다", () => {
-    const s = read("shared/stores/game.ts");
+    const s = gamePathSrc();
     const guard = s.indexOf('if (now.militaryStatus !== "미필") return s;');
     const apply = s.indexOf('careerStage: "military"', guard > 0 ? guard : 0);
     expect(guard).toBeGreaterThan(0);
@@ -43,7 +44,7 @@ describe("병역은 미필일 때만 진행된다", () => {
   });
 
   it("전역은 군필로 바꾼다 — 안 그러면 가드가 있어도 또 간다", () => {
-    const s = read("shared/stores/game.ts");
+    const s = gamePathSrc();
     expect(s).toMatch(/militaryStatus: "군필"/);
   });
 });

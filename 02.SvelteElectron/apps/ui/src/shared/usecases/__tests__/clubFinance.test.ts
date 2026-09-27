@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { revenueTypeOf, type ClubFinanceRules } from "../clubFinance";
@@ -95,7 +96,7 @@ describe("배선", () => {
 
   /** 🔴 저장 안 하면 앱을 껐다 켤 때 정적값으로 돌아간다 */
   it("예산이 세이브에 실린다", () => {
-    const G = read("apps/ui/src/shared/stores/game.ts");
+    const G = gamePathSrc();
     expect(G).toContain("clubBudgets: s.clubBudgets,");
     expect(G).toContain("clubBudgets:      (saved.clubBudgets ?? {})");
   });
@@ -110,9 +111,7 @@ describe("배선", () => {
 
   /** ⚠ 리그마다 따로 정산하므로 덮어쓰면 다른 리그가 지워진다 */
   it("예산을 덮어쓰지 않고 합친다", () => {
-    expect(read("apps/ui/src/shared/stores/game.ts")).toContain(
-      "clubBudgets: { ...s.clubBudgets, ...next }",
-    );
+    expect(gamePathSrc()).toContain("clubBudgets: { ...s.clubBudgets, ...next }");
   });
 });
 

@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -23,7 +24,7 @@ const rules = JSON.parse(read("resource/data/master/players/generation_rules.jso
 
 describe("등록말소 기간", () => {
   const market = strip(read("apps/ui/src/shared/usecases/weekPhases/market.ts"));
-  const store = strip(read("apps/ui/src/shared/stores/game.ts"));
+  const store = strip(gamePathSrc());
   const rollover = strip(read("apps/ui/src/shared/usecases/seasonRollover.ts"));
 
   it("값이 규칙 파일에 있다", () => {

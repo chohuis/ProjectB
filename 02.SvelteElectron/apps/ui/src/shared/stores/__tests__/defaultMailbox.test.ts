@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { gamePathSrc } from "./gamePathSrc";
 
 // ── 새 게임 소식함은 비어서 시작한다 ──────────────────────────────
 //
@@ -10,8 +9,8 @@ import { resolve } from "node:path";
 // 사용자 결정(2026-09-03): 지운다 — 첫 소식함은 실제 시스템 소식이 채운다.
 // 문자열 포함으로만 본다 — 정규식을 쓰지 않는다(CLAUDE.md).
 
-const ROOT = resolve(__dirname, "../../../../../..");
-const src = readFileSync(resolve(ROOT, "apps/ui/src/shared/stores/game.ts"), "utf8");
+// 스토어 경로 전체 — Ⅱ-2 로 덩이가 나가도 검사 문장이 안 바뀐다
+const src = gamePathSrc();
 
 describe("기본 소식함", () => {
   it("DEFAULT_MAILBOX 가 빈 배열이다", () => {

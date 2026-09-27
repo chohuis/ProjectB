@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "./gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { deriveProfileFromBudgetIndex } from "../game";
@@ -354,7 +355,7 @@ describe("연혁 → prestige", () => {
    *   `proTeamProfilePersist.test.ts` 가 쓰는 방식과 같다.
    */
   it("`profilesFromMaster` 가 연혁을 실제로 넘긴다 — 배선", () => {
-    const src = readFileSync(resolve(__dirname, "../game.ts"), "utf8");
+    const src = gamePathSrc();
     expect(src, "파생 호출부가 세 번째 인자를 안 넘긴다").toContain(
       "(t.history?.budget ?? 0) / avg, t.traits, t.history)",
     );

@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pitchingOvrOf, battingOvrOf } from "../ovr";
@@ -137,7 +138,7 @@ describe("OVR 식", () => {
 
   /** 식이 **한 벌**이어야 한다 — 불러오기가 따로 셈하면 또 갈린다 */
   it("불러오기와 이벤트가 같은 함수를 쓴다", () => {
-    const G = read("apps/ui/src/shared/stores/game.ts");
+    const G = gamePathSrc();
     expect(G).toContain("pitchingMerged.ovr = pitchingOvrOf(pitchingMerged);");
     expect(G).toContain("battingMerged.ovr = battingOvrOf(battingMerged);");
     expect(G).toContain("if (pTouched) pitching.ovr = pitchingOvrOf(pitching);");

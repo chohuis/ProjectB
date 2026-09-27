@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "./gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -30,7 +31,7 @@ const block = (src: string, start: string, end: string) => {
 };
 
 describe("군 복무 중 소속 리그", () => {
-  const game = read("shared/stores/game.ts");
+  const game = gamePathSrc();
 
   it("입대하면 leagueId 가 LEAGUE_MILITARY 다", () => {
     const enlist = block(game, "enlistMilitary(", "markMilitaryAsked(");

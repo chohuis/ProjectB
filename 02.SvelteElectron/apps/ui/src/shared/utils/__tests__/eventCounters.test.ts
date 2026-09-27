@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { weekPathSrc } from "../../usecases/__tests__/weekPathSrc";
 import { resolve } from "node:path";
@@ -143,7 +144,7 @@ describe("count — 누적 카운터", () => {
   });
 
   it("🔴 다섯 다 올려 주는 자리가 있다 — 없으면 그 조건은 영원히 false 다", () => {
-    const game = readFileSync(resolve("apps/ui/src/shared/stores/game.ts"), "utf8");
+    const game = gamePathSrc();
     // 같은 팀 해 — 시즌 롤오버가 올리고 팀이 바뀌면 1 로 되돌린다
     expect(game).toContain("sameTeamYears: p.lastSeasonTeamId === p.teamId");
     // 완봉·완투·같은 포수 — 공식 등판마다
