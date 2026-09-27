@@ -116,7 +116,11 @@ function pickJobs(plan) {
   if (got.length === 0) throw new Error(`[simrun] PB_ONLY=${only} 가 아무 판도 안 고른다`);
   return got;
 }
-const OUT = path.join(process.cwd(), "resource/logs/runs");
+// ⚠ **옛 판은 덮지 말고 별 폴더에**(CLAUDE.md). 기본은 그대로 `resource/logs/runs`
+//   (여러 세션이 공유하는 자리라 덮어쓰기 가드가 있다) — 새 배치를 격리하고
+//   싶으면 `PB_RUNS_DIR` 로 딴 폴더를 준다(`report-simruns.cjs` 의 같은 이름
+//   env 와 짝 — 여기서 낸 폴더를 그대로 읽는다).
+const OUT = path.join(process.cwd(), process.env.PB_RUNS_DIR || "resource/logs/runs");
 const MARK = "SIMRUN_JSON ";
 
 /** 자식이 왜 죽었는지 그대로 낸다 — stdout 만 찍어 진짜 오류를 버린 적이 있다(2026-09-08) */
