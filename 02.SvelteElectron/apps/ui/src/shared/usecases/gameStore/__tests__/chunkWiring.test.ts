@@ -87,3 +87,46 @@ describe("덩이 1 — NPC 드래프트", () => {
     expect(src).toContain("lastDraftYear: year");
   });
 });
+
+describe("덩이 2 — 전 리그 시즌 종료", () => {
+  /** 🔴 **대조군.** 둘: 진로 결정(군 전역 뒤 시즌 열기) · 시즌 롤오버. */
+  it("호출부 둘이 그대로다 — 옮기기 전과 같은 수", () => {
+    const sites = callSites("processAllLeaguesSeasonEnd");
+    expect(sites.length, sites.join("\n")).toBe(2);
+  });
+
+  it("store 는 넘기기만 한다 — 덩이 본문이 game.ts 에 안 남았다", () => {
+    const store = readFileSync(resolve(ROOT, "apps/ui/src/shared/stores/game.ts"), "utf8");
+    expect(store).toContain("processAllLeaguesSeasonEndChunk(");
+    // 옮긴 본문의 표식 — store 에 남아 있으면 정본이 둘이다
+    expect(store.includes("await runOffseasonProcessing(")).toBe(false);
+    expect(store.includes("sportsVacatingPositions")).toBe(false);
+    expect(store.includes("beforeMilitary")).toBe(false);
+  });
+
+  /**
+   * 갈림길 — 이 덩이가 조용히 꺼지면 오프시즌이 통째로 안 돈다. 옮기면서
+   * 빠지기 쉬운 「안 넘기면 Rust 가 조용히 기본값으로 가는」 인자들을 센다.
+   */
+  it("갈림길이 다 살아 있다", () => {
+    const src = gamePathSrc();
+    const flat = gamePathFlat();
+    // 오프시즌 본체
+    expect(src).toContain("runOffseasonProcessing(");
+    // 안 넘기면 웨이버가 통째로 꺼진다
+    expect(src).toContain("waiverRules");
+    // FA 상한을 예산에서 낸다
+    expect(flat).toContain("teamPayrollCap: cap,");
+    // 그해 성적 → 방출 판정
+    expect(src).toContain("calcNpcPerfScore");
+    // 상무 — 주인공이 뽑힌 해엔 NPC 정원에서 한 자리를 뺀다
+    expect(src).toContain("protagonistTookSportsSlot");
+    // 상무 Phase 1 — 결원 목록을 넘긴다(2026-08-28 에 고친 자리)
+    expect(src).toContain("sportsVacatingPositions");
+    // 전·후 스냅샷으로 FA·병역 변화를 잡는다
+    expect(src).toContain("beforeTeam");
+    expect(src).toContain("beforeMilitary");
+    // 소식함은 store 의 합치기를 그대로 쓴다(정본 하나)
+    expect(src).toContain("pushMailbox(");
+  });
+});
