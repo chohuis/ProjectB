@@ -1,0 +1,24 @@
+{
+  "id": "EVT_HID_HS_STORAGE_TAPE",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "story",
+  "category": "training",
+  "priority": 886,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    }
+  ],
+  "messageTemplateId": "MSG_HID_HS_STORAGE_TAPE",
+  "decisionTemplateId": "DEC_HID_HS_STORAGE_TAPE",
+  "cost": {
+    "fatigueDelta": 8
+  },
+  "_newNote": "2026-09-27 · 고교/hidden 폴백 자리 — **조건 없는 히든**이다(`PLAN_EVENT_TIERS §8`: 「조건 없는 히든을 무대마다 하나둘 · 뜨는 것 자체가 사건」). 실측 근거는 `PLAN_103 §5` 의 고교 히든 창 표: 고교 히든 넷 중 **주차 창을 가진 것이 0** 이라 넓힐 창이 없었고, 상태·성적 조건이 없는 후보가 `EVT_HID_HS_QUIET_SPONSOR` **하나뿐**이었다. 종당 커리어 1 회(`tier_rules.hidden.careerCapPerEvent`)라 그 하나가 뜬 뒤로는 후보가 0 이고 그다음 히든 뽑기는 전부 폴백이다",
+  "_tierNote": "대가는 `{fatigueDelta: 8}` — 밤에 테이프를 본다. 이미 21 자리가 쓰는 값이라 새 크기를 안 만들었다(밸런스 동결)",
+  "_rewardNote": "보상은 고교 히든 둘(`DAWN_FIELD`·`QUIET_SPONSOR`)이 쓰는 크기 그대로다 — 잠재력 +1 · 성실 +6 · 훈련 효율 +20% 8주 · 동료 관계 +20. **구종 보상은 안 쓴다**(짝 조건 `pitch_learning` 이 필요해지고, 그러면 「조건 없는 히든」이 아니게 된다). 투구 어휘·투구 스탯을 안 쓴 것도 뜻이 있다 — `player_type` 선언을 붙이면 타자 주인공에게서 다시 후보가 0 이 된다"
+}

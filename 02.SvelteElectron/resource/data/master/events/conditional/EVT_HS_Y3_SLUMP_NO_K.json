@@ -1,0 +1,40 @@
+{
+  "id": "EVT_HS_Y3_SLUMP_NO_K",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "train",
+  "category": "training",
+  "priority": 700,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "grade",
+      "value": 3
+    },
+    {
+      "type": "season_k_lte",
+      "value": 12
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    },
+    {
+      "type": "week_lte",
+      "value": 27
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_SLUMP_NO_K",
+  "decisionTemplateId": "DEC_HS_SLUMP_NO_K",
+  "_windowNote": "2026-09-27 — `EVT_HS_SLUMP_NO_K`(w≥30)의 3학년 몫이다. 3학년은 진로 허브 W28 에서 끝나 w≥30 이 **영영 안 열렸다**(`PLAN_102 「폴백 자리 둘」 §1`). 창은 W20~27 — 고교는 W7 개막이고 주말리그가 W26, 패왕기가 W26~27 이라(`seasonWeeks.ts` 주석) W20 이면 그해 삼진이 사실상 다 쌓였다. `grade 3` 과 저쪽의 `grade ≤ 2` 가 배타라 한 해에 둘 다 안 뜬다",
+  "_reuseNote": "소식·갈래 틀을 새로 안 만들었다. 문안이 시기를 안 말하고(「올해 삼진이 손에 꼽습니다」) 갈래 셋도 학년을 안 타서 `MSG_HS_SLUMP_NO_K`·`DEC_HS_SLUMP_NO_K` 를 그대로 쓴다 — 틀 공유는 이미 소식 34 자리·갈래 15 자리가 쓰는 꼴이다(실측 2026-09-27)",
+  "_rewardNote": "보상은 `EVT_HS_SLUMP_NO_K` 와 같은 갈래를 쓰므로 레어 규약 안이다 — 구종 보상이 아니라 무브먼트 XP 다(`PLAN_REWARDS §2` 「구종은 유니크부터」)"
+}
