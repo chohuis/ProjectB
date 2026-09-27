@@ -233,3 +233,40 @@ describe("덩이 4 — 병역", () => {
     expect(flat).toContain("now.contract.remainingYears + 2");
   });
 });
+
+describe("덩이 5 — 선택지 효과 적용", () => {
+  /**
+   * 🔴 **대조군.** `applyEffectToProtagonist` 는 효과 계산의 **정본**이고
+   *   부르는 자리가 여럿이다. store 가 그 이름으로 **다시 내보내지** 않으면
+   *   `from "../game"` 로 부르던 길이 통째로 끊긴다.
+   */
+  it("store 가 그 이름으로 다시 내보낸다 — 부르던 길이 그대로다", () => {
+    const store = readFileSync(resolve(ROOT, "apps/ui/src/shared/stores/game.ts"), "utf8");
+    expect(store).toContain(
+      'export { applyEffectToProtagonist } from "../usecases/gameStore/rewards"',
+    );
+    // 본문은 안 남았다 — 정본이 둘이면 한쪽만 고쳐진다
+    expect(store.includes("const POTENTIAL_CAREER_CAP")).toBe(false);
+    expect(store.includes("잠재력 커리어 상한")).toBe(false);
+  });
+
+  it("갈림길이 다 살아 있다", () => {
+    const src = gamePathSrc();
+    const flat = gamePathFlat();
+    // 투구/타격을 키 접두사로 가른다 — 접두사 없는 키는 투구다
+    expect(flat).toContain('key.includes(".") ? key.split(".") : ["pitching", key]');
+    // 파생값(ovr)을 다시 계산한다 — 바뀐 쪽만
+    expect(src).toContain("pitchingOvrOf(pitching)");
+    expect(src).toContain("battingOvrOf(batting)");
+    // 커리어 누계 상한 둘 — 한 번에 재면 여러 번 받아 넘는다
+    expect(src).toContain("POTENTIAL_CAREER_CAP");
+    expect(src).toContain("DEVRATE_CAREER_CAP");
+    // 히든 구종 두 단계 (§0.1 에서 검사까지 붙인 자리)
+    expect(flat).toContain("fx.pitchGradeUp.steps ?? 1");
+    // 겹치는 버프는 긴 쪽이 남는다
+    expect(src).toContain("longerOf");
+    // 특성 중복 무시 · 태그 합치기
+    expect(src).toContain("fx.trait.id");
+    expect(src).toContain("applyTags(p.tags, fx.addTag, fx.removeTag)");
+  });
+});
