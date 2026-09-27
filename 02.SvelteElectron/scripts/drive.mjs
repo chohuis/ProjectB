@@ -25,6 +25,8 @@ const DEV_URL = process.env.VITE_DEV_SERVER_URL ?? "http://localhost:5174";
 
 let app = null;
 let page = null;
+/** `snapshot`/`verify` 가 재시작(quit → launch) 을 가로질러 들고 있는 상태 — 페이지가 아니라 이 Node 프로세스가 든다 */
+const snapshots = new Map();
 
 const electronBin = process.platform === "win32"
   ? path.join(APP_DIR, "node_modules/electron/dist/electron.exe")
@@ -380,6 +382,43 @@ const COMMANDS = {
         return;
       }
       console.log(`  week ${i + 1}: ${wk} · 버튼 "${label}"`);
+    }
+  },
+
+  /**
+   * **snapshot/verify** — 재시작(quit → launch) 전후 상태가 같은지 잰다
+   * (e2e-3seasons · PLAN_103 Ⅲ). 지금 열려 있는 화면에서 보이는 값만
+   * 찍는다 — 대본이 같은 탭을 골라 놓고 불러야 짝이 맞는다(예: 팀 탭에서
+   * `snapshot team`, 재시작 뒤 똑같이 팀 탭에서 `verify team`).
+   */
+  async snapshot(key) {
+    if (!page) return fail("ERROR: launch first");
+    const s = await page.evaluate(() => ({
+      wk: document.querySelector(".wk")?.innerText ?? null,
+      ovr: document.querySelector(".ovr.u-num")?.innerText ?? null,
+      rosterCount: document.querySelectorAll(".roster-row").length,
+      itemCount: document.querySelectorAll(".item").length,
+    }));
+    snapshots.set(String(key).trim(), s);
+    console.log("snapshot", key, "→", JSON.stringify(s));
+  },
+
+  async verify(key) {
+    if (!page) return fail("ERROR: launch first");
+    const k = String(key).trim();
+    const before = snapshots.get(k);
+    if (!before) return fail(`ERROR: verify — snapshot 이 없다: ${k}`);
+    const now = await page.evaluate(() => ({
+      wk: document.querySelector(".wk")?.innerText ?? null,
+      ovr: document.querySelector(".ovr.u-num")?.innerText ?? null,
+      rosterCount: document.querySelectorAll(".roster-row").length,
+      itemCount: document.querySelectorAll(".item").length,
+    }));
+    const diffs = Object.keys(before).filter((f) => String(before[f]) !== String(now[f]));
+    if (diffs.length) {
+      fail(`ERROR: verify(${k}) 불일치 — ` + diffs.map((f) => `${f}: ${JSON.stringify(before[f])} → ${JSON.stringify(now[f])}`).join(" · "));
+    } else {
+      console.log(`verify ${k} → OK`, JSON.stringify(now));
     }
   },
 
