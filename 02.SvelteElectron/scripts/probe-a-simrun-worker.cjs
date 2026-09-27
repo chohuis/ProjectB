@@ -10,6 +10,10 @@ const PERSONA = process.env.PB_PERSONA || "growth";
 const PRESET = process.env.PB_START_PRESET || "balanced";
 const RUN_NO = Number(process.env.PB_RUN_NO || 1);
 
+// 계측 전용 — stderr 보존 검사(`probe-a-simrun.cjs` §워커 stderr)가 이 줄로
+// 파일이 실제로 생기는지 잰다. 안 주면 아무 것도 안 낸다.
+if (process.env.PB_STDERR_PROBE === "1") console.error(`PB_STDERR_PROBE #${RUN_NO}`);
+
 (async () => {
   // 계측 전용 — 대학 지원 분기(「전부 충족」 vs 뽑기 통과)를 `advanceWeek.ts`의
   // `__PB_CAREER_LOG` 게이트가 console.log("[진로점수] ...")로 찍는다. 게임

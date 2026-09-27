@@ -149,10 +149,23 @@ function runOne(n, seed, persona, preset) {
       clearTimeout(timer);
       const line = out.split("\n").find((l) => l.startsWith(MARK));
       resolve(line
-        ? { ok: true, report: JSON.parse(line.slice(MARK.length)) }
+        ? { ok: true, report: JSON.parse(line.slice(MARK.length)), err }
         : { ok: false, out, err, code, signal });
     });
   });
+}
+
+/** 판 폴더에 `#NN.stderr.log` 로 남긴다 — 콘솔 출력(`failReport`)은 그대로 두고
+ * 더한다(2026-09-27 · D · PLAN_103 Ⅲ-워커stderr). 비어도 파일은 남긴다 —
+ * 「빈 파일도 stderr 없음의 증거」다. 길면(200줄 초과) 죽은 자식이 쏟아낸 것일
+ * 수 있어 마지막 200줄만 남긴다.
+ */
+function writeStderrLog(n, err) {
+  const lines = (err ?? "").split("\n");
+  const body = lines.length > 200 ? lines.slice(-200).join("\n") : (err ?? "");
+  const p = path.join(OUT, `#${String(n).padStart(2, "0")}.stderr.log`);
+  fs.writeFileSync(p, body);
+  return p;
 }
 
 (async () => {
@@ -173,10 +186,12 @@ function runOne(n, seed, persona, preset) {
     const n = j.n;
     const r = await runOne(n, j.seed, j.persona, j.preset);
     if (!r.ok) {
-      console.log(`  🔴 #${n} ${j.persona}/${j.preset}/${j.seed} 실패`);
+      const logPath = writeStderrLog(n, r.err);
+      console.log(`  🔴 #${n} ${j.persona}/${j.preset}/${j.seed} 실패 · stderr → ${path.relative(process.cwd(), logPath)}`);
       console.log(failReport(r));
       return null;
     }
+    const stderrLogPath = writeStderrLog(n, r.err);
     fs.writeFileSync(path.join(OUT, `#${String(n).padStart(2, "0")}.json`), JSON.stringify(r.report, null, 1));
     const h = r.report.머리, t = r.report.꼬리;
     // 🔴 **끊긴 판을 「[끝]」이라고 적으면 안 된다** (2026-09-10 실측). 6판이
@@ -195,7 +210,8 @@ function runOne(n, seed, persona, preset) {
     const 끊김 = 연도폭 < SEASONS && h.은퇴나이 == null;
     console.log(`  ${끊김 ? "🔴 [끊김]" : "  [끝]"} #${String(n).padStart(2)} ${j.persona}/${j.preset}/${j.seed}`
       + ` ${t.진로갈래} · ${연도폭}/${SEASONS}시즌 · 최고OVR ${h.최고OVR} · 통산 ${h.통산승}승`
-      + ` · 예외 ${t.예외} · 폴백 ${t.폴백}`);
+      + ` · 예외 ${t.예외} · 폴백 ${t.폴백}`
+      + (끊김 ? ` · stderr → ${path.relative(process.cwd(), stderrLogPath)}` : ""));
     return r.report;
   });
   const reports = out.filter(Boolean);
