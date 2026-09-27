@@ -9,7 +9,7 @@ import {
   tableLabelBlock,
 } from "../dashboardCopy";
 import { buildBars, buildCards, buildRankList, buildTableView } from "../dashboardView";
-import { weekPathSrc } from "../../usecases/__tests__/weekPathSrc";
+import { weekPathSrc, weekPathFlat } from "../../usecases/__tests__/weekPathSrc";
 import {
   bracketTableMeta,
   cardsMeta,
@@ -64,6 +64,7 @@ const SRC_MARKET = resolve(__dirname, "../../usecases/weekPhases/market.ts");
 //   이름을 적으면 다음 쪼개기 때 또 빨개지므로 주간 진행 경로 **전체**를
 //   한 덩이로 읽는다(`weekPathSrc.ts` 머리말)
 const SRC_WEEK_WIRING = weekPathSrc();
+const SRC_WEEK_FLAT = weekPathFlat();
 /** 「없다」를 묻는 검사가 쓰는 좁은 자리 — 리그 경기 결과 소식을 만드는 파일 */
 const SRC_WEEK_LEAGUE_RESULTS = resolve(__dirname, "../../usecases/advanceWeek.ts");
 
@@ -328,7 +329,9 @@ describe("배선과 본문", () => {
     expect(read(SRC_ROLL).includes('rankListMeta("farmChampion"')).toBe(true);
     expect(read(SRC_ROLL).includes('timelineMeta("seasonHsSync"')).toBe(true);
     expect(read(SRC_MARKET).includes("faCompTableMeta(")).toBe(true);
-    expect(SRC_WEEK_WIRING.includes('rankListMeta("tourAward"')).toBe(true);
+    // ⚠ 눌러서 본다 — 대회 시상 표는 Ⅱ-1 로 `weekPhases/postseason.ts` 에
+    //   갔고 그 파일은 prettier 범위 안이라 인자가 줄마다 접혔다 (A-6)
+    expect(SRC_WEEK_FLAT.includes('rankListMeta( "tourAward"')).toBe(true);
   });
 
   /**

@@ -120,8 +120,10 @@ describe("리그 포스트시즌 블록 — 갈림길", () => {
 
   it("시리즈 승자가 나오면 다음 시리즈를 채우고 비주인공 시리즈를 푼다", () => {
     expect(WEEK_PATH).toContain("newBracket = await fillNextSeries(newBracket, updated);");
+    // ⚠ 띄어쓰기를 눌러서 본다(`weekPathFlat`) — prettier 가 인자를 줄마다
+    //   접어서 괄호 뒤에 한 칸이 생긴다. 서식이 바뀌어도 안 깨지는 쪽이다(A-6)
     expect(WEEK_PATH).toContain(
-      "newBracket = await resolveNonProtagonistSeries(newBracket, g.protagonist.teamId,",
+      "newBracket = await resolveNonProtagonistSeries( newBracket, g.protagonist.teamId,",
     );
   });
 });
