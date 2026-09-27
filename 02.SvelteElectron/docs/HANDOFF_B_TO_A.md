@@ -1,3 +1,74 @@
+# B → A 인계 6차 (2026-09-27 · B 대행) — 1.0.3 Ⅳ B 큐에서 나온 A 몫
+
+> 일감은 `PLAN_103_2026-09-27.md §5`. 여기는 **B 가 데이터로 못 닫는 것**만 적는다.
+> 아래 5차 이하는 그대로 둔다.
+
+## §0.1 `check:rewards` 가 「히든은 두 단계」를 안 본다 (B-2)
+
+`PLAN_REWARDS §1` 은 히든의 구종 보상을 **「구종 등급 두 단계」**로 못박는데,
+`scripts/check-rewards.cjs` 에는 그 줄이 없다. 지금은 히든에 `steps` 를 안 적어도
+초록이고, 안 적으면 **한 단계만 먹고 조용히 넘어간다**(`HANDOFF_A_TO_B §0.21`).
+
+- 지금 히든 구종 이벤트는 **둘뿐**이다 — `EVT_HID_PRO_AFTER_CG`(`pitchGradeUp` ·
+  09-27 에 `steps: 2` 를 심었다) · `EVT_HID_HS_CHANCE_LESSON`(`pitchGrant`).
+- 넣을 규칙: **`tier === "hidden"` 이고 `pitchGradeUp` 이 있으면 `steps ≥ 2`**.
+  대조군으로 유니크 둘(`EVT_FARM_U_BATTERY_TIP`·`EVT_PRO_U_OLD_HAND`)이 `steps`
+  없이 초록이어야 한다.
+
+🔴 **같이 정할 것 하나** — `pitchGrant` 는 단계 개념이 없다(`game.ts:1209` 가 늘
+`grade: 1` 로 준다). 그래서 **히든의 `pitchGrant` 는 유니크의 `pitchGrant` 와
+완전히 같다.** 「등급이 오르면 크기가 아니라 종류가 바뀐다」가 여기서만 안 지켜진다.
+데이터로는 못 가른다 — 부여 등급을 받는 칸(`pitchGrant.grade`)을 열든지, 히든에는
+`pitchGrant` 를 안 쓰기로 정하든지 둘 중 하나다.
+
+## §0.2 `relationTarget` — 예약어 둘이 모자라고, 대상 둘을 못 적는다 (B-4)
+
+`relationDelta` 를 쓰는 군 선택지 **57개 전수**를 보고 힌트가 이미 대상을 말하던
+**11 칸**에 심었다(`subunit` 9 · `junior` 1 · `all` 1). 남은 넷은 데이터로 못 닫는다.
+
+| 자리 | 힌트 | 지금 실제 | 왜 못 닫나 |
+|---|---|---|---|
+| `MIL_CAL_FESTIVAL#out` | 「동기 관계 +3」 | 재적 **전원**에게 간다 | 예약어에 `peer` 가 없다 |
+| `MIL_CAL_FESTIVAL#stay` | 「간부 관계 +2」 | 재적 **전원**에게 간다 | 예약어에 `officer` 가 없다 |
+| `MIL_COND_CONFLICT_SENIOR#stand` | 「관계 -8, **동기 관계 +3**」 | -8 만 간다 | 선택지에 `relationDelta` 가 하나뿐 |
+| `MIL_COND_JUNIOR_TROUBLE#cover` / `#report` | 「후임 +8, **간부 -2**」 / 「**간부 +3**, 후임 -6」 | 후임 몫만 간다 | 같은 이유 |
+
+- **예약어 둘**(`peer`·`officer`)은 `members.json` 의 `role` 값 그대로라 값이 이미
+  있다 — `MILITARY_RELATION_TARGETS` · 평가기 · `check:militarydata` 셋이 같이 움직인다.
+- **대상 둘**은 더 크다. 선택지가 `relationDelta` 를 배열로 받든지(`[{target,delta}]`),
+  아니면 문안에서 둘째 대상을 지우든지다. **지우는 쪽은 B 가 하겠다** — 어느 쪽인지
+  말해 달라. 지금은 셋 다 **힌트의 절반이 아무 일도 안 한다**(표시와 동작이 다른 것).
+
+## §0.3 `startGuarantee` — 쓸 통지가 **하나도 없다** (B-6 · 실측)
+
+「자리를 준다」가 필요한 통지가 있나 먼저 세라는 일감이었다. **없다.**
+
+- **통지(`tier: "notice"`)는 13종 전부 훑었다.** 자리를 주는 것은 하나도 없고,
+  자리를 **빼앗는** 것이 하나 있다(`EVT_PRO_ROLE_DEMOTE` 「보직 강등」).
+  감독 관계를 **조건**으로 보는 통지도 0 이다(결정 2번이 요구하는 꼴).
+- **자리를 말하는 이벤트는 있는데 갈래가 다르다.** 「1군 로테이션에 한 자리가
+  빕니다」(`EVT_FARM_SPOT_START`) · 「1군 불펜에 한 자리」(`EVT_FARM_R_BULLPEN_JOIN`) ·
+  「콜업 명단」(`EVT_FARM_R_CALLUP_LIST`) · 「대체 선발 준비」(`EVT_FARM_FIRST_TEAM_HOLE`) ·
+  「연습경기 한 이닝」(`EVT_FARM_EXHIBITION`) — **전부 노말·레어**라 상태 효과를
+  넣으면 `check:lanes` 가 빨강이고 런타임도 무시한다(`decisions.ts:77`).
+- 🔴 **`types/main.ts` 의 2026-09-08 실측이 09-27 에도 그대로다** — 이름이
+  「`startGuarantee` 첫 사용처」인 셋은 여전히 **감독 관계 +6** 을 준다.
+- FA·트레이드 통지는 **없다**. `EVT_PRO_FA_MARKET_TALK`(읽기만) ·
+  `EVT_PRO_YEAR5_FA_NEAR`(유니크) · `EVT_PRO_TRADE_RUMOR`(유니크) ·
+  `EVT_PRO_MID_TRADE_RUMOR_MID`(유니크) · `EVT_FARM_TRADE_TALK_FARM`(노말)뿐이다.
+
+**죽은 갈래는 아니다 — 아직 안 부른 것이다.** 배선은 끝까지 있고
+`rewardKeys.test.ts` 가 누적까지 잰다. 부르려면 셋 중 하나를 골라야 하고,
+**어느 쪽이든 A 의 결정이 먼저다**:
+
+| | 길 | 대가 |
+|---|---|---|
+| ㉠ | `HANDOFF_A_TO_B §0.12` 의 `EVT_PRO_MANAGER_TRUST` 를 **새로 연다**(조건 `relation_gte manager` + `season_starts_gte`) | 통지가 13 → 14. 조건 둘은 **이미 산다** — `season_starts_gte` 는 `EVT_PRO_ROLE_DEMOTE` 가 쓰고 `relation_gte` 는 평가기에 있다(실측 09-27). **문안·갈래는 B 가 쓴다** |
+| ㉡ | 위 다섯 중 하나를 **통지로 옮긴다**(등급 칸을 지우고 `tier: "notice"`) | 등급 분포가 움직여 `check:tiercoverage` 를 다시 재야 한다(`§0.11` 과 같은 자리) |
+| ㉢ | 그대로 둔다 | 배선 넷(부여·깊이·반영·차감)이 계속 아무도 안 부른다 |
+
+---
+
 # B → A 인계 5차 (2026-09-02) — 사기 손질 · 병역 · 대학 도달률
 
 > **B-1 · B-2 · B-3 · B-4 · B-11 · B-12 · B-13 끝났다.** 병합해 달라.
