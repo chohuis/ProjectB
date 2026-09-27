@@ -15771,10 +15771,11 @@
         {
           "id": "grip",
           "label": "지금 잡아 둔다",
-          "effectHint": "구종 등급 +1, 피로 +8",
+          "effectHint": "구종 등급 +2, 피로 +8",
           "effects": {
             "pitchGradeUp": {
-              "id": "PITCH_SLIDER"
+              "id": "PITCH_SLIDER",
+              "steps": 2
             },
             "fatigueDelta": 8
           }
