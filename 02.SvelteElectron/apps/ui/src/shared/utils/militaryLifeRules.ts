@@ -6,6 +6,7 @@
  * 부대원 id 를 코드에 적지 않는다 — 동작 훅은 `members[].tags` 로 찾는다 (§37).
  */
 import type {
+  MemberRelationPair,
   MilitaryCalendarEntry,
   MilitaryCondition,
   MilitaryLifeEvent,
@@ -205,6 +206,14 @@ export function toLifeEvent(e: {
         relationTarget,
         ...rest
       } = c as Record<string, unknown> & { id: string; label: string; effectHint?: string };
+      // 🔴 `relationDelta` 는 **꼴로 뜻이 갈린다**(머리말). 옛 풀의 관계도 객체
+      //   `{kind,delta}` 는 `rest` 에 그대로 두고, **배열**(대상 둘 · 09-27)만
+      //   병영생활 칸으로 꺼낸다. 안 꺼내면 `extraEffects` 로 새어 `applySideEffects`
+      //   가 `{kind,delta}` 로 읽으려다 조용히 아무 일도 안 한다
+      const pairs = Array.isArray(rest.relationDelta)
+        ? (rest.relationDelta as MemberRelationPair[])
+        : undefined;
+      if (pairs) delete rest.relationDelta;
       return {
         id,
         label,
@@ -217,6 +226,7 @@ export function toLifeEvent(e: {
         leaveDays: leaveDays as number | undefined,
         perfTierDelta: perfTierDelta as number | undefined,
         relationTarget: relationTarget as string | undefined,
+        ...(pairs ? { relationDelta: pairs } : {}),
         // 나머지(관계도 객체 · 돈 · XP · 성실 · 컨디션)는 그대로 둔다 —
         // `applyEventEffect`·`applySideEffects` 가 읽는 이름 그대로다
         ...(Object.keys(rest).length > 0
@@ -283,6 +293,45 @@ export interface ChoiceCtx {
   ballCap: number;
 }
 
+/**
+ * `memberRelationDelta` 를 **대상·값 짝의 목록으로 편다** — 펴는 자리는 여기 하나다.
+ *
+ * 숫자면 짝 하나(대상은 `relationTarget` → 이벤트 `member` → `"all"` · 옛 동작 그대로),
+ * 배열이면 적힌 그대로다. 0 은 버린다 — 아무 일도 안 하는 칸이다.
+ *
+ * 🔴 **왜 함수로 꺼냈나**: 읽는 쪽이 셋이다(평가기 · 효과 힌트 `eventTierCopy` ·
+ *   검사). 각자 `Array.isArray` 를 적으면 한 곳만 안 고쳐진 채로 남는다 —
+ *   이 저장소가 반복해 밟은 꼴이다(CLAUDE.md §함정).
+ */
+export function memberRelationPairs(
+  fx: DecisionEffect,
+  eventMember?: string,
+): MemberRelationPair[] {
+  const d = fx.memberRelationDelta;
+  if (d === undefined) return [];
+  if (Array.isArray(d)) return d.filter((p) => p.delta !== 0).map((p) => ({ ...p }));
+  if (typeof d !== "number" || d === 0) return [];
+  return [{ target: fx.relationTarget ?? eventMember ?? "all", delta: d }];
+}
+
+/** 대상 하나가 **누구에게** 가나 — 예약어(`MILITARY_RELATION_TARGETS`) 다섯과 부대원 id */
+function relationTargetIds(target: string, ctx: ChoiceCtx): string[] {
+  switch (target) {
+    case "all":
+      return ctx.present.map((m) => m.id);
+    case "subunit":
+      return ctx.present.filter((m) => m.subunit === ctx.mySubunit).map((m) => m.id);
+    // 아래 셋은 `members.json` 의 `role` 값 그대로다 — 예약어와 데이터가 같은 이름이다
+    case "junior":
+    case "peer":
+    case "officer":
+      return ctx.present.filter((m) => m.role === target).map((m) => m.id);
+    default:
+      // 부대원 id — 없는 id 면 **아무에게도 안 간다**(오타가 조용히 퍼지지 않게)
+      return ctx.present.some((m) => m.id === target) ? [target] : [];
+  }
+}
+
 /** 선택지 효과 중 병영생활 몫을 상태에 적는다 (§28 · 능력치·피로·사기는 기존 applyEffectToProtagonist 가 맡는다) */
 export function applyChoiceToState(
   state: MilitaryLifeState,
@@ -296,23 +345,9 @@ export function applyChoiceToState(
     penalties: [...state.penalties],
     perf: [...state.perf],
   };
-  if (fx.memberRelationDelta) {
-    const target = fx.relationTarget ?? ctx.event?.member ?? "all";
-    const ids =
-      target === "all"
-        ? ctx.present.map((m) => m.id)
-        : target === "subunit"
-          ? ctx.present.filter((m) => m.subunit === ctx.mySubunit).map((m) => m.id)
-          : target === "junior"
-            ? ctx.present.filter((m) => m.role === "junior").map((m) => m.id)
-            : ctx.present.some((m) => m.id === target)
-              ? [target]
-              : [];
-    for (const id of ids) {
-      next.relations[id] = Math.max(
-        -100,
-        Math.min(100, (next.relations[id] ?? 0) + fx.memberRelationDelta),
-      );
+  for (const { target, delta } of memberRelationPairs(fx, ctx.event?.member)) {
+    for (const id of relationTargetIds(target, ctx)) {
+      next.relations[id] = Math.max(-100, Math.min(100, (next.relations[id] ?? 0) + delta));
     }
   }
   if (fx.ballDelta) {

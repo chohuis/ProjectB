@@ -1,3 +1,6 @@
+// 군 전용 모양은 `types/militaryLife.ts` 가 정본이다 — 여기서 다시 적지 않는다
+import type { MemberRelationPair } from "./militaryLife";
+
 /**
  * 사이드바 6칸. (U4 — 11개에서 줄였다)
  *
@@ -47,9 +50,12 @@ export interface DecisionEffect {
   // ── 현역 병영생활 전용 (PLAN_MILITARY_LIFE §28) — `militaryLife` 가 있을 때만 읽는다 ──
   // ⚠ 이름이 `memberRelationDelta` 인 이유: 아래 `relationDelta`(코치·동료 관계도 · {kind, delta})가 이미 있다.
   //   이벤트 JSON 의 선택지 필드는 `relationDelta`(§28)이고, 루프가 pending 으로 옮길 때 이 이름으로 바꾼다.
-  memberRelationDelta?: number; // 부대원 관계 ± (대상은 relationTarget)
+  // 🔴 **배열도 받는다**(2026-09-27 · B 인계 6차 §0.2) — 「관계 −8, 동기 관계 +3」처럼
+  //   대상마다 값이 다른 선택지가 있다. 숫자는 옛 꼴 그대로고, 펴는 자리는
+  //   `militaryLifeRules.memberRelationPairs` **하나**다(읽는 쪽이 갈리지 않게).
+  memberRelationDelta?: number | readonly MemberRelationPair[]; // 부대원 관계 ± (숫자면 대상은 relationTarget)
   // 예약어 정본은 `types/militaryLife.ts` 의 `MILITARY_RELATION_TARGETS` 하나 — 늘릴 때 거기부터
-  relationTarget?: string; // 부대원 id · "all" · "subunit" · "junior" (없으면 이벤트의 member → 없으면 all)
+  relationTarget?: string; // 부대원 id · "all" · "subunit" · "junior" · "peer" · "officer" (없으면 이벤트의 member → 없으면 all)
   ballDelta?: number; // 야구 감각 ±
   award?: string; // 표창 id
   penalty?: string; // 징계 id

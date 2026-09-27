@@ -10,6 +10,7 @@ import {
   eligibleEvents,
   fillText,
   isEligible,
+  memberRelationPairs,
   perfTier,
   presentMembers,
   roleFromSeed,
@@ -239,6 +240,135 @@ describe("선택지 효과 → 상태 (§28)", () => {
     })!;
     expect(moved.choices[0].relationTarget).toBe("junior");
     expect(moved.choices[0].extraEffects?.relationTarget).toBeUndefined();
+  });
+
+  /**
+   * 🔴 예약어 둘이 모자랐다 (2026-09-27 · B 인계 6차 §0.2). 힌트가 「동기 관계 +3」·
+   *   「간부 관계 +2」를 말하는 칸이 넷 있었는데 적을 값이 없어 **재적 전원**에게 갔다.
+   *   이름은 `members.json` 의 `role` 값 그대로다 — 여기서 그걸 센다.
+   */
+  it("🔴 relationTarget — peer · officer 가 members.json 의 role 그대로 갈린다", () => {
+    const present = presentMembers(members, 70);
+    const s = emptyMilitaryLife("U", 60);
+    for (const m of present) s.relations[m.id] = 0;
+    const ctx = { week: 70, event: null, present, mySubunit: "SQ1", ballCap: 80 } as const;
+    for (const role of ["peer", "officer"] as const) {
+      const got = applyChoiceToState(s, { memberRelationDelta: 5, relationTarget: role }, ctx);
+      const ids = Object.keys(got.relations).filter((k) => got.relations[k] !== 0);
+      expect(ids.length).toBeGreaterThan(0);
+      for (const id of ids) expect(present.find((m) => m.id === id)!.role).toBe(role);
+      // 전원이 아니다 — 늘리기 전에는 여기가 all 과 같았다(대조군)
+      expect(ids.length).toBeLessThan(present.length);
+    }
+    // 넷이 서로 다른 묶음이다
+    const idsOf = (t: string) => {
+      const g = applyChoiceToState(s, { memberRelationDelta: 5, relationTarget: t }, ctx);
+      return Object.keys(g.relations)
+        .filter((k) => g.relations[k] !== 0)
+        .sort()
+        .join(",");
+    };
+    const got = ["junior", "peer", "officer", "subunit"].map(idsOf);
+    expect(new Set(got).size).toBe(4);
+  });
+
+  /**
+   * 🔴 「관계 −8, **동기 관계 +3**」처럼 대상 둘을 말하는 선택지가 셋 있었는데
+   *   칸이 하나뿐이라 **힌트의 절반이 아무 일도 안 했다**(B 인계 6차 §0.2).
+   */
+  it("🔴 relationDelta 배열 — 대상마다 다른 값이 각자에게 간다 · 숫자 꼴은 그대로", () => {
+    const present = presentMembers(members, 70);
+    const s = emptyMilitaryLife("U", 60);
+    for (const m of present) s.relations[m.id] = 0;
+    const ctx = { week: 70, event: null, present, mySubunit: "SQ1", ballCap: 80 } as const;
+    const got = applyChoiceToState(
+      s,
+      {
+        memberRelationDelta: [
+          { target: "MEM_CO", delta: -8 },
+          { target: "peer", delta: 3 },
+        ],
+      },
+      ctx,
+    );
+    expect(got.relations.MEM_CO).toBe(-8);
+    for (const m of present) {
+      if (m.id === "MEM_CO") continue;
+      expect(got.relations[m.id]).toBe(m.role === "peer" ? 3 : 0);
+    }
+    // 대조군 — 배열을 안 펴면(첫 칸만 읽으면) peer 쪽이 0 이다
+    expect(Object.values(got.relations).some((v) => v === 3)).toBe(true);
+
+    // 숫자 꼴은 한 줄도 안 바뀐다
+    const one = applyChoiceToState(s, { memberRelationDelta: 4, relationTarget: "junior" }, ctx);
+    const jIds = Object.keys(one.relations).filter((k) => one.relations[k] !== 0);
+    expect(jIds.length).toBeGreaterThan(0);
+    for (const id of jIds) expect(present.find((m) => m.id === id)!.role).toBe("junior");
+
+    // 배열 꼴에서 relationTarget 은 안 읽힌다 — check:militarydata 가 데이터에서 같이 막는다
+    const ignored = applyChoiceToState(
+      s,
+      { memberRelationDelta: [{ target: "MEM_CO", delta: 2 }], relationTarget: "all" },
+      ctx,
+    );
+    expect(Object.values(ignored.relations).filter((v) => v !== 0).length).toBe(1);
+  });
+
+  /**
+   * 펴는 자리가 하나인지 — 효과 힌트(`eventTierCopy`)도 같은 함수를 쓴다.
+   * 합쳐 세면 「−8 과 +3」이 −5 한 덩이가 되어 「얻고 잃는다」가 사라진다.
+   */
+  it("memberRelationPairs — 숫자·배열을 한 자리에서 편다 · 0 은 버린다", () => {
+    expect(memberRelationPairs({ memberRelationDelta: 5 })).toEqual([{ target: "all", delta: 5 }]);
+    expect(memberRelationPairs({ memberRelationDelta: 5, relationTarget: "peer" })).toEqual([
+      { target: "peer", delta: 5 },
+    ]);
+    expect(memberRelationPairs({ memberRelationDelta: 5 }, "MEM_CO")).toEqual([
+      { target: "MEM_CO", delta: 5 },
+    ]);
+    expect(memberRelationPairs({ memberRelationDelta: 0 })).toEqual([]);
+    expect(memberRelationPairs({})).toEqual([]);
+    expect(
+      memberRelationPairs({
+        memberRelationDelta: [
+          { target: "peer", delta: 3 },
+          { target: "officer", delta: 0 },
+        ],
+      }),
+    ).toEqual([{ target: "peer", delta: 3 }]);
+  });
+
+  it("toLifeEvent 는 relationDelta 배열만 선택지 칸으로 꺼낸다 — 관계도 객체는 그대로 둔다", () => {
+    const arr = toLifeEvent({
+      id: "L",
+      title: "t",
+      description: "d",
+      choices: [
+        {
+          id: "c",
+          label: "l",
+          relationDelta: [
+            { target: "MEM_CO", delta: -8 },
+            { target: "peer", delta: 3 },
+          ],
+        } as never,
+      ],
+    })!;
+    expect(arr.choices[0].relationDelta).toEqual([
+      { target: "MEM_CO", delta: -8 },
+      { target: "peer", delta: 3 },
+    ]);
+    expect(arr.choices[0].extraEffects).toBeUndefined();
+
+    // 옛 풀의 관계도 객체 `{kind,delta}` 는 뜻이 다르다 — extraEffects 에 그대로 남아야 한다
+    const obj = toLifeEvent({
+      id: "L2",
+      title: "t",
+      description: "d",
+      choices: [{ id: "c", label: "l", relationDelta: { kind: "coach", delta: 3 } } as never],
+    })!;
+    expect(obj.choices[0].relationDelta).toBeUndefined();
+    expect(obj.choices[0].extraEffects?.relationDelta).toEqual({ kind: "coach", delta: 3 });
   });
 
   it("ballDelta 는 상한을 넘지 않고 · 상벌·휴가는 쌓이고 · perfTierDelta 는 그 이벤트의 마지막 성과에만", () => {

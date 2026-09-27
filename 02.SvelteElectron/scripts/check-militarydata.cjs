@@ -59,7 +59,8 @@ const REQUIRED_CALENDAR = [
 ];
 const CHOICE_EFFECT_KEYS = ["relationDelta", "fatigueDelta", "moraleDelta", "ballDelta", "award", "penalty", "leaveDays", "perfTierDelta", "relationTarget"];
 // relationTarget 예약어 — types/militaryLife.ts 의 MILITARY_RELATION_TARGETS 와 같아야 한다 (아래가 둘을 묶는다)
-const RELATION_TARGETS = ["all", "subunit", "junior"];
+// peer·officer 는 members.json 의 role 값 그대로다 (2026-09-27 · 같은 것을 두 이름으로 부르지 않는다)
+const RELATION_TARGETS = ["all", "subunit", "junior", "peer", "officer"];
 
 // ── 타입 파일과 어휘가 같은가 (문자열 포함 검사 · 정규식 없음) ──
 {
@@ -146,10 +147,32 @@ if (lifePool) {
           if (["id", "label", "effectHint"].includes(k)) continue;
           if (!CHOICE_EFFECT_KEYS.includes(k)) fail(`${e.id}/${c.id}: 선택지 필드 "${k}" 를 모른다 (statDelta 는 현역에 없다)`);
         }
-        // relationTarget — 예약어 셋이거나 members.json 의 id 여야 한다. 오타면 아무에게도 안 간다
+        // relationDelta 는 **숫자 아니면 짝 배열**이다 (2026-09-27 · 대상 둘)
+        const pairs = Array.isArray(c.relationDelta) ? c.relationDelta : null;
+        if (c.relationDelta !== undefined && !pairs && typeof c.relationDelta !== "number") {
+          fail(`${e.id}/${c.id}: relationDelta 는 숫자거나 [{target,delta}] 배열`);
+        }
+        if (pairs) {
+          if (pairs.length < 2) fail(`${e.id}/${c.id}: relationDelta 배열이 ${pairs.length}칸 — 대상이 하나면 숫자로 적는다(꼴이 둘이 되지 않게)`);
+          // 배열이면 칸마다 target 이 있다. relationTarget 을 같이 적으면 **안 읽히는 칸**이 생긴다
+          if (c.relationTarget !== undefined) fail(`${e.id}/${c.id}: relationDelta 가 배열인데 relationTarget 도 있다 — 배열에서는 안 읽힌다`);
+          const seen = new Set();
+          for (const p of pairs) {
+            if (!p || typeof p !== "object") { fail(`${e.id}/${c.id}: relationDelta 칸이 객체가 아니다`); continue; }
+            for (const k of Object.keys(p)) if (!["target", "delta"].includes(k)) fail(`${e.id}/${c.id}: relationDelta 칸 필드 "${k}" 를 모른다`);
+            if (typeof p.target !== "string" || !p.target) fail(`${e.id}/${c.id}: relationDelta 칸에 target 이 없다`);
+            else {
+              if (!RELATION_TARGETS.includes(p.target) && !memberIds.has(p.target)) fail(`${e.id}/${c.id}: relationDelta target "${p.target}" — ${RELATION_TARGETS.join("|")} 나 members.json 의 id`);
+              if (seen.has(p.target)) fail(`${e.id}/${c.id}: relationDelta target "${p.target}" 가 두 번 — 뒤엣것이 앞엣것에 더해져 표시와 달라진다`);
+              seen.add(p.target);
+            }
+            if (typeof p.delta !== "number" || p.delta === 0) fail(`${e.id}/${c.id}: relationDelta 칸의 delta 는 0 아닌 숫자`);
+          }
+        }
+        // relationTarget — 예약어 다섯이거나 members.json 의 id 여야 한다. 오타면 아무에게도 안 간다
         if (c.relationTarget !== undefined) {
           if (typeof c.relationTarget !== "string" || !c.relationTarget) fail(`${e.id}/${c.id}: relationTarget 은 문자열`);
-          else if (!RELATION_TARGETS.includes(c.relationTarget) && !memberIds.has(c.relationTarget)) fail(`${e.id}/${c.id}: relationTarget "${c.relationTarget}" — all|subunit|junior 나 members.json 의 id`);
+          else if (!RELATION_TARGETS.includes(c.relationTarget) && !memberIds.has(c.relationTarget)) fail(`${e.id}/${c.id}: relationTarget "${c.relationTarget}" — ${RELATION_TARGETS.join("|")} 나 members.json 의 id`);
           if (c.relationDelta === undefined) fail(`${e.id}/${c.id}: relationTarget 만 있고 relationDelta 가 없다 — 아무 일도 안 일어난다`);
         }
       }

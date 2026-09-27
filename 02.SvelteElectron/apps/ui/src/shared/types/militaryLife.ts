@@ -97,17 +97,46 @@ export interface MilitaryCondition {
  * 이 셋은 **예약어**다. 평가기는 `militaryLifeRules.applyChoiceToState` 하나.
  *
  * ⚠ 예약어를 늘릴 때 표 둘을 같이 — 여기와 `applyChoiceToState` 의 갈래.
- *   `scripts/check-militarydata.cjs` 가 이 파일에서 문자열로 셋을 찾아 둘이 갈리면 막는다.
+ *   `scripts/check-militarydata.cjs` 가 이 파일에서 문자열로 다섯을 찾아 둘이 갈리면 막는다.
+ *
+ * 🔴 **`peer`·`officer` 는 2026-09-27 에 늘렸다**(B 인계 6차 §0.2). 이름을 새로
+ *   짓지 않고 `MilitaryMemberRole` 값 그대로 쓴다 — `junior` 가 이미 그렇고,
+ *   「동기」에 `peer` · 「간부」에 `cadre` 처럼 **같은 것을 두 이름으로** 부르면
+ *   `members.json` 의 `role` 칸과 예약어가 갈려 다음 사람이 밟는다.
+ *   `senior`(선임 3명)는 **안 넣는다** — 그걸 부르는 힌트가 데이터에 아직 없다.
  */
-export const MILITARY_RELATION_TARGETS = ["all", "subunit", "junior"] as const;
+export const MILITARY_RELATION_TARGETS = ["all", "subunit", "junior", "peer", "officer"] as const;
 export type MilitaryRelationTargetKeyword = (typeof MILITARY_RELATION_TARGETS)[number];
+
+/**
+ * 관계가 **대상마다 다르게** 갈 때의 한 칸 (2026-09-27 · B 인계 6차 §0.2).
+ *
+ * 힌트가 「관계 −8, **동기 관계 +3**」처럼 **대상 둘**을 말하는 선택지가 셋 있는데
+ * (`MIL_COND_CONFLICT_SENIOR#stand` · `MIL_COND_JUNIOR_TROUBLE#cover`/`#report`)
+ * 칸이 하나뿐이라 **힌트의 절반이 아무 일도 안 했다**. 표시와 동작이 다른 자리다.
+ *
+ * ⚠ `target` 은 필수다 — 배열을 쓰는 순간 「누구에게」가 칸마다 달라서
+ *   이벤트 `member` 로 떨어지는 옛 기본값이 뜻을 잃는다.
+ */
+export interface MemberRelationPair {
+  /** 예약어(`MILITARY_RELATION_TARGETS`) 또는 `members.json` 의 부대원 id */
+  target: string;
+  delta: number;
+}
 
 /** 선택지 효과 — 전부 선택 · 능력치(statDelta)는 현역에서 **없다** (§28) */
 export interface MilitaryLifeChoice {
   id: string;
   label: string;
   effectHint?: string;
-  relationDelta?: number;
+  /**
+   * 부대원 관계 ±.
+   *
+   * - **숫자** — 옛 꼴 그대로. 받는 사람은 아래 `relationTarget` 이 정한다.
+   * - **배열** — 대상마다 다른 값(`MemberRelationPair`). 이때 `relationTarget` 은
+   *   **안 쓴다**(칸마다 `target` 이 있다) — `check:militarydata` 가 같이 적으면 막는다.
+   */
+  relationDelta?: number | readonly MemberRelationPair[];
   /**
    * `relationDelta` 를 **누가 받나** — 부대원 id · `"all"` · `"subunit"` · `"junior"`.
    * 없으면 이벤트의 `member` → 그것도 없으면 `"all"`(옛 동작 그대로).
