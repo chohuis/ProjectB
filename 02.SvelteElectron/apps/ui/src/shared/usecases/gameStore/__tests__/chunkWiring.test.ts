@@ -130,3 +130,57 @@ describe("덩이 2 — 전 리그 시즌 종료", () => {
     expect(src).toContain("pushMailbox(");
   });
 });
+
+describe("덩이 3 — 계약·FA·트레이드", () => {
+  /**
+   * 🔴 **대조군.** 열한 함수 전부 호출부가 있어야 한다. 하나라도 0 이면
+   *   그 갈래가 이제 아무도 안 부르는 것이고, store 에서 나가는 길에
+   *   위임자를 흘렸다는 뜻이다.
+   */
+  it("열한 함수의 호출부가 다 살아 있다", () => {
+    const names = [
+      "signContract",
+      "setPendingNextContract",
+      "applyPendingNextContract",
+      "applyTradeTransfer",
+      "markIncentivesSettled",
+      "applySeasonContractProgress",
+      "incrementFaNegotiationRound",
+      "incrementFaUnsignedWeek",
+      "resetFaProgress",
+      "advanceTradeAdaptationWeek",
+      "applyOptionResult",
+    ];
+    const dead = names.filter((n) => callSites(n).length === 0);
+    expect(dead, "호출부가 0인 함수").toEqual([]);
+  });
+
+  it("store 는 넘기기만 한다 — 덩이 본문이 game.ts 에 안 남았다", () => {
+    const store = readFileSync(resolve(ROOT, "apps/ui/src/shared/stores/game.ts"), "utf8");
+    expect(store).toContain("contracts.signContract(");
+    // 계약을 실제로 적는 자리는 이제 하나다 — store 에 남으면 정본이 둘이다
+    expect(store.includes("shiftContract(")).toBe(false);
+    expect(store.includes("incentiveKey(")).toBe(false);
+  });
+
+  /**
+   * 🔴 연차를 팀 이동으로 0 으로 되돌리던 결함이 되살아나지 않게.
+   *   `proServiceYearReset` 검사와 같은 자리를 여기서도 본다 — 그쪽은
+   *   `gamePathSrc()` 로 읽으므로 이 덩이를 함께 본다.
+   */
+  it("갈림길이 다 살아 있다", () => {
+    const src = gamePathSrc();
+    const flat = gamePathFlat();
+    // 팀이 바뀌어도 연차는 유지된다
+    expect(flat).toContain("proServiceYears: s.protagonist.proServiceYears,");
+    expect(src.includes("proServiceYears: isNewTeam ? 0")).toBe(false);
+    // 예약 계약은 W52 까지 옛 계약을 밀지 않는다
+    expect(flat).toContain("shiftContract(undefined, contract, stamp)");
+    // 트레이드 적응 3주
+    expect(flat).toContain("tradeAdaptationWeeks: 3,");
+    // 인센티브 중복 지급을 막는 열쇠
+    expect(src).toContain("incentiveKey(i)");
+    // 계약이 바뀌면 호환 객체를 다시 만든다
+    expect(src).toContain("toPlayerCompat(protagonist)");
+  });
+});

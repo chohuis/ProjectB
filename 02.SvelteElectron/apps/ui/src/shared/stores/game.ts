@@ -39,17 +39,17 @@ import {
 //   쓰는 곳 없는 이름이 store 를 다시 무겁게 만든다
 import type { DraftPick, SchoolScenario } from "../types/save";
 import type { ProContract } from "../types/save";
-import { shiftContract, type ContractStamp } from "../utils/contractHistory";
+// 계약 도장은 위임자의 인자 타입으로만 쓴다 — 찍는 곳은 덩이 셋이다
+import { type ContractStamp } from "../utils/contractHistory";
 import { transitionReason, universityGradeOf, universityWeekOnEnroll } from "../utils/careerTransition";
 import { careerSummaryOf } from "../utils/careerSummary";
 import { pitchingOvrOf, battingOvrOf } from "../utils/ovr";
-// 인센티브를 구분하는 열쇠 — **식이 둘이 되면 자물쇠가 안 맞는다**
-import { incentiveKey } from "../utils/contractTerms";
 import { masterStore } from "./master";
 // store 밖으로 뺀 게임 로직 덩이 — `PLAN_103 §3` Ⅱ-2. 검사는 `gamePathSrc()` 가
 // 이 파일과 `usecases/gameStore/*` 를 한 덩이로 읽는다
 import { processNpcDraft as processNpcDraftChunk } from "../usecases/gameStore/npcDraft";
 import { processAllLeaguesSeasonEnd as processAllLeaguesSeasonEndChunk } from "../usecases/gameStore/seasonEndLeagues";
+import * as contracts from "../usecases/gameStore/contracts";
 
 import { autoLog } from "./autoAdvance";
 import { npcLiveStatsStore } from "./npcLiveStats";
@@ -557,7 +557,8 @@ function profilesFromMaster(): Record<string, import("./master").ProTeamProfile>
   return out;
 }
 
-function toPlayerCompat(p: ProtagonistSave): GameStoreState["player"] {
+// `export` 는 Ⅱ-2 덩이 셋(계약·군·진로)이 같은 호환 객체를 만들기 때문이다 — 정본은 여기 하나다
+export function toPlayerCompat(p: ProtagonistSave): GameStoreState["player"] {
   const gradeLabel = p.grade ? `${p.grade}학년` : "-";
   const throws = p.handedness === "L" ? "좌투" : p.handedness === "S" ? "양투" : "우투";
   const bats   = p.handedness === "L" ? "좌타" : p.handedness === "S" ? "양타" : "우타";
@@ -586,7 +587,7 @@ function toPlayerCompat(p: ProtagonistSave): GameStoreState["player"] {
 }
 
 // ── 헬퍼: school 호환 객체 ────────────────────────────────────
-function toSchoolCompat(
+export function toSchoolCompat(
   careerStage: ProtagonistSave["careerStage"],
   s: SchoolState,
 ): GameStoreState["school"] {
@@ -2657,143 +2658,51 @@ function createGameStore() {
       });
     },
 
-    signContract(contract: ProContract, stamp: ContractStamp = {}) {
-      update((s) => {
-        const shift = shiftContract(s.protagonist.contract, contract, stamp,
-                                    s.protagonist.contractHistory);
-        const leagueStage =
-          contract.leagueId === "LEAGUE_ABL"         ? "pro_abl" :
-          contract.leagueId === "LEAGUE_JBL"         ? "pro_jbl" :
-          contract.leagueId === "LEAGUE_INDEPENDENT" ? "independent" :
-          "pro_kbl";
-        const protagonist: ProtagonistSave = {
-          ...s.protagonist,
-          contract: { ...shift.contract, status: "active" },
-          // 지나간 계약은 기록 탭 「계약 이력」이 읽는다 (§7-4). 소식은 밀려나도
-          // 여기는 남는다 — 그게 이 필드가 있는 이유다
-          contractHistory: shift.history,
-          money: Math.max(0, s.protagonist.money + contract.signingBonus),
-          careerStage: leagueStage,
-          // 학년은 고교에서만 의미가 있다. `applyDraftDecision`은 이미 이렇게
-          // 지우는데 여기만 빠져 있어서, 드래프트로 프로에 간 선수가
-          // `grade: 3`을 달고 다녔다 — 시즌 종료 화면 헤더가 `p.grade`를 먼저
-          // 보므로 프로 선수에게 "3학년"이 찍혔다
-          grade: undefined,
-          teamId: contract.teamId,
-          leagueId: contract.leagueId,
-          faNegotiationRound: 0,
-          faUnsignedWeeks: 0,
-          tradeAdaptationWeeks: 0,
-          // 🔴 **팀을 옮겼다고 연차를 0으로 되돌리지 않는다.**
-          //
-          // 예전엔 `isNewTeam ? 0 : ...`이었다. 그런데 `isNewTeam`은 "프로에 처음
-          // 들어왔다"가 아니라 **"팀이 바뀜다"**다 — FA 이적·트레이드·
-          // 2군 이동으로 `teamId`가 바뀔 때마다 연차가 사라졌다.
-          // 실측(씨앗 424242 · 12시즌): 연차 **4 → 0**으로 리셋됐다.
-          // 그러면 FA 자격(5년)에 영영 못 닿고 은퇴 판정도 어긋난다.
-          //
-          // ⚠ 프로 등록일수는 리그 전체 기준이다. 신인은 어차피 이 값이 0이라
-          //   따로 리셋할 이유가 없다.
-          proServiceYears: s.protagonist.proServiceYears,
-        };
-        return {
-          ...s,
-          protagonist,
-          player: toPlayerCompat(protagonist),
-          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
-        };
-      });
-    },
 
-    // 오프시즌 계약 서명 — 즉시 시즌 초기화 없이 pendingNextContract에 보관
+    // ── 계약·FA·트레이드 ───────────────────────────────────────
+    //
+    // 실제 처리는 `usecases/gameStore/contracts.ts` 다 — store 는 넘기기만 한다.
+    // 이름·인자·돌려주는 값은 그대로다(호출부 불변).
+    //
+    // 오프시즌 계약 서명 — 즉시 시즌 초기화 없이 pendingNextContract에 보관.
     // W52 SeasonEndModal에서 applyPendingNextContract 호출 시 실제 적용
-    setPendingNextContract(contract: ProContract, stamp: ContractStamp = {}) {
-      update((s) => {
-        // 🔴 **여기서 옛 계약을 밀지 않는다.** 서명은 오프시즌이고 옛 계약은
-        //    W52 까지 살아 있다 — 지금 밀면 「계약 정보」가 빈 채로 한 달이
-        //    지나간다. 이력은 `applyPendingNextContract` 가 넘길 때 쌓는다.
-        //    찍는 것(연도·종류)은 지금 해야 한다 — 그때는 몇 년에 서명했는지
-        //    모른다.
-        const shift = shiftContract(undefined, contract, stamp);
-        const leagueStage =
-          contract.leagueId === "LEAGUE_ABL"         ? "pro_abl" :
-          contract.leagueId === "LEAGUE_JBL"         ? "pro_jbl" :
-          contract.leagueId === "LEAGUE_INDEPENDENT" ? "independent" :
-          "pro_kbl";
-        const protagonist: ProtagonistSave = {
-          ...s.protagonist,
-          pendingNextContract: { ...shift.contract, status: "active" },
-          careerStage: leagueStage,
-          teamId: contract.teamId,
-          leagueId: contract.leagueId,
-          money: Math.max(0, s.protagonist.money + contract.signingBonus),
-          faNegotiationRound: 0,
-          faUnsignedWeeks: 0,
-          // 🔴 **팀을 옮겼다고 연차를 0으로 되돌리지 않는다.**
-          //
-          // 예전엔 `isNewTeam ? 0 : ...`이었다. 그런데 `isNewTeam`은 "프로에 처음
-          // 들어왔다"가 아니라 **"팀이 바뀜다"**다 — FA 이적·트레이드·
-          // 2군 이동으로 `teamId`가 바뀔 때마다 연차가 사라졌다.
-          // 실측(씨앗 424242 · 12시즌): 연차 **4 → 0**으로 리셋됐다.
-          // 그러면 FA 자격(5년)에 영영 못 닿고 은퇴 판정도 어긋난다.
-          //
-          // ⚠ 프로 등록일수는 리그 전체 기준이다. 신인은 어차피 이 값이 0이라
-          //   따로 리셋할 이유가 없다.
-          proServiceYears: s.protagonist.proServiceYears,
-        };
-        return {
-          ...s,
-          protagonist,
-          player: toPlayerCompat(protagonist),
-          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
-        };
-      });
+    signContract(contract: ProContract, stamp: ContractStamp = {}) {
+      contracts.signContract({ update }, contract, stamp);
     },
-
+    setPendingNextContract(contract: ProContract, stamp: ContractStamp = {}) {
+      contracts.setPendingNextContract({ update }, contract, stamp);
+    },
     // W52 SeasonEndModal에서 호출 — pendingNextContract를 contract로 확정
     applyPendingNextContract() {
-      update((s) => {
-        const pending = s.protagonist.pendingNextContract;
-        if (!pending) return s;
-        // 옛 계약이 자리를 내주는 순간이 여기다 — 재계약·FA 가 이 길로 온다
-        const shift = shiftContract(s.protagonist.contract, pending, {},
-                                    s.protagonist.contractHistory);
-        const protagonist: ProtagonistSave = {
-          ...s.protagonist,
-          contract: shift.contract,
-          contractHistory: shift.history,
-          pendingNextContract: undefined,
-        };
-        return { ...s, protagonist, player: toPlayerCompat(protagonist) };
-      });
+      contracts.applyPendingNextContract({ update });
     },
-
     applyTradeTransfer(toTeamId: string, toLeagueId?: string) {
-      update((s) => {
-        const current = s.protagonist.contract;
-        const newLeagueId = toLeagueId ?? s.protagonist.leagueId;
-        const leagueStage: import("../types/save").CareerStage =
-          newLeagueId === "LEAGUE_ABL"         ? "pro_abl" :
-          newLeagueId === "LEAGUE_JBL"         ? "pro_jbl" :
-          newLeagueId === "LEAGUE_INDEPENDENT" ? "independent" :
-          "pro_kbl";
-        const protagonist: ProtagonistSave = {
-          ...s.protagonist,
-          teamId:    toTeamId,
-          leagueId:  newLeagueId,
-          careerStage: leagueStage,
-          tradeAdaptationWeeks: 3,
-          contract: current
-            ? { ...current, teamId: toTeamId, leagueId: newLeagueId }
-            : current,
-        };
-        return {
-          ...s,
-          protagonist,
-          player: toPlayerCompat(protagonist),
-          logs: [`트레이드 이적: ${toTeamId}`, ...s.logs].slice(0, 30),
-        };
-      });
+      contracts.applyTradeTransfer({ update }, toTeamId, toLeagueId);
+    },
+    markIncentivesSettled(seasonYear: number, keys: readonly string[]) {
+      contracts.markIncentivesSettled({ update }, seasonYear, keys);
+    },
+    applySeasonContractProgress() {
+      contracts.applySeasonContractProgress({ update });
+    },
+    incrementFaNegotiationRound() {
+      contracts.incrementFaNegotiationRound({ update });
+    },
+    incrementFaUnsignedWeek() {
+      contracts.incrementFaUnsignedWeek({ update });
+    },
+    resetFaProgress() {
+      contracts.resetFaProgress({ update });
+    },
+    advanceTradeAdaptationWeek() {
+      contracts.advanceTradeAdaptationWeek({ update });
+    },
+    applyOptionResult(payload: {
+      exercised: boolean;
+      nextSalary: number;
+      optionType: "team" | "player";
+    }) {
+      contracts.applyOptionResult({ update }, payload);
     },
 
     addMilitaryDeferPenalty(points: number) {
@@ -2995,80 +2904,10 @@ function createGameStore() {
      *
      * ⚠ 계산은 `usecases/incentiveSettlement.ts` 가 한다 — 여기는 패치만이다.
      */
-    markIncentivesSettled(seasonYear: number, keys: readonly string[]) {
-      if (keys.length === 0) return;
-      const set = new Set(keys);
-      update((s) => {
-        const c = s.protagonist.contract;
-        if (!c?.incentives?.length) return s;
-        return {
-          ...s,
-          protagonist: {
-            ...s.protagonist,
-            contract: {
-              ...c,
-              incentives: c.incentives.map((i) => {
-                if (!set.has(incentiveKey(i))) return i;
-                const paid = i.paidSeasons ?? [];
-                if (paid.includes(seasonYear)) return i;
-                return { ...i, paidSeasons: [...paid, seasonYear] };
-              }),
-            },
-          },
-        };
-      });
-    },
 
-    applySeasonContractProgress() {
-      update((s) => {
-        const current = s.protagonist.contract;
-        if (!current) return s;
-        const remainingYears = Math.max(0, current.remainingYears - 1);
-        const status = remainingYears > 0 ? "active" : "expired";
-        return {
-          ...s,
-          protagonist: {
-            ...s.protagonist,
-            contract: {
-              ...current,
-              remainingYears,
-              status,
-            },
-          },
-        };
-      });
-    },
 
-    incrementFaNegotiationRound() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          faNegotiationRound: Math.min(2, (s.protagonist.faNegotiationRound ?? 0) + 1),
-        },
-      }));
-    },
 
-    incrementFaUnsignedWeek() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          faUnsignedWeeks: (s.protagonist.faUnsignedWeeks ?? 0) + 1,
-        },
-      }));
-    },
 
-    resetFaProgress() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          faNegotiationRound: 0,
-          faUnsignedWeeks: 0,
-        },
-      }));
-    },
 
     advanceMilitaryRecoveryWeek() {
       update((s) => ({
@@ -3080,15 +2919,6 @@ function createGameStore() {
       }));
     },
 
-    advanceTradeAdaptationWeek() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          tradeAdaptationWeeks: Math.max(0, (s.protagonist.tradeAdaptationWeeks ?? 0) - 1),
-        },
-      }));
-    },
 
     /**
      * **일어난 일**을 적는다 (2026-09-08 · L1 · `PLAN_MESSAGE_LANES`).
@@ -3126,48 +2956,6 @@ function createGameStore() {
       }));
     },
 
-    applyOptionResult(payload: {
-      exercised: boolean;
-      nextSalary: number;
-      optionType: "team" | "player";
-    }) {
-      update((s) => {
-        const current = s.protagonist.contract;
-        if (!current) return s;
-        if (!payload.exercised) {
-          return {
-            ...s,
-            protagonist: {
-              ...s.protagonist,
-              contract: {
-                ...current,
-                status: "expired",
-              },
-            },
-          };
-        }
-        return {
-          ...s,
-          protagonist: {
-            ...s.protagonist,
-            contract: {
-              ...current,
-              salary: payload.nextSalary,
-              remainingYears: 1,
-              status: "active",
-              teamOptionYears:
-                payload.optionType === "team"
-                  ? Math.max(0, current.teamOptionYears - 1)
-                  : current.teamOptionYears,
-              playerOptionYears:
-                payload.optionType === "player"
-                  ? Math.max(0, current.playerOptionYears - 1)
-                  : current.playerOptionYears,
-            },
-          },
-        };
-      });
-    },
 
     // 구종 습득 시작
     startPitchTraining(pitchId: string) {
