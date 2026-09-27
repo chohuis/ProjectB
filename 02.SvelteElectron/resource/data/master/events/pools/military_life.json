@@ -80,6 +80,7 @@
           "label": "한 명씩 인사한다",
           "effectHint": "재적 부대원 전원 관계 +2, 사기 +2",
           "relationDelta": 2,
+          "relationTarget": "all",
           "moraleDelta": 2
         }
       ]
@@ -97,7 +98,8 @@
           "id": "ok",
           "label": "판다",
           "effectHint": "피로는 캘린더(박격포 +12 / 통신 +6), 같은 소단위 관계 +1",
-          "relationDelta": 1
+          "relationDelta": 1,
+          "relationTarget": "subunit"
         }
       ]
     },
@@ -273,17 +275,20 @@
           "id": "junior",
           "label": "후임을 챙긴다",
           "effectHint": "후임 관계 +4",
-          "relationDelta": 4
+          "relationDelta": 4,
+          "relationTarget": "junior"
         },
         {
           "id": "squad",
           "label": "소단위를 챙긴다",
           "effectHint": "같은 소단위 전원 +2, 성과 판정 유리",
           "relationDelta": 2,
+          "relationTarget": "subunit",
           "perfTierDelta": -1
         }
       ],
-      "_rewardNote": "갈래 둘이 **효과 종류까지 같아** 고를 뜻이 없었다(R3 · 2026-09-09) — 둘 다 관계 +N 이고 받는 사람도 안 갈렸다. `relationTarget` 을 붙이려 했으나 `check:militarydata` 가 **선택지 필드로 모르는 칸**이라 잡았다(맞다 · 배선이 없다). 소단위 쪽에 **성과 판정 보정**을 붙여 종류를 갈랐다 — 크기는 안 건드렸다"
+      "_rewardNote": "갈래 둘이 **효과 종류까지 같아** 고를 뜻이 없었다(R3 · 2026-09-09) — 둘 다 관계 +N 이고 받는 사람도 안 갈렸다. `relationTarget` 을 붙이려 했으나 `check:militarydata` 가 **선택지 필드로 모르는 칸**이라 잡았다(맞다 · 배선이 없다). 소단위 쪽에 **성과 판정 보정**을 붙여 종류를 갈랐다 — 크기는 안 건드렸다",
+      "_targetNote": "B-4(2026-09-27) — 배선이 섰다(`HANDOFF_A_TO_B §0.23`). 이제 둘이 **다른 사람에게 간다**: 후임 쪽은 `junior`, 소단위 쪽은 `subunit`. `junior` 는 초반에 대상이 0 이 될 수 있는데(`MEM_JR_1` joinWeek 36 · `MEM_JR_2` 62) 이 이벤트는 **`minRank: 3`(W61 · calendar.json)** 이라 `MEM_JR_1` 이 이미 있다. `perfTierDelta` 는 그대로 둔다 — 대가가 갈린 뒤에도 종류가 둘이면 고를 뜻이 더 는다"
     },
     {
       "id": "MIL_CAL_WORKS_FALL",
@@ -298,7 +303,8 @@
           "id": "ok",
           "label": "판다",
           "effectHint": "피로는 캘린더(박격포 +10 / 통신 +5), 소단위 관계 +1",
-          "relationDelta": 1
+          "relationDelta": 1,
+          "relationTarget": "subunit"
         }
       ]
     },
@@ -449,6 +455,7 @@
           "effectHint": "감각 +3, 소단위 관계 +2, 피로 +5",
           "ballDelta": 3,
           "relationDelta": 2,
+          "relationTarget": "subunit",
           "fatigueDelta": 5
         }
       ]
@@ -792,14 +799,16 @@
           "label": "제대로 치운다",
           "effectHint": "피로 +6, 소단위 관계 +2",
           "fatigueDelta": 6,
-          "relationDelta": 2
+          "relationDelta": 2,
+          "relationTarget": "subunit"
         },
         {
           "id": "dodge",
           "label": "요령껏 한다",
           "effectHint": "피로 +2, 소단위 관계 -1",
           "fatigueDelta": 2,
-          "relationDelta": -1
+          "relationDelta": -1,
+          "relationTarget": "subunit"
         }
       ]
     },
@@ -1062,7 +1071,8 @@
           "label": "나간다",
           "effectHint": "피로 +5, 소단위 관계 +1",
           "fatigueDelta": 5,
-          "relationDelta": 1
+          "relationDelta": 1,
+          "relationTarget": "subunit"
         }
       ]
     },
@@ -1368,7 +1378,8 @@
           "label": "돈다",
           "effectHint": "피로 +4, 소단위 관계 +1",
           "fatigueDelta": 4,
-          "relationDelta": 1
+          "relationDelta": 1,
+          "relationTarget": "subunit"
         }
       ]
     },
@@ -1393,6 +1404,7 @@
           "label": "끼어든다",
           "effectHint": "소단위 전원 관계 +3, 사기 +4",
           "relationDelta": 3,
+          "relationTarget": "subunit",
           "moraleDelta": 4
         }
       ]
@@ -1624,5 +1636,6 @@
     }
   ],
   "_memberNote": "🔴 **성격은 말투가 아니라 「어떤 일이 일어나느냐」로 드러난다**(사용자 확정 2026-09-09). 문안이 성격을 읽는 게 아니라, `member` 로 **그 사람이 나오는 장면을 성격에 맞춰** 배정한다. 위 넷은 그렇게 새로 쓴 것이고 기존 120종은 손대지 않았다",
+  "_relationTargetNote": "B-4(2026-09-27) — `relationTarget` 을 **힌트가 이미 대상을 말하고 있던 자리에만** 심었다(열한 칸 · 전수 표는 `docs/PLAN_103_2026-09-27.md §5`). `subunit` 아홉(`MIL_CAL_WORKS_SPRING#ok` · `MIL_CAL_WORKS_FALL#ok` · `MIL_CAL_PROMOTE_3#squad` · `MIL_COND_SENSE_HIGH#throw` · `MIL_COND_SNOW#work` · `#dodge` · `MIL_DAY_WORK#ok` · `MIL_DAY_PATROL#ok` · `MIL_DAY_SQUAD_MEAL#join`) · `junior` 하나(`MIL_CAL_PROMOTE_3#junior`) · `all` 하나(`MIL_CAL_FIRST_DAY#greet` · 뜻을 못박는 것이라 동작은 안 바뀐다). ⚠ **못 심은 것 넷** — 힌트가 「동기 관계」·「간부 관계」를 말하는데 예약어가 `all|subunit|junior` 뿐이라 적을 값이 없다(`MIL_CAL_FESTIVAL#out`·`#stay`) · 힌트가 **대상 둘**을 말하는데 선택지에 `relationDelta` 가 하나뿐이다(`MIL_COND_CONFLICT_SENIOR#stand` 「동기 관계 +3」 · `MIL_COND_JUNIOR_TROUBLE#cover` 「간부 관계 -2」 · `#report` 「간부 관계 +3」 — 셋은 지금도 **아무 일도 안 일어난다**). 둘 다 A 몫으로 넘긴다 — 예약어를 늘리는 것도, 대상 둘을 받는 것도 `types/militaryLife.ts`·평가기·검사가 같이 움직인다",
   "_memberCoverageNote": "B-3(2026-09-27) — 부대원 15명 중 **어느 이벤트에도 안 나오던 둘**(`MEM_XO` 오승표 「원칙대로 간다」 · `MEM_PLT_LDR` 신동주 「아직 서툴다」)에게 장면 하나씩 붙였다(`MIL_DAY_XO_BY_THE_BOOK` · `MIL_DAY_PLT_LDR_FIRST`). 실측: 두 id 는 `members.json` 말고는 저장소 어디에도 없었다. 나머지 13명은 이미 장면이 있어 **안 늘렸다** — 억지로 붙이면 장면이 성격을 못 따라간다. 성격은 여기서도 장면으로 드러낸다(`{member.trait}` 는 B-7 몫)"
 }
