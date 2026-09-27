@@ -85,6 +85,14 @@ function runWorker() {
   const 빈틈없음 = ys.every((y, i) => i === 0 || y.연도 === ys[i - 1].연도 + 1);
   check("연도가 첫 줄부터 빈틈없이 1씩 늘어난다", 빈틈없음, `연도 ${연도들.join(",")}`);
 
+  // 🔴 이벤트 id 계측 칸(PLAN_103 §5-1 · D 가 워커에 이었다). `headless.boot()`
+  //   는 늘 계측 모드라(`__PB_MEASURE__`) 이 판은 항상 켜진 채로 돈다 — 켜진
+  //   채로도 칸이 안 차면 배선이 빠진 것이다. 꺼진 채(실제 플레이)의 "빈 칸"은
+  //   `eventIdCounters.test.ts` 가 이미 본다(여기서는 재확인 안 한다).
+  const 이벤트id있는줄 = ys.filter((y) => y.이벤트id && Object.keys(y.이벤트id).length > 0);
+  check("이벤트id 칸이 찬다(계측 모드에서 워커가 이었다)", 이벤트id있는줄.length > 0,
+    `이벤트id 있는 줄 ${이벤트id있는줄.length}/${ys.length}`);
+
   log("");
   if (failed) { log(`🔴 ${failed}건 실패`); process.exit(1); }
   log("전부 통과");
