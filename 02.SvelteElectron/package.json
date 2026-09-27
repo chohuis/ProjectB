@@ -163,6 +163,7 @@
     "smoke:dist": "cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe DRIVE_USER_DATA=1 node scripts/drive.mjs scripts/smoke-dist.txt",
     "probe:military": "cross-env DRIVE_USER_DATA=1 PF_YEARS=6 ELECTRON_RUN_AS_NODE=1 electron scripts/probe-paths.cjs --path mil",
     "smoke:oldsaves": "cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe node scripts/drive.mjs scripts/smoke-oldsaves.txt",
+    "e2e:3seasons": "node scripts/e2e-3seasons.mjs",
     "check:msgdupid": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-msgdupid.cjs",
     "check:roundtrip": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-roundtrip.cjs",
     "check:savecolumns": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-savecolumns.cjs",

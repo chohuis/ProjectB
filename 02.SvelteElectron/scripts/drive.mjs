@@ -25,6 +25,8 @@ const DEV_URL = process.env.VITE_DEV_SERVER_URL ?? "http://localhost:5174";
 
 let app = null;
 let page = null;
+/** `snapshot`/`verify` 가 재시작(quit → launch) 을 가로질러 들고 있는 상태 — 페이지가 아니라 이 Node 프로세스가 든다 */
+const snapshots = new Map();
 
 const electronBin = process.platform === "win32"
   ? path.join(APP_DIR, "node_modules/electron/dist/electron.exe")
@@ -344,16 +346,26 @@ const COMMANDS = {
           //   안 바뀌면 `GO` 를 주 진행으로 세지 않고 계속 막는 것을 치운다.
           const go = document.querySelector(".go:not(.btn)");
           if (go && !go.disabled) { go.click(); return "GO"; }
+          // 🔴 **disabled 인 `.go` 가 늘 막힌 것은 아니다** (재현 2026-09-27 ·
+          //   `PLAN_103 Ⅲ-드라이버` · C 09-21 제보 「go가 disabled」). `TopHeader`
+          //   가 주 진행을 **비동기**로 돌리는 동안 버튼을 "진행 중..." 으로 잠근다
+          //   — 그 찰나에 이 guard 가 걸리면 실제로는 몇 초 뒤 풀릴 것을 영영
+          //   막힌 것으로 오판했다(고교 리그 W17·W19 에서 재현: `goDisabled` 가
+          //   다음 evaluate 에서 `false`로 돌아왔다). 처리 중 표시일 때는 STUCK 이
+          //   아니라 BUSY 로 보고 기다린다 — 진짜 막힘은 그래도 20바퀴를 다 써서 잡힌다.
+          if (go && go.disabled && go.innerText.includes("진행 중")) return "BUSY";
           // 왜 막혔는지 말한다 — "STUCK"만 던지면 앱을 다시 띄워 손으로 뒤져야 한다
           return "STUCK:" + (go ? (go.disabled ? "go가 disabled" : "?") : ".go 없음")
             + " | " + (document.body.innerText.slice(0, 60).replace(/\s+/g, " "));
         }, { stopSel, auto });
         if (state === "MATCH") { console.log(`week ${i}: 목표 화면 도달`); return; }
         seenStates.set(state, (seenStates.get(state) ?? 0) + 1);
-        await new Promise((r) => setTimeout(r, state === "GO" || state === "SIM" ? 5000 : 1200));
+        await new Promise((r) => setTimeout(r, state === "GO" || state === "SIM" || state === "BUSY" ? 5000 : 1200));
         // GO 를 눌렀는데 **주차 표시가 그대로면 주가 안 간 것이다** — pending 화면만
         // 열렸을 뿐이다(㉮). 다음 바퀴에서 그걸 치운다
         if (state === "GO" && (await weekText()) !== wkBefore) break;
+        // BUSY 는 STUCK 이 아니다 — 다음 바퀴에서 다시 본다(처리가 끝나면 GO 나
+        // pending 으로 바뀐다). guard 20바퀴 한도가 실질적인 상한이다.
         if (state.startsWith("STUCK")) { stuckState = state; break; }
       }
       const label = await page.evaluate(() => document.querySelector(".go:not(.btn)")?.innerText ?? "(없음)");
@@ -370,6 +382,43 @@ const COMMANDS = {
         return;
       }
       console.log(`  week ${i + 1}: ${wk} · 버튼 "${label}"`);
+    }
+  },
+
+  /**
+   * **snapshot/verify** — 재시작(quit → launch) 전후 상태가 같은지 잰다
+   * (e2e-3seasons · PLAN_103 Ⅲ). 지금 열려 있는 화면에서 보이는 값만
+   * 찍는다 — 대본이 같은 탭을 골라 놓고 불러야 짝이 맞는다(예: 팀 탭에서
+   * `snapshot team`, 재시작 뒤 똑같이 팀 탭에서 `verify team`).
+   */
+  async snapshot(key) {
+    if (!page) return fail("ERROR: launch first");
+    const s = await page.evaluate(() => ({
+      wk: document.querySelector(".wk")?.innerText ?? null,
+      ovr: document.querySelector(".ovr.u-num")?.innerText ?? null,
+      rosterCount: document.querySelectorAll(".roster-row").length,
+      itemCount: document.querySelectorAll(".item").length,
+    }));
+    snapshots.set(String(key).trim(), s);
+    console.log("snapshot", key, "→", JSON.stringify(s));
+  },
+
+  async verify(key) {
+    if (!page) return fail("ERROR: launch first");
+    const k = String(key).trim();
+    const before = snapshots.get(k);
+    if (!before) return fail(`ERROR: verify — snapshot 이 없다: ${k}`);
+    const now = await page.evaluate(() => ({
+      wk: document.querySelector(".wk")?.innerText ?? null,
+      ovr: document.querySelector(".ovr.u-num")?.innerText ?? null,
+      rosterCount: document.querySelectorAll(".roster-row").length,
+      itemCount: document.querySelectorAll(".item").length,
+    }));
+    const diffs = Object.keys(before).filter((f) => String(before[f]) !== String(now[f]));
+    if (diffs.length) {
+      fail(`ERROR: verify(${k}) 불일치 — ` + diffs.map((f) => `${f}: ${JSON.stringify(before[f])} → ${JSON.stringify(now[f])}`).join(" · "));
+    } else {
+      console.log(`verify ${k} → OK`, JSON.stringify(now));
     }
   },
 

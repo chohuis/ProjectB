@@ -29,6 +29,9 @@ npm.cmd run build:packages  # TypeScript 패키지
 npm.cmd run build           # 전체 프로덕션 빌드
 ```
 
+## 테스트
+- `npm run e2e:3seasons` — 새 게임 → 3시즌 자동 진행 → 재시작 → 이어하기 → 상태 비교(`scripts/e2e-3seasons.txt`)
+
 ## 프로젝트 구조
 - `apps/ui`: Svelte UI — 화면 렌더링·입력값 전달만 (로직 없음)
 - `apps/desktop`: Electron main/preload — DLL 로드·IPC·파일 I/O

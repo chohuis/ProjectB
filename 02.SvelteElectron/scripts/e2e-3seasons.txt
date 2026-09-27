@@ -1,0 +1,56 @@
+# e2e:3seasons — 새 게임 → 3시즌(156주) 자동 진행 → 재시작 → 이어하기 →
+# 상태 비교(시즌·주·주인공 OVR·NPC 수·소식 수) → 한 주 더 (2026-09-27 · D · PLAN_103 Ⅲ)
+#
+#   npm run e2e:3seasons
+#   = node scripts/e2e-3seasons.mjs (DRIVE_USER_DATA 를 고정 폴더로 만들어 이 대본에 준다 —
+#     "1" 이면 launch 마다 새 임시 폴더가 파여 재시작 뒤 다른 세이브를 보게 된다)
+#
+# 선택자는 smoke-dist.txt·c64-notice.txt 와 같다. `.wk`/`.ovr.u-num`/`.roster-row`/
+# `.item` 은 snapshot/verify(drive.mjs)가 그대로 쓴다 — 팀 탭에서 찍고 팀 탭에서 재 보고,
+# 소식 탭에서 찍고 소식 탭에서 재 봐야 짝이 맞는다.
+#
+# ⚠ **156주가 12~20분이다**(PLAN_103 §4 추정). CI 는 별 job · 주 1회로 돈다 — 매 push 에
+#   넣기엔 아깝다(㉤ 확정).
+launch
+wait .btn.primary
+click .btn.primary
+wait .slot-info
+click .slot-info
+wait #pname
+fill #pname|e2e3s
+click .btn.next
+wait button.team-list-item
+click button.team-list-item
+click .btn.next
+click .btn.next
+wait .btn.start
+ss e2e-00-confirm
+click .btn.start
+wait .go
+advance 156 --auto
+ss e2e-01-w156
+click-text 팀
+sleep 800
+snapshot team
+click-text 소식
+sleep 800
+snapshot news
+ss e2e-02-before-restart
+quit
+launch
+wait .btn.cont
+click .btn.cont
+wait .slot-info
+click .slot-info
+wait .go
+ss e2e-03-after-continue
+click-text 팀
+sleep 800
+verify team
+click-text 소식
+sleep 800
+verify news
+ss e2e-04-verified
+advance 1 --auto
+ss e2e-05-plus1week
+quit
