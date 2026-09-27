@@ -75,17 +75,19 @@ export const DEFAULT_MATCH_ENGINE_TUNING: MatchEngineTuning = {
   //   그 거울이고, 이 파일 머리말이 「Rust 값과 동기」라고 못박고 있다 —
   //   한쪽만 고치면 이 프로젝트가 여러 번 당한 「표가 둘」이 된다.
   //   폭 9 → 5 (2026-09-27 · 결정 ⑤ · 평균 54.4 불변 · 근거는 Rust 쪽 주석).
+  //   창 52~57 → 52.5~57.5 (2026-09-28 · 결정 ⑤ 수준 중립 · 폭 5 그대로 · 전부
+  //   +0.5). +1 은 지나쳤다 — 근거는 Rust 쪽 주석.
   pitchBase: {
-    fastball: 57,
-    sinker: 56,
-    cutter: 55.5,
-    slider: 55.5,
-    curve: 54,
-    changeup: 53.5,
-    splitter: 54,
-    forkball: 53.5,
-    screwball: 53,
-    knuckleball: 52,
+    fastball: 57.5,
+    sinker: 56.5,
+    cutter: 56,
+    slider: 56,
+    curve: 54.5,
+    changeup: 54,
+    splitter: 54.5,
+    forkball: 54,
+    screwball: 53.5,
+    knuckleball: 52.5,
   },
   strategyBonus: { aggressive: 2, balanced: 0, safe: -2 },
   powerBonus: { low: -1.5, normal: 0, high: 2.8 },
