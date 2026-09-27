@@ -2458,11 +2458,29 @@ function createGameStore() {
     },
 
     // 대학 진행 주차 증가 (advanceWeek에서 호출)
+    //
+    // 🔴 **`grade` 를 여기서 같이 맞춘다** (2026-09-27 · `BALANCE_BACKLOG`
+    //   「`protagonist.grade` 가 대학에서 한 해 뒤처진다」 · 제안 ㉯).
+    //
+    //   예전엔 `processSeasonEnd` 가 적었다. 그 블록은 시즌 **끝**에 도는데
+    //   그때 `universityWeek` 은 정확히 52 이고 `universityGradeOf(52)` 는 1 이라
+    //   **직전 시즌의 학년**이 남았다(판 #6·#12 의 `[진로점수]` 줄이 2029·2030
+    //   둘 다 `grade=1` · 2030 의 진짜 학년은 2).
+    //
+    // ⚠ **축을 하나로 둔다.** 「+1 을 더해서 다음 주 학년을 적는」 쪽(제안 ㉮)은
+    //   왜 +1 인지가 또 하나의 축이 된다. 계수기가 **움직이는 자리**에서 같이
+    //   비추면 어긋날 틈이 없다 — `universityWeek` 이 정본이고 `grade` 는 거울이다
+    //   (`careerTransition.universityGradeOf` 머리말).
     incrementUniversityWeek() {
-      update((s) => ({
-        ...s,
-        schoolState: { ...s.schoolState, universityWeek: s.schoolState.universityWeek + 1 },
-      }));
+      update((s) => {
+        const universityWeek = s.schoolState.universityWeek + 1;
+        const grade = universityGradeOf(undefined, universityWeek) as 1 | 2 | 3 | 4;
+        return {
+          ...s,
+          schoolState: { ...s.schoolState, universityWeek },
+          protagonist: { ...s.protagonist, grade },
+        };
+      });
     },
 
     /**
@@ -4297,14 +4315,17 @@ function createGameStore() {
       // 확정되므로, 그때 넣은 `grade: 1`을 시즌 종료에서 또 +1 하면
       // **첫 대학 시즌을 2학년으로 뛴다** (실측 — 1학년이 통째로 사라진다).
       // 고교는 계수기가 따로 없어 +1이 맞다.
+      //
+      // 🔴 **대학은 여기서 아무것도 안 적는다** (2026-09-27 · `BALANCE_BACKLOG`
+      //   「`protagonist.grade` 가 대학에서 한 해 뒤처진다」 · 제안 ㉯).
+      //   예전엔 이 자리에서 `grade = universityGradeOf(undefined, uw)` 를 적었다.
+      //   이 블록은 시즌 **끝**에 도는데 그때 `uw` 는 정확히 52 라(`universityAxis`
+      //   「1년째 W52 에 uw 52 · 아직 1학년」) **직전 시즌 학년**이 남았다.
+      //   지금은 계수기가 움직이는 자리(`incrementUniversityWeek`)에서 같이
+      //   비춘다 — 거울을 두 곳에서 닦으면 한쪽만 닦인 채 남는다.
       const proto = s.protagonist;
       let updatedProto: ProtagonistSave = proto;
-      if (proto.careerStage === "university") {
-        updatedProto = {
-          ...proto,
-          grade: universityGradeOf(undefined, s.schoolState.universityWeek) as 1 | 2 | 3 | 4,
-        };
-      } else if (proto.grade != null && proto.careerStage === "highschool") {
+      if (proto.grade != null && proto.careerStage === "highschool") {
         updatedProto = { ...proto, ...advanceProtagonistGrade(proto.grade, proto.careerStage).patch };
       }
 
