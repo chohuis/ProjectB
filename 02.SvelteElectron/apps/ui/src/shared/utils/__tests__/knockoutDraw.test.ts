@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { knockoutMatchIds, winnerById, allScheduleEntries } from "../scheduleView";
+import { weekPathSrc } from "../../usecases/__tests__/weekPathSrc";
 
 /**
  * **넉아웃 무승부** — 실사용자 세이브에서 나온 결함의 정본 검사.
@@ -94,7 +95,9 @@ describe("대회 소식 id 는 주차를 담는다", () => {
    *   주차를 넣으면 조용히 버려지는 대신 두 통이 남아 눈에 띈다.
    */
   const TN = read("apps/ui/src/shared/usecases/weekPhases/tournamentNews.ts");
-  const AW = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+  // ⚠ 주간 진행 경로를 **한 덩이로** 읽는다 — Ⅱ-1(2026-09-27)로 대회 블록이
+  //   `weekPhases/postseason.ts` 로 갔다(`weekPathSrc.ts` 머리말)
+  const AW = weekPathSrc();
 
   it.each([
     ["개막", "id: `msg-tour-open-${def.id}-${seasonYear}-w${weekNum}`"],

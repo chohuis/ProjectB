@@ -9,6 +9,7 @@ import {
   tableLabelBlock,
 } from "../dashboardCopy";
 import { buildBars, buildCards, buildRankList, buildTableView } from "../dashboardView";
+import { weekPathSrc } from "../../usecases/__tests__/weekPathSrc";
 import {
   bracketTableMeta,
   cardsMeta,
@@ -59,7 +60,12 @@ const labels = parseDashboardLabels(
 const SRC_TOUR = resolve(__dirname, "../../usecases/weekPhases/tournamentNews.ts");
 const SRC_ROLL = resolve(__dirname, "../../usecases/seasonRollover.ts");
 const SRC_MARKET = resolve(__dirname, "../../usecases/weekPhases/market.ts");
-const SRC_WEEK = resolve(__dirname, "../../usecases/advanceWeek.ts");
+// ⚠ 대회 시상 표는 Ⅱ-1(2026-09-27)로 `advanceWeek.ts` 밖으로 나갔다. 파일
+//   이름을 적으면 다음 쪼개기 때 또 빨개지므로 주간 진행 경로 **전체**를
+//   한 덩이로 읽는다(`weekPathSrc.ts` 머리말)
+const SRC_WEEK_WIRING = weekPathSrc();
+/** 「없다」를 묻는 검사가 쓰는 좁은 자리 — 리그 경기 결과 소식을 만드는 파일 */
+const SRC_WEEK_LEAGUE_RESULTS = resolve(__dirname, "../../usecases/advanceWeek.ts");
 
 const bracketRow = (round: string, home: string, away: string, week: number, mine = false) => ({
   round,
@@ -322,7 +328,7 @@ describe("배선과 본문", () => {
     expect(read(SRC_ROLL).includes('rankListMeta("farmChampion"')).toBe(true);
     expect(read(SRC_ROLL).includes('timelineMeta("seasonHsSync"')).toBe(true);
     expect(read(SRC_MARKET).includes("faCompTableMeta(")).toBe(true);
-    expect(read(SRC_WEEK).includes('rankListMeta("tourAward"')).toBe(true);
+    expect(SRC_WEEK_WIRING.includes('rankListMeta("tourAward"')).toBe(true);
   });
 
   /**
@@ -352,7 +358,11 @@ describe("배선과 본문", () => {
    *    `table.leagueResults.lead` 가 그것이다.
    */
   it("리그 경기 결과 본문이 표를 되풀이하지 않는다", () => {
-    const week = read(SRC_WEEK);
+    // 🔴 **여기만 덩이가 아니라 파일 하나다** (2026-09-27 · Ⅱ-1).
+    //   아래 첫 줄이 「없다」를 묻는 검사라, 주간 진행 경로 전체로 넓히면
+    //   남의 소식(`tournamentNews`·`market`)에 있는 같은 글자에 걸려 늘
+    //   빨강이다. **「있다」는 넓게 · 「없다」는 좁게** 봐야 한다.
+    const week = read(SRC_WEEK_LEAGUE_RESULTS);
     // 값 줄을 그대로 싣던 자리가 없어졌다
     expect(week.includes("body: lines.join(")).toBe(false);
     // 문안의 한 줄을 쓴다 — 화면과 같은 창구(`tableCopy`)로 찾는다
@@ -386,7 +396,7 @@ describe("배선과 본문", () => {
   });
 
   it("전·후반기 스냅샷이 내 리그도 뜬다", () => {
-    const src = read(SRC_WEEK);
+    const src = SRC_WEEK_WIRING;
     const at = src.indexOf("snapshotDueAt(nextWeekNum)");
     expect(at > 0).toBe(true);
     expect(
@@ -503,7 +513,7 @@ describe("B-35 새 키", () => {
     expect(read(SRC_ROLL).includes("militaryAnnualTableMeta(")).toBe(true);
     expect(read(SRC_ROLL).includes('playerListTableMeta("resign"')).toBe(true);
     expect(read(SRC_MARKET).includes("faMarketTableMeta(")).toBe(true);
-    expect(read(SRC_WEEK).includes("coachReportTableMeta(")).toBe(true);
+    expect(SRC_WEEK_WIRING.includes("coachReportTableMeta(")).toBe(true);
     expect(read(CAMPUS).includes('cardsMeta("cards.scoutDay"')).toBe(true);
     expect(read(CAMPUS).includes('cardsMeta("cards.showcase"')).toBe(true);
     expect(read(CAMPUS).includes('cardsMeta("cards.allstar"')).toBe(true);
@@ -563,9 +573,9 @@ describe("§0.6 다섯", () => {
     const NATL = resolve(__dirname, "../../usecases/nationalTeam.ts");
     const FRIENDLY = resolve(__dirname, "../friendlyMatchEngine.ts");
     const MIL = resolve(__dirname, "../../usecases/militaryDecision.ts");
-    expect(read(SRC_WEEK).includes("examBarsMeta(")).toBe(true);
-    expect(read(SRC_WEEK).includes("semesterBarsMeta(")).toBe(true);
-    expect(read(SRC_WEEK).includes('cardsMeta("cards.seasonBrief"')).toBe(true);
+    expect(SRC_WEEK_WIRING.includes("examBarsMeta(")).toBe(true);
+    expect(SRC_WEEK_WIRING.includes("semesterBarsMeta(")).toBe(true);
+    expect(SRC_WEEK_WIRING.includes('cardsMeta("cards.seasonBrief"')).toBe(true);
     expect(read(NATL).includes('cardsMeta("cards.natlSquad"')).toBe(true);
     // ⚠ 눌러서 본다 — prettier 가 인자를 다음 줄로 접었다 (A-6)
     expect(flattenSrc(read(FRIENDLY)).includes('cardsMeta( "cards.friendlyPlan"')).toBe(true);
