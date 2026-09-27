@@ -15852,6 +15852,66 @@
       ]
     },
     {
+      "id": "DEC_HID_HS_STORAGE_TAPE",
+      "prompt": "그 테이프를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "alone",
+          "label": "혼자 돌려 본다",
+          "effectHint": "잠재력 +1, 성실 +6",
+          "effects": {
+            "potentialDelta": 1,
+            "diligenceDelta": 6
+          }
+        },
+        {
+          "id": "share",
+          "label": "부원들과 같이 본다",
+          "effectHint": "훈련 효율 +20% 8주, 동료 관계 +20",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 8
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 20
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HID_HS_SAME_SEAT",
+      "prompt": "그 사람을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "ask",
+          "label": "누구냐고 묻는다",
+          "effectHint": "잠재력 +1, 멘토 (코치 효율 +20%)",
+          "effects": {
+            "potentialDelta": 1,
+            "mentor": {
+              "role": "coach",
+              "pct": 20
+            }
+          }
+        },
+        {
+          "id": "keep",
+          "label": "하던 대로 한다",
+          "effectHint": "훈련 효율 +20% 8주, 컨디션 +12",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 8
+            },
+            "conditionDelta": 12
+          }
+        }
+      ]
+    },
+    {
       "id": "DEC_HID_HS_CHANCE_LESSON",
       "prompt": "무엇을 배우겠습니까?",
       "options": [

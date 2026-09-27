@@ -1,0 +1,27 @@
+{
+  "id": "EVT_HID_HS_SAME_SEAT",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "people",
+  "category": "career",
+  "priority": 888,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    }
+  ],
+  "messageTemplateId": "MSG_HID_HS_SAME_SEAT",
+  "decisionTemplateId": "DEC_HID_HS_SAME_SEAT",
+  "cost": {
+    "relationDelta": {
+      "kind": "teammate",
+      "delta": -6
+    }
+  },
+  "_newNote": "2026-09-27 · 고교/hidden 폴백 자리 둘째 — **조건 없는 히든**이다. 셋으로 만든 산수는 `PLAN_103 §5`: 고교는 세 시즌 156주이고 히든 가중이 1% 라 커리어당 뽑기 기대가 1.6 회다. 무조건 후보가 하나면 두 번째 뽑기부터 폴백이라(09-21 판 셋에서 고교 히든 폴백 2건) **셋**이어야 여유가 생긴다",
+  "_tierNote": "대가는 `{relationDelta: teammate -6}` — 그 시선을 나 혼자 받는다. 17 자리가 쓰는 값 그대로다(밸런스 동결)",
+  "_rewardNote": "보상 크기는 고교 히든이 이미 쓰는 것뿐이다 — 잠재력 +1 · 멘토(코치 효율 +20%) · 훈련 효율 +20% 8주 · 컨디션 +12. 구종 보상·투구 스탯·투구 어휘를 안 쓴다(`EVT_HID_HS_STORAGE_TAPE` 의 `_rewardNote` 와 같은 이유)"
+}
