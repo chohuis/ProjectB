@@ -101,3 +101,68 @@
 ⚠ 이 트랙에서 잣대가 먼저 틀린 것이 **일곱 번째**다(등급 축 · 연차 표기 셋 ·
 공유 문안 · 학년 게이트 · 합쇼체 어미 · 되풀이 · 효과 두 꼴). **세는 코드는
 데이터가 실제로 쓰는 표기를 먼저 훑고 짜야 한다.**
+
+---
+
+## 7. 히든의 `pitchGrant` 를 유니크와 어떻게 가르나 — A 제안 (2026-09-27 · 결정 대기)
+
+`check:rewards ⑥`(히든의 `pitchGradeUp` 은 `steps ≥ 2`)을 넣으면서 **`pitchGrant`
+쪽에는 걸 잣대가 없다**는 것이 드러났다(`HANDOFF_B_TO_A 6차 §0.1`). 여기는
+**제안만** 적는다 — **데이터 변경은 B 몫**이고, 어느 길인지는 사용자가 정한다.
+
+### 7.1 실측 (2026-09-27 · 규칙 759종)
+
+구종 보상을 주는 선택지는 **15 칸**이고 히든은 그중 **둘**이다.
+
+| 등급 | 칸 | `pitchGrant` | `pitchGradeUp` | `pitchProgressJump` |
+|---|---:|---:|---:|---:|
+| 유니크 | 13 | 5 | 2 | 6 |
+| **히든** | **2** | **1** | **1** | 0 |
+
+- 히든 둘 — `EVT_HID_PRO_AFTER_CG#grip`(`pitchGradeUp steps 2`) ·
+  `EVT_HID_HS_CHANCE_LESSON#grip`(`pitchGrant PITCH_CHANGEUP` · 조건
+  `pitch_learning false`).
+- 대조군이 되는 유니크 둘 — `EVT_FARM_U_BATTERY_TIP#apply` ·
+  `EVT_PRO_U_OLD_HAND#sharpen` 은 `steps` 없이 한 단계다(유니크의 몫).
+
+🔴 **`pitchGrant` 에는 이미 두 뜻이 있다**(`game.ts:1202-1213` 실측).
+
+```
+없는 구종      → { id, grade: 1 } 로 새로 붙는다
+이미 있는 구종 → grade +1 (상한 5)        ← pitchGradeUp steps 1 과 결과가 같다
+5종이 찼다     → console.warn 하고 아무 일도 안 난다
+```
+
+그래서 **「히든의 `pitchGrant` 만 크게」를 지금 스키마로는 못 적는다.** 부여는
+늘 `grade: 1` 이다.
+
+### 7.2 길 둘
+
+| | 길 | 무엇이 바뀌나 | 대가 |
+|---|---|---|---|
+| **㉠** | `pitchGrant.grade`(부여 등급) 칸을 연다. 히든은 `grade: 2` | `types/main.ts:154` · `game.ts:1209` · `check:rewards`(히든 `pitchGrant` 는 `grade ≥ 2`) | 🔴 **「이미 있는 구종」 갈래와 뜻이 겹친다** — 있는 구종에 `grade: 2` 가 오면 「2 로 맞춘다」인지 「+2」인지 자리마다 다시 정해야 한다. 그리고 등급 2 로 시작하는 것은 **크기**지 종류가 아니라 §1 의 「크기가 아니라 종류가 바뀐다」와 어긋난다 |
+| **㉡** | 규약: **히든은 `pitchGrant` 를 안 쓴다.** 새 구종이 필요하면 `pitchGrant` + 같은 칸에 `pitchGradeUp steps 2` 를 쓰지 말고, **`pitchGradeUp steps 2` 하나로** 간다 | 데이터 1 칸(`EVT_HID_HS_CHANCE_LESSON#grip`) · `check:rewards`(히든에 `pitchGrant` 가 있으면 빨강) | 히든이 **새 구종을 못 준다**. 그 칸은 조건이 `pitch_learning:false` 라 「배우는 중이 아닐 때」만 떠서 **올릴 구종을 고를 근거가 없다**(보유 구종 중 무엇을 올릴지 데이터가 못 적는다 — `pitchGradeUp.id` 가 고정이라 안 가진 구종이면 `console.warn` 뒤 아무 일도 안 난다) |
+
+### 7.3 A 권장 — **㉡ 이 아니라 ㉠ 의 좁은 꼴**
+
+㉡ 은 히든에서 **새 구종 부여라는 종류 자체를 없앤다**. 그런데 §2 ③ 의 표는
+「안 배우는 중 → 새 구종 부여」를 **상태로** 못박았다 — 그 자리를 히든에서만
+지우면 히든이 유니크보다 **좁아진다**(거꾸로다).
+
+그래서 제안은 **부여 등급 칸을 열되 「없는 구종」 갈래에만 뜻을 준다**:
+
+```
+pitchGrant: { id, grade?: 1 | 2 }        // 기본 1
+  없는 구종      → { id, grade: grade ?? 1 }
+  이미 있는 구종 → grade +1  (지금 그대로 · `grade` 칸은 **안 본다**)
+```
+
+- **「이미 있는 구종」 갈래는 한 줄도 안 건드린다** — ㉠ 의 겹침이 여기서 사라진다.
+- 검사 ⑥ 의 짝: **`tier === "hidden"` 이고 `pitchGrant` 가 있으면 `grade === 2`**.
+  대조군은 유니크 `pitchGrant` 다섯 — `grade` 없이 초록이어야 한다.
+- 「크기가 아니라 종류」와의 충돌은 **남는다.** 다만 히든의 다른 보상도
+  `statDelta +3` · `potentialDelta +3` 처럼 **크기로** 갈리고 있어(§1 표),
+  구종만 예외로 두는 값이 더 커 보인다.
+
+⚠ **밸런스 값이다 — 건마다 사용자에게 묻는다**(`CLAUDE.md`). 정해지면:
+`types/main.ts` · `game.ts` 는 A, 데이터 1 칸과 `_rewardNote` 는 B.
