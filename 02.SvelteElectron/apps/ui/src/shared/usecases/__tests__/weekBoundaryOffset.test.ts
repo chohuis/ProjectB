@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { weekPathSrc } from "./weekPathSrc";
 
 // ── 주 경계의 "전주" 조회 ──────────────────────────────────────
 //
@@ -33,7 +34,11 @@ function boundaryBody(s: string): string {
 
 describe("주 경계에서 지난 주 경기를 본다", () => {
   it("관계도 갱신이 weekNum이 아니라 지난 주를 조회한다", () => {
-    const body = boundaryBody(src());
+    // ⚠ 관계도 블록은 Ⅱ-1(2026-09-27)로 `weekPhases/relations.ts` 에 갔다.
+    //   파일 이름을 적지 않고 주간 진행 경로 **전체**를 본다(`weekPathSrc.ts`).
+    //   `processWeekBoundary` 본문만 자르던 까닭(바깥의 다른 `weekNum` 용법)은
+    //   여기서는 안 걸린다 — 아래 두 식은 이 경로 안에 한 자리씩뿐이다.
+    const body = weekPathSrc();
     // 주인공 경기 조회
     expect(body).toMatch(/e\.week === gameWeek && e\.isProtagonistGame/);
     expect(body).toMatch(/const gameWeek = weekNum - 1/);
