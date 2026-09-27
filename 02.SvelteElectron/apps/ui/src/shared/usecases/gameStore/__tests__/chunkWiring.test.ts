@@ -184,3 +184,52 @@ describe("덩이 3 — 계약·FA·트레이드", () => {
     expect(src).toContain("toPlayerCompat(protagonist)");
   });
 });
+
+describe("덩이 4 — 병역", () => {
+  /** 🔴 **대조군.** 열한 함수 전부 호출부가 있어야 한다. */
+  it("열한 함수의 호출부가 다 살아 있다", () => {
+    const names = [
+      "grantMilitaryExemption",
+      "addMilitaryDeferPenalty",
+      "setSportsUnitApplied",
+      "markSportsUnitPrompted",
+      "markMilitaryAsked",
+      "enlistMilitary",
+      "applyMilitaryDischarge",
+      "setMilitaryLife",
+      "advanceMilitaryWeek",
+      "completeMilitaryService",
+      "advanceMilitaryRecoveryWeek",
+    ];
+    const dead = names.filter((n) => callSites(n).length === 0);
+    expect(dead, "호출부가 0인 함수").toEqual([]);
+  });
+
+  it("store 는 넘기기만 한다 — 덩이 본문이 game.ts 에 안 남았다", () => {
+    const store = readFileSync(resolve(ROOT, "apps/ui/src/shared/stores/game.ts"), "utf8");
+    expect(store).toContain("military.enlistMilitary(");
+    // 병역 상태를 실제로 적는 자리는 이제 하나다
+    expect(store.includes('militaryStatus: "현역"')).toBe(false);
+    expect(store.includes('militaryStatus: "군필"')).toBe(false);
+    expect(store.includes("militaryHiatusStage: now.careerStage")).toBe(false);
+  });
+
+  it("갈림길이 다 살아 있다", () => {
+    const src = gamePathSrc();
+    const flat = gamePathFlat();
+    // 🔴 미필만 입대한다 — 화면 가드만 두면 헤드리스가 통과해 복무를 세 번 한다
+    expect(flat).toContain('if (now.militaryStatus !== "미필") return s;');
+    // 입대하면 소속 리그도 군으로
+    expect(src).toContain('leagueId: "LEAGUE_MILITARY"');
+    // 전역해도 학교로는 안 돌아간다
+    expect(flat).toContain('hiatus === "highschool" || hiatus === "university" ? null : hiatus');
+    // 다녀온 부대는 남긴다
+    expect(src).toContain("militaryServedUnit");
+    // 회복 주 — 상무 2 · 현역 6
+    expect(flat).toContain('militaryRecoveryWeeks: p.militaryUnit === "sports" ? 2 : 6,');
+    // 면제는 미필만 · 주인공도 커리어에 남긴다
+    expect(src).toContain('eventType: "military_exempt"');
+    // 유효한 계약만 복무 기간만큼 연장
+    expect(flat).toContain("now.contract.remainingYears + 2");
+  });
+});

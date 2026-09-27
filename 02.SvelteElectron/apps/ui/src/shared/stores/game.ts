@@ -50,6 +50,7 @@ import { masterStore } from "./master";
 import { processNpcDraft as processNpcDraftChunk } from "../usecases/gameStore/npcDraft";
 import { processAllLeaguesSeasonEnd as processAllLeaguesSeasonEndChunk } from "../usecases/gameStore/seasonEndLeagues";
 import * as contracts from "../usecases/gameStore/contracts";
+import * as military from "../usecases/gameStore/military";
 
 import { autoLog } from "./autoAdvance";
 import { npcLiveStatsStore } from "./npcLiveStats";
@@ -2503,6 +2504,10 @@ function createGameStore() {
      * 진학·입단 같은 학적 전이가 아니라 같은 구단 안의 이동이다.
      * 2군 일정·순위표는 이미 있으므로 `leagueId`만 맞으면 그대로 뛴다.
      */
+    // ── 병역 ───────────────────────────────────────────────────
+    //
+    // 실제 처리는 `usecases/gameStore/military.ts` 다 — store 는 넘기기만 한다.
+    // 이름·인자·돌려주는 값은 그대로다(호출부 불변).
     /**
      * 국제대회 성적으로 병역 면제 (Phase 7-3).
      *
@@ -2510,39 +2515,47 @@ function createGameStore() {
      * 미필만 면제로 바꾼다. 주인공도 같은 경로를 탄다.
      */
     grantMilitaryExemption(npcIds: string[], seasonYear: number, tournamentName: string) {
-      const target = new Set(npcIds);
-      update((s) => {
-        const npcs = s.npcs.map((n) => {
-          if (!target.has(n.npcId) || n.militaryStatus !== "미필") return n;
-          return {
-            ...n,
-            militaryStatus: "면제" as const,
-            careerEvents: [
-              ...(n.careerEvents ?? []),
-              { year: seasonYear, eventType: "military_exempt" as const,
-                detail: `${tournamentName} 입상` },
-            ],
-          };
-        });
-        // ⚠ **주인공만 커리어 이벤트가 없었다.** NPC는 `military_exempt`를
-        // 남기는데 주인공은 `militaryStatus`만 바뀌어서, 연도별 인생 기록에
-        // "아시안게임 우승 → 병역 면제"가 **한 줄도 안 떴다.**
-        // 국제대회 입상은 병역을 벗어나는 두 길 중 하나다 — 커리어의 분기점인데
-        // 기록에 없으면 플레이어가 무슨 일이 있었는지 되짚을 수 없다.
-        const protoExempt = target.has(s.protagonist.id) && s.protagonist.militaryStatus === "미필";
-        const proto = protoExempt
-          ? {
-              ...s.protagonist,
-              militaryStatus: "면제" as const,
-              careerEvents: [
-                ...(s.protagonist.careerEvents ?? []),
-                { year: seasonYear, eventType: "military_exempt" as const,
-                  detail: `${tournamentName} 입상` },
-              ],
-            }
-          : s.protagonist;
-        return { ...s, npcs, protagonist: proto };
-      });
+      military.grantMilitaryExemption({ update }, npcIds, seasonYear, tournamentName);
+    },
+    addMilitaryDeferPenalty(points: number) {
+      military.addMilitaryDeferPenalty({ update }, points);
+    },
+    setSportsUnitApplied(flag: boolean) {
+      military.setSportsUnitApplied({ update }, flag);
+    },
+    markSportsUnitPrompted(seasonYear: number) {
+      military.markSportsUnitPrompted({ update }, seasonYear);
+    },
+    markMilitaryAsked(seasonYear: number) {
+      military.markMilitaryAsked({ update }, seasonYear);
+    },
+    enlistMilitary(
+      unit: "sports" | "general",
+      enlistWeek = MILITARY_RESULT_WEEK,
+      sportsUnitSelected = false,
+      enlistYear?: number,
+    ) {
+      military.enlistMilitary({ update }, unit, enlistWeek, sportsUnitSelected, enlistYear);
+    },
+    applyMilitaryDischarge(args: {
+      statDelta: number;
+      velocityDelta: number;
+      recoveryWeeks: number;
+      record: import("../types/militaryLife").MilitaryRecord;
+    }) {
+      military.applyMilitaryDischarge({ update }, args);
+    },
+    setMilitaryLife(next: import("../types/militaryLife").MilitaryLifeState | null) {
+      military.setMilitaryLife({ update }, next);
+    },
+    advanceMilitaryWeek() {
+      military.advanceMilitaryWeek({ update });
+    },
+    completeMilitaryService(at?: { season: number; week: number }) {
+      military.completeMilitaryService({ update }, at);
+    },
+    advanceMilitaryRecoveryWeek() {
+      military.advanceMilitaryRecoveryWeek({ update });
     },
 
     setProtagonistTeam(teamId: string, leagueId: string) {
@@ -2705,22 +2718,7 @@ function createGameStore() {
       contracts.applyOptionResult({ update }, payload);
     },
 
-    addMilitaryDeferPenalty(points: number) {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          militaryDeferPenalty: (s.protagonist.militaryDeferPenalty ?? 0) + points,
-        },
-      }));
-    },
 
-    setSportsUnitApplied(flag: boolean) {
-      update((s) => ({
-        ...s,
-        protagonist: { ...s.protagonist, sportsUnitApplied: flag },
-      }));
-    },
 
     /** 은퇴 확정 — 커리어가 여기서 끝난다 */
     retire(rec: { year: number; week: number; reason: import("../types/save").RetirementReason }) {
@@ -2731,169 +2729,22 @@ function createGameStore() {
     },
 
     /** 체육부대 후보 공개를 이 시즌에 물어봤다고 표시 — 같은 주 무한 반복 방지 */
-    markSportsUnitPrompted(seasonYear: number) {
-      update((s) => ({
-        ...s,
-        protagonist: { ...s.protagonist, sportsUnitPromptedYear: seasonYear },
-      }));
-    },
 
     /** 입대 여부를 이 시즌에 물어봤다고 표시 — 같은 주 무한 반복 방지 */
-    markMilitaryAsked(seasonYear: number) {
-      update((s) => ({
-        ...s,
-        protagonist: { ...s.protagonist, militaryAskedYear: seasonYear },
-      }));
-    },
 
-    enlistMilitary(unit: "sports" | "general", enlistWeek = MILITARY_RESULT_WEEK, sportsUnitSelected = false, enlistYear?: number) {
-      update((s) => {
-        const now = s.protagonist;
-        const isPro = now.careerStage === "pro_kbl" || now.careerStage === "pro_abl" || now.careerStage === "pro_jbl" || now.careerStage === "independent";
-        // 유효한 계약(잔여 > 0)만 군 복무 기간만큼 연장; 만료된 계약은 연장 없이 전역 후 FA/재계약
-        const extendedContract = isPro && now.contract && now.contract.remainingYears > 0
-          ? { ...now.contract, remainingYears: now.contract.remainingYears + 2 }
-          : now.contract;
-        // ⚠ **미필만 입대한다.** 화면 가드만 두면 다른 호출부(헤드리스·
-        // 이벤트)가 그대로 통과한다 — 실제로 조사에서 군 복무를 세 번 하는
-        // 커리어가 나왔다. 되돌릴 수 없는 상태 전이라 여기서도 막는다.
-        if (now.militaryStatus !== "미필") return s;
-
-        const protagonist: ProtagonistSave = {
-          ...now,
-          careerStage: "military",
-          // 🔴 **소속 리그도 군으로 옮긴다** (2026-09-02).
-          //
-          // 예전엔 단계만 바꾸고 `leagueId` 는 입대 전 것을 그대로 뒀다.
-          // 배경 시뮬은 `lid === 주인공.leagueId` 를 건너뛰므로, 학생 입대자는
-          // 복무 2년 내내 **고교 리그가 통째로 멈췄고**(실측 `HIGHSCHOOL 1020/0`),
-          // 프로 입대자면 **그 프로 리그가 멈춘다.** 소속은 NPC 처럼
-          // `LEAGUE_MILITARY` 다(AUDIT_STAGES §8). 원래 리그는 전역 때
-          // 복구 단계(`militaryHiatusStage`)에서 되돌린다.
-          leagueId: "LEAGUE_MILITARY",
-          militaryUnit: unit,
-          militaryServiceWeeks: 0,
-          militaryRecoveryWeeks: 0,
-          militaryStatus: "현역",
-          militaryEnlistWeek: enlistWeek,
-          militaryEnlistYear: enlistYear ?? null,
-          militaryDischargeYear: enlistYear != null ? enlistYear + 2 : null,
-          militaryHiatusStage: now.careerStage,
-          sportsUnitSelected,
-          contract: extendedContract,
-        };
-        return {
-          ...s,
-          protagonist,
-          player: toPlayerCompat(protagonist),
-          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
-        };
-      });
-    },
 
     /**
      * 전역 환산 (PLAN_MILITARY_LIFE §30) — 복무 중 안 건드린 능력치를 야구 감각으로 한 번에 환산하고
      * 군 경력 한 장을 남긴다. 값은 usecases/militaryDecision 이 rules.json 에서 계산해 넘긴다 — 여기선 적기만.
      * ⚠ `completeMilitaryService` 뒤에 불러야 회복 주(고정 6)를 덮는다.
      */
-    applyMilitaryDischarge(args: {
-      statDelta: number; velocityDelta: number; recoveryWeeks: number;
-      record: import("../types/militaryLife").MilitaryRecord;
-    }) {
-      update((s) => {
-        const p = s.protagonist;
-        const c99 = (v: number) => Math.max(1, Math.min(99, v));
-        const pitching = {
-          ...p.pitching,
-          command:  c99(p.pitching.command  + args.statDelta),
-          control:  c99(p.pitching.control  + args.statDelta),
-          recovery: c99(p.pitching.recovery + args.statDelta),
-          velocity: c99(p.pitching.velocity + args.velocityDelta),
-        };
-        const protagonist: ProtagonistSave = {
-          ...p, pitching,
-          militaryRecoveryWeeks: args.recoveryWeeks,
-          militaryLife: null,
-          militaryRecord: args.record,
-        };
-        return { ...s, protagonist, player: toPlayerCompat(protagonist) };
-      });
-    },
     /** 병영생활 상태 얇은 패처 — 계산은 usecases/militaryLife.ts · utils/militaryLifeRules.ts */
-    setMilitaryLife(next: import("../types/militaryLife").MilitaryLifeState | null) {
-      update((s) => {
-        const protagonist = { ...s.protagonist, militaryLife: next };
-        return { ...s, protagonist, player: toPlayerCompat(protagonist) };
-      });
-    },
-    advanceMilitaryWeek() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          militaryServiceWeeks: s.protagonist.militaryServiceWeeks + 1,
-        },
-      }));
-    },
 
     /**
      * @param at 실제로 전역한 시점. **상무·현역 둘 다 여기를 지난다** —
      *   전역 환산(`applyMilitaryDischarge`)은 현역만 타므로 거기 두면 상무가 빠진다.
      *   안 넘기면 안 적는다(옛 호출부·검사 호환).
      */
-    completeMilitaryService(at?: { season: number; week: number }) {
-      update((s) => {
-        const p = s.protagonist;
-        // 휴학 단계 복구: militaryHiatusStage 우선, 없으면 leagueId 기반.
-        //
-        // ⚠ **학교로는 돌아가지 않는다.** 고교·대학에서 입대하면 hiatusStage가
-        // 그 학적이라 그대로 복구했는데, 그러면 2년 복무한 21세가 고등학교로
-        // 돌아간다(실측). `careerTransition`이 "고교 재입학 불가"를 이미
-        // 명시하고 있고, 전이표에서도 학교로 가는 화살표는 없다.
-        // 학생 신분에서 입대했으면 갈 곳은 독립리그다.
-        const hiatus = p.militaryHiatusStage as import("../types/save").CareerStage | null;
-        const restored = (hiatus === "highschool" || hiatus === "university") ? null : hiatus;
-        const stage: import("../types/save").CareerStage =
-          restored ??
-          (p.leagueId === "LEAGUE_ABL" ? "pro_abl" :
-           p.leagueId === "LEAGUE_JBL" ? "pro_jbl" :
-           p.leagueId === "LEAGUE_KBL" ? "pro_kbl" : "independent");
-        const protagonist: ProtagonistSave = {
-          ...p,
-          careerStage: stage,
-          // 입대 때 `LEAGUE_MILITARY` 로 옮겼으니 여기서 되돌린다 — 단계가
-          // 정본이고 리그는 그 파생이다. 학생 출신은 독립으로 간다(위 주석).
-          // ⚠ 독립의 **팀**은 `dischargeProtagonist` 가 정한다 — 여기는 리그만.
-          leagueId:
-            stage === "pro_abl" ? "LEAGUE_ABL" :
-            stage === "pro_jbl" ? "LEAGUE_JBL" :
-            stage === "pro_kbl" ? "LEAGUE_KBL" : "LEAGUE_INDEPENDENT",
-          // ⚠ **다녀온 부대는 남긴다.** 지우면 전역 후 상무/현역 구분이 사라져
-          // 선수 상세·인생 기록에 표시할 수 없다 (NPC 쪽도 같이 고쳤다)
-          militaryServedUnit: p.militaryUnit ?? p.militaryServedUnit,
-          militaryUnit: null,
-          militaryServiceWeeks: 0,
-          militaryRecoveryWeeks: p.militaryUnit === "sports" ? 2 : 6,
-          militaryStatus: "군필",
-          // 전역 뒤 경과를 재는 유일한 기준점 (B-20 §30). `militaryRecoveryWeeks` 는
-          // 0에서 멈춰 그 뒤를 못 센다
-          dischargedSeason: at?.season ?? p.dischargedSeason,
-          dischargedWeek:   at?.week   ?? p.dischargedWeek,
-          militaryHiatusStage: null,
-          // 학년은 학생일 때만 의미가 있다. 전역자는 학교로 안 돌아가므로
-          // 지운다 — 안 그러면 독립리그 선수가 `grade: 3`을 달고 다니고
-          // 시즌 종료 화면 헤더가 그걸 먼저 읽어 "3학년"이 찍힌다
-          // (`signContract`·`applyDraftDecision`이 이미 같은 이유로 지운다)
-          grade: undefined,
-        };
-        return {
-          ...s,
-          protagonist,
-          player: toPlayerCompat(protagonist),
-          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
-        };
-      });
-    },
 
     /**
      * 인센티브 정산 자물쇠 (PLAN_CONTRACT_TERMS §7 ⑤).
@@ -2909,15 +2760,6 @@ function createGameStore() {
 
 
 
-    advanceMilitaryRecoveryWeek() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          militaryRecoveryWeeks: Math.max(0, (s.protagonist.militaryRecoveryWeeks ?? 0) - 1),
-        },
-      }));
-    },
 
 
     /**
