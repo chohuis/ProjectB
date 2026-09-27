@@ -2,6 +2,10 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { flattenSrc } from "../../utils/__tests__/flattenSrc";
+// ⚠ 주간 진행 경로를 **한 덩이로** 읽는다 — Ⅱ-1(2026-09-27)로 대회·포스트시즌
+//   블록이 `weekPhases/postseason.ts` 로 갔다. 파일 이름을 적으면 다음 쪼개기
+//   때 또 빨개진다(동작은 하나도 안 바뀌었는데도 · `weekPathSrc.ts` 머리말)
+import { weekPathSrc } from "./weekPathSrc";
 
 /**
  * **무승부 규칙** (2026-08-29 · 사용자 확정).
@@ -60,7 +64,7 @@ describe("무승부 규칙", () => {
       "phase:                g.phase",
     );
     expect(read("apps/ui/src/shared/stores/backgroundLeague.ts")).toContain("phase: e.phase");
-    const AW = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+    const AW = weekPathSrc();
     expect(AW.split("phase: game.phase").length - 1).toBe(3);
   });
 
@@ -83,7 +87,7 @@ describe("무승부 규칙", () => {
       "export function knockoutMatchIds(",
     );
     // 대회 경기가 도는 세 갈래: 주인공 리그 · 배경 리그 · 회피 경기
-    const AW = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+    const AW = weekPathSrc();
     expect(AW.split("knockout: isKnockoutGame(game.id)").length - 1).toBe(3);
     expect(read("apps/ui/src/shared/stores/backgroundLeague.ts")).toContain(
       "knockout: knockoutIds.has(e.id)",
@@ -104,7 +108,7 @@ describe("무승부 규칙", () => {
    * 테스터 세이브의 장미기는 영영 1라운드에 갇힌 채다.
    */
   it("저장된 넉아웃 무승부를 재경기로 푼다", () => {
-    const AW = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+    const AW = weekPathSrc();
     expect(AW).toContain("async function replayDrawnKnockout(");
     expect(AW).toContain("if (settled) resultOf.set(m.id, settled);");
     // 못 풀면 **라운드를 안 닫는다** — 승자 없는 결과를 억지로 넘기지 않는다

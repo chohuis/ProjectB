@@ -11,6 +11,7 @@ import type { DecisionEffect, MessageCategory, MessageItem } from "../types/main
 import { evaluateConditions } from "./conditionEvaluator";
 import { resolveNumber } from "./eventPaths";
 import { GRADES, gradeBelow, type EventGrade, type TierRules } from "./tierRules";
+import { isMeasureMode } from "./measureMode";
 
 // 이벤트 내부 카테고리 → UI 표시 카테고리 매핑
 // JSON 템플릿의 category 필드는 내부 분류용이며 여기서 표시용으로 변환된다
@@ -287,6 +288,32 @@ export const eventFunnelStats = {
   emittedByRule: {} as Record<string, number>,
 };
 
+/**
+ * **계측 전용 — 이번 판에 실제로 뜬 이벤트 id** (2026-09-27 · Ⅳ 폴백).
+ *
+ * 🔴 왜 필요한가. 판 JSON 의 「해마다」 줄은 등급별 **건수**만 실었다. 그래서
+ *   「B 가 넣은 레어 일곱이 실제로 뽑혔나」를 **못 쟀다** — 레어가 12건 떴다는
+ *   것과 그 일곱 중 무엇이 떴는지는 다른 물음이다. `eventFunnelStats.
+ *   emittedByRule` 은 종수를 세지만 등급·무대가 안 붙어 있어 판에서 못 가른다.
+ *
+ * ⚠ **키 하나가 정본이다** — `무대/등급/id`. 등급별 표·무대별 표를 따로 쌓지
+ *   않는다. 셋을 따로 늘리면 한쪽만 늘어난 채 남는다(이 저장소가 제일 많이
+ *   밟은 형태). 쪼개는 일은 읽는 쪽(`perfEntry.eventIdRow`)이 한다.
+ *
+ * ⚠ **계측 모드에서만 쌓인다**(`isMeasureMode()`). 실제 플레이에서는 이 객체가
+ *   내내 비어 있다 — 커리어 40년이면 키가 수백 개라 세이브·메모리에 얹을
+ *   이유가 없다. 배선은 `__tests__/eventIdCounters.test.ts` 가 본다.
+ */
+export const eventIdCounters = {
+  /** `무대/등급/id` → 그 판에서 뜬 횟수 (누계) */
+  뽑힘: {} as Record<string, number>,
+};
+
+/** 회차 사이에 섞이지 않게 — 재기 직전에 부른다 (`resetEventFunnelStats` 와 짝) */
+export function resetEventIdCounters(): void {
+  eventIdCounters.뽑힘 = {};
+}
+
 export function resetEventFunnelStats(): void {
   eventFunnelStats.weeks = 0;
   eventFunnelStats.elapsedMs = 0;
@@ -556,6 +583,13 @@ export function runEventEngine(
 
     eventFunnelStats[lane].emitted++;
     eventFunnelStats.emittedByRule[rule.id] = (eventFunnelStats.emittedByRule[rule.id] ?? 0) + 1;
+    // 계측 전용 — 뜬 id 를 무대·등급과 같이 적는다 (`eventIdCounters` 머리말).
+    // ⚠ **네 레인이 전부 여기를 지난다.** 등급 줄기에만 달면 통지·필수가 빠진다
+    if (isMeasureMode()) {
+      const g = gradeOf(rule) ?? (rule.tier ? String(rule.tier) : "무등급");
+      const key = `${stageGroup}/${g}/${rule.id}`;
+      eventIdCounters.뽑힘[key] = (eventIdCounters.뽑힘[key] ?? 0) + 1;
+    }
     newMessages.push(message);
     updatedTriggers[rule.id] = week;
     // 🔴 **히든은 종당 커리어 한 번이다** (§3 `hidden.careerCapPerEvent`).

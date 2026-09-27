@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { tournamentAwards, pitcherScore, batterScore } from "../tournamentAwards";
+import { weekPathSrc } from "./weekPathSrc";
 
 /**
  * 대회 개인 수상 (2026-08-30).
@@ -102,7 +103,10 @@ describe("대회 수상", () => {
 });
 
 describe("배선", () => {
-  const src = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+  // ⚠ 주간 진행 경로를 **한 덩이로** 읽는다 — Ⅱ-1(2026-09-27)로 대회 블록이
+  //   `weekPhases/postseason.ts` 로 갔다. 파일 이름을 적으면 다음 쪼개기 때 또
+  //   빨개진다(동작은 하나도 안 바뀌었는데도 · `weekPathSrc.ts` 머리말)
+  const src = weekPathSrc();
 
   it("결승이 끝나면 수상을 준다", () => {
     expect(src.includes("tournamentAwards(")).toBe(true);

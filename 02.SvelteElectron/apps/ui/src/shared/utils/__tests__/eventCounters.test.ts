@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
+import { weekPathSrc } from "../../usecases/__tests__/weekPathSrc";
 import { resolve } from "node:path";
 import {
   collectStreakKeys,
@@ -325,7 +326,9 @@ describe("last_game — 직전 등판", () => {
 });
 
 describe("배선 — 넷이 실제로 실린다", () => {
-  const src = readFileSync(resolve("apps/ui/src/shared/usecases/advanceWeek.ts"), "utf8");
+  // ⚠ 주간 진행 경로를 **한 덩이로** 읽는다 — Ⅱ-1(2026-09-27)로 관계도 블록이
+  //   `weekPhases/relations.ts` 에 갔다(`weekPathSrc.ts` 머리말)
+  const src = weekPathSrc();
   it("연속 주 수를 **이벤트보다 먼저** 갱신한다 — 나중이면 한 주씩 밀린다", () => {
     const tick = src.indexOf("tickStreaks(afterP.streaks");
     const run = src.indexOf("const evResult = runEventEngine(");

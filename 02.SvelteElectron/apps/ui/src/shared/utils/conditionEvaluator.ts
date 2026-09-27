@@ -4,6 +4,7 @@ import { streakKeyOf } from "./eventCounters";
 import { storyNpcIdOf } from "./storyNpcRegistry";
 import type { PitcherSeasonStats } from "../types/save";
 import { GROUPS_BY_LEAGUE } from "./leagueTeams.generated";
+import { universityGradeOf } from "./careerTransition";
 
 // ── 조건 단일 평가 ─────────────────────────────────────────────
 export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
@@ -42,6 +43,20 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
       return protagonist.leagueId === cond.leagueId;
 
     case "grade":
+      // 🔴 **대학은 계수기에서 센다** (2026-09-27 · `BALANCE_BACKLOG`
+      //   「`protagonist.grade` 가 대학에서 한 해 뒤처진다」).
+      //
+      //   `grade` 는 거울이고 정본은 `schoolState.universityWeek` 이다
+      //   (`careerTransition.universityGradeOf` 머리말). 거울만 보면 **옛
+      //   세이브에서 한 해 어긋난 채로 판정한다** — 2026-09-27 전에 저장된
+      //   대학 세이브의 `grade` 에는 직전 시즌 학년이 들어 있다.
+      //
+      // ⚠ 대학 학년 조건은 지금 데이터에 0건이다. 그래서 여기가 **아직 안
+      //   부른 갈래**이고, B 가 하나라도 쓰는 날 그날부터 이게 답을 낸다.
+      // ⚠ 고교는 계수기가 없다 — 거울이 곧 정본이다.
+      if (protagonist.careerStage === "university") {
+        return universityGradeOf(protagonist.grade, schoolState?.universityWeek) === cond.value;
+      }
       return (protagonist.grade ?? 0) === cond.value;
 
     case "player_type":

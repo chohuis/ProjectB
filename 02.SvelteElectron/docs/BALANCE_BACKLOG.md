@@ -1427,7 +1427,31 @@ C(25)·B(30)·A(45)·S(70)는 수상을 2·2·3·5회 받아야 닿는다 — �
 
 ---
 
-## 게임 로직 — `protagonist.grade` 가 대학에서 한 해 뒤처진다 (2026-09-21 · A · **안 고쳤다 · 사용자 판단 대기**)
+## ~~게임 로직 — `protagonist.grade` 가 대학에서 한 해 뒤처진다~~ (2026-09-21 · A · **2026-09-27 고쳤다 — 제안 ㉯**)
+
+> **닫혔다.** 밸런스 값이 아니라 구조라 사용자 판단을 안 기다렸다 —
+> `CLAUDE.md` 「정본을 둘 만들기」가 이미 답을 정해 놓은 자리다.
+>
+> **고른 것은 ㉯**(`universityWeek` 이 정본 · `grade` 는 거울). ㉮(+1)를 안
+> 고른 까닭은 「왜 +1 인가」가 또 하나의 축이 되기 때문이다.
+>
+> **어디를 고쳤나 — 셋.**
+> - `stores/game.ts` `processSeasonEnd` ③ 에서 **대학 갈래를 지웠다**(거울을
+>   두 곳에서 닦지 않는다). 고교 갈래는 그대로다 — 계수기가 없어 +1 이 맞다.
+> - `stores/game.ts` `incrementUniversityWeek` 이 계수기를 올리는 **그 자리에서**
+>   거울을 같이 닦는다. 어긋날 틈이 없다.
+> - `utils/conditionEvaluator.ts` `case "grade"` 가 대학이면
+>   `universityGradeOf(grade, schoolState?.universityWeek)` 로 센다 — 고치기 전에
+>   저장된 세이브의 거울이 뒤처져 있어도 판정이 안 어긋난다.
+>
+> **검사** `stores/__tests__/universityGradeMirror.test.ts` — 4년 208주를 주마다
+> 돌려 거울과 계수기가 한 주도 안 어긋나는지 · 시즌 경계(uw 52·53) · 4학년 상한
+> · 옛 세이브 모양(거울 1 · 계수기 84)에서 조건이 2학년으로 판정되는지 ·
+> **대조군**(시즌 끝 블록에 옛 문장이 돌아오면 빨강).
+>
+> 회귀: vitest 전건 · `check:eventconditions` · `universityAxis` · `academicsGrade`.
+
+<details><summary>고치기 전 기록 (2026-09-21)</summary>
 
 24판 #6·#12 의 대학 100주+ 걸침을 추적하다 나왔다(정본
 `docs/SIM_102_UNIV_MIL_2026-09-19.md` §③ 끝 절). **100주 걸침 자체는
@@ -1457,6 +1481,8 @@ B 가 대학 학년 조건을 쓰는 이벤트를 하나라도 쓰면 **그날 �
 
 ⚠ **밸런스 값이 아니다.** 학년이 바뀌면 대학 이벤트 창이 움직일 수 있으니
 고치는 날 `check:eventconditions` · `universityAxis.test.ts` 를 같이 본다.
+
+</details>
 
 ---
 

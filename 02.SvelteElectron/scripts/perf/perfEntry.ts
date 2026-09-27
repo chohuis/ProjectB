@@ -13,7 +13,12 @@ import {
   gameStore, MAX_MAILBOX, mailboxTrimStats, mailboxProduceStats, messageKindOf,
   mailboxDupStats, resetMailboxDupStats,
 } from "../../apps/ui/src/shared/stores/game";
-import { eventFunnelStats, resetEventFunnelStats } from "../../apps/ui/src/shared/utils/eventEngine";
+import {
+  eventFunnelStats,
+  resetEventFunnelStats,
+  eventIdCounters,
+  resetEventIdCounters,
+} from "../../apps/ui/src/shared/utils/eventEngine";
 import {
   militaryLifeCounters,
   resetMilitaryLifeCounters,
@@ -8501,6 +8506,49 @@ export function militaryCounters(): { 캘린더: number; 뽑기: number } {
 }
 /** 회차 사이에 섞이지 않게 — 재기 직전에 부른다(`resetEventFunnel`과 짝) */
 export function resetMilitaryCounters(): void { resetMilitaryLifeCounters(); }
+
+/**
+ * **뜬 이벤트 id 계수기** (2026-09-27 · A · Ⅳ 폴백).
+ *
+ * 🔴 판 JSON 의 「해마다」 줄에 등급별 **건수**만 있어서 「B 가 넣은 레어 일곱이
+ *   실제로 뽑혔나」를 못 쟀다. 누계를 그대로 돌려준다 — 해마다 차를 내는 건
+ *   `tierCounters`·`militaryCounters` 와 같은 방식으로 호출부
+ *   (`probe-a-simrun-worker.cjs`)가 한다.
+ *
+ * 키는 `무대/등급/id` 하나다(정본). 사람이 읽는 표로 쪼개는 건 `eventIdRow`.
+ */
+export function eventIdCounts(): Record<string, number> {
+  return { ...eventIdCounters.뽑힘 };
+}
+/** 회차 사이에 섞이지 않게 — 재기 직전에 부른다(`resetEventFunnel`과 짝) */
+export function resetEventIdCounts(): void { resetEventIdCounters(); }
+
+/**
+ * **해마다 줄에 실을 꼴** — `eventIdCounts()` 의 **차**를 넘기면 등급별 id 목록을
+ * 낸다. 워커는 이 함수만 부르면 된다(쪼개는 규칙을 워커에 두면 정본이 둘이다).
+ *
+ * ```
+ *   eventIdRow({ "고교/레어/EVT_A": 2, "고교/노말/EVT_B": 1 })
+ *   → { 레어: ["EVT_A×2"], 노말: ["EVT_B"] }
+ * ```
+ *
+ * ⚠ 무대는 **안 접는다** — 같은 id 가 두 무대에서 뜨는 일은 없고, 접으면
+ *   「대학에서 뜬 고교 이벤트」 같은 사고를 판에서 못 본다. 무대까지 보고
+ *   싶으면 `eventIdCounts()` 의 키를 그대로 읽는다.
+ */
+export function eventIdRow(delta: Record<string, number>): Record<string, string[]> {
+  const out: Record<string, string[]> = {};
+  for (const [key, n] of Object.entries(delta)) {
+    if (n <= 0) continue;
+    const parts = key.split("/");
+    // `무대/등급/id` — id 에 `/` 가 들어갈 일은 없지만 뒤에서부터 잘라 안전하게
+    const id = parts.slice(2).join("/") || key;
+    const grade = parts[1] ?? "무등급";
+    (out[grade] ??= []).push(n > 1 ? `${id}×${n}` : id);
+  }
+  for (const list of Object.values(out)) list.sort();
+  return out;
+}
 
 /**
  * **이 규칙 하나가 어떻게 됐나** — 연계를 만들었을 때 "실제로 도는가"를 묻는 도구.

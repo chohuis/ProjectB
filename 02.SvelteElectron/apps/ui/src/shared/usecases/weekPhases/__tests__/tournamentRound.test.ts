@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { buildRoundProgressMessage } from "../tournamentNews";
+import { weekPathSrc } from "../../__tests__/weekPathSrc";
 
 /**
  * 대회 라운드 진행 소식.
@@ -116,7 +117,9 @@ describe("라운드 진행 소식", () => {
 describe("호출부 배선", () => {
   it("advanceWeek 가 라운드 소식과 권역 목록을 넘긴다", () => {
     // ⚠ 안 넘기면 에러가 아니라 "명단만 나옴"으로 조용히 나타난다
-    const src = readFileSync(resolve(__dirname, "../../advanceWeek.ts"), "utf8");
+    // ⚠ 주간 진행 경로를 **한 덩이로** 읽는다 — Ⅱ-1(2026-09-27)로 대회 블록이
+    //   `weekPhases/postseason.ts` 로 갔다(`weekPathSrc.ts` 머리말)
+    const src = weekPathSrc();
     const i = src.indexOf("buildRoundProgressMessage(");
     expect(i).toBeGreaterThan(-1);
     expect(src.slice(i, i + 200)).toContain("myRegionTeamIds");
