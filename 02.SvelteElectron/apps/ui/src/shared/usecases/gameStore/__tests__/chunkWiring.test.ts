@@ -33,13 +33,29 @@ function appSources(): string[] {
   return out;
 }
 
-/** 그 이름을 `.` 뒤에서 부르는 자리 수 — 정의가 있는 두 파일은 뺀다 */
+/**
+ * 부를 만한 파일을 **한 번만 읽어 둔다**.
+ *
+ * ⚠ 이름마다 다시 읽으면 800파일 × 이름 수가 되어, 커버리지 계측을 켠 판에서
+ *   5초 제한을 넘긴다(실제로 넘겼다). 검사는 느려서 빨개지면 안 된다.
+ */
+const SKIP = [join("stores", "game.ts"), join("usecases", "gameStore")];
+let _sources: Array<[string, string]> | null = null;
+function sources(): Array<[string, string]> {
+  if (!_sources) {
+    _sources = appSources()
+      .filter((p) => !SKIP.some((s) => p.includes(s)))
+      .map((p) => [p, readFileSync(p, "utf8")] as [string, string]);
+  }
+  return _sources;
+}
+
+/** 그 이름을 `.` 뒤에서 부르는 자리 — 정의가 있는 두 자리는 뺀다 */
 function callSites(name: string): string[] {
   const needle = "." + name + "(";
-  const skip = [join("stores", "game.ts"), join("usecases", "gameStore")];
-  return appSources()
-    .filter((p) => !skip.some((s) => p.includes(s)))
-    .filter((p) => readFileSync(p, "utf8").includes(needle));
+  return sources()
+    .filter(([, text]) => text.includes(needle))
+    .map(([p]) => p);
 }
 
 describe("덩이 1 — NPC 드래프트", () => {
