@@ -158,6 +158,19 @@ pub struct PitcherStats {
     pub movement: f64,
     pub clutch: f64,
     #[serde(rename = "holdRunners")] pub hold_runners: f64,
+    /// 던지는 손 — `"R"`·`"L"`·`"S"`(양투). **정본은 `npc.handedness` 다.**
+    ///
+    /// 🔴 **엔진이 이 칸을 아예 안 받고 있었다** (2026-09-28 · 결정 ⑫).
+    ///   `roster_gen` 이 만들고 slot.db 가 보관하고 화면이 보여 주는데
+    ///   `PitcherStats` 에 칸이 없어서 **타석 판정에 좌우가 안 들었다** —
+    ///   플래툰 효과가 0 이었다. 실측·근거는
+    ///   `docs/SIM_103_CLUTCH_PLATOON_2026-09-28.md §2`.
+    /// ⚠ `#[serde(default)]` 라 **안 넘겨도 조용히 통과하고 우투가 된다.**
+    ///   배선을 빼면 `tuning::platoon_quality_bonus` 가 전부 같은 값을 내므로
+    ///   리그 타율이 안 움직인다 — 그래서 실패로 안 보인다. 배선을 뺀
+    ///   대조군은 `PB_PLATOON=0` 이다.
+    #[serde(default = "hand_right")]
+    pub handedness: String,
     /// 보유 구종. **비면 패스트볼 하나로 던진다** (구 세이브·데이터 결손 대비).
     ///
     /// ⚠ 예전엔 이 필드가 아예 없었고 `auto_pick_decision`이 Fastball/Slider/
@@ -196,6 +209,9 @@ pub struct PartialPitcherStats {
     pub movement: Option<f64>,
     pub clutch: Option<f64>,
     #[serde(rename = "holdRunners")] pub hold_runners: Option<f64>,
+    /// 던지는 손. 안 넘기면 우투다 — 위 `PitcherStats.handedness` 의 ⚠ 참고
+    #[serde(default)]
+    pub handedness: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -222,7 +238,19 @@ pub struct BatterStats {
     pub bunting: Option<f64>,
     pub fielding: f64,
     pub arm: f64,
+    /// 치는 손 — `"R"`·`"L"`·`"S"`(양타). **정본은 `npc.handedness` 다.**
+    ///
+    /// ⚠ **칸이 하나다 — 좌투우타가 구조상 없다.** `stores/game.ts` 가 같은
+    ///   `handedness` 에서 `throws`·`bats` 를 둘 다 파생한다. 투수에게는
+    ///   던지는 손, 타자에게는 치는 손으로 읽는다.
+    /// ⚠ `#[serde(default)]` — 위 `PitcherStats.handedness` 와 같은 함정.
+    #[serde(default = "hand_right")]
+    pub handedness: String,
 }
+
+/// `handedness` 기본값 — 옛 세이브·배선 누락은 우투/우타로 본다
+/// (slot.db 의 `handedness TEXT NOT NULL DEFAULT 'R'` 와 같은 값이다)
+pub fn hand_right() -> String { "R".to_string() }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RunnerStats {

@@ -146,6 +146,102 @@ pub fn course_mode() -> f64 {
     }
 }
 
+// ── 좌우 상성 (플래툰 · 결정 ⑫ · 2026-09-28) ───────────────────────────
+//
+// 🔴 **엔진이 좌우를 아예 안 받고 있었다.** `handedness` 는 세계 생성
+//   (`roster_gen`)·slot.db·화면까지 다 있는데 `PitcherStats`/`BatterStats` 에
+//   칸이 없어 **타석 판정에 좌우가 안 들었다.** `platoon` 스탯이 따로 있지만
+//   생성이 전원 정확히 50 고정이라 레버가 아니다(실측 2,000명 ·
+//   `docs/SIM_103_CLUTCH_PLATOON_2026-09-28.md §2-2`). 04 도 같은 자리를
+//   `PLATOON_FIXED` 로 중립 고정만 했고 **계수는 04 에도 없다** — 그래서
+//   아래 값은 가져온 값이 아니라 **제안값**이다(`BALANCE_BACKLOG` ⑫ 절).
+//
+// **크기의 근거 둘.**
+//   ① 실제 야구 — 반대 손 상대일 때 타자가 유리하고 폭이 타율 약 .015~.025
+//      다. 좌타-좌투가 우타-우투보다 조금 크다.
+//   ② 이 엔진의 눈금 — **`probe:a:platoon` 으로 직접 쟀다.** 처음엔 ⑤ 의
+//      눈금(`pitch_base` 폭 2.42점 ↔ 피안타율 .017 = 품질 1점 ≈ **.007**)을
+//      환산해 폭 3.0/3.4 로 걸었는데, 900경기/칸 실측에서 같은손↔반대손이
+//      **.039~.043** 이 나왔다 — 목표(.015~.025)의 **두 배**다.
+//      🔴 **⑤ 의 눈금을 그대로 옮기면 안 됐다.** 그 값은 피안타율 .27 대에서
+//      잰 기울기이고, 여기 계측은 .21 대(OVR 60 대 60)라 **같은 품질 1점이
+//      .013 을 움직인다**(거의 두 배). 아래 값은 그 실측 기울기로 다시
+//      잡은 것이다 — 폭 **1.5**(우) · **1.7**(좌) → 실측 .020 급.
+//
+// 🔴 **평균이 0 이다.** 인구 비율(`lefty_ratio` · 투수 30% 좌 · 타자 35% 좌)로
+//   가중하면
+//     .455×(+0.6) + .105×(+1.0) + .245×(−0.9) + .195×(−0.7) = **+0.02**
+//   다. 평균을 0 으로 안 두면 좌우를 넣는 것만으로 **리그 타율이 움직여**
+//   「좌우 상성」과 「리그 난이도」 두 변수가 한꺼번에 간다.
+//   검사 `tuning::platoon_tests::플래툰_계수의_인구_가중_평균이_0에_가깝다`.
+//
+// ⚠ **평균 0 은 타율의 평균 0 이다 — 실점은 아니다.** 득점은 안타율의
+//   **볼록 함수**라, 타자 유리 쪽이 올리는 실점이 투수 유리 쪽이 내리는 것보다
+//   크다. 실측에서 리그 타율은 +.001(불변)인데 실점9 는 폭 3.0/3.4 일 때
+//   **+0.13(+5.4%)** 이었다. 폭을 절반으로 줄이면 이 몫도 대략 4분의 1 이 된다
+//   (볼록성이라 폭의 제곱으로 준다). 남는 몫은 `BALANCE_BACKLOG` ⑫ 절에 적는다.
+//
+// ⚠ **감독 라인업은 안 건드린다**(1.0.4). 지금은 타석 판정 계수 하나뿐이고,
+//   「좌투 상대엔 우타를 낸다」 같은 편성은 다음 판이다.
+
+/// 좌완·좌타 비율 — **정본 하나다.** `roster_gen`(초기 로스터 · 용병) ·
+/// `military_roster`(체육부대) · `npc_sim::generate_freshmen`(연차 신입)이
+/// 전부 이걸 부른다.
+///
+/// 🔴 예전엔 같은 숫자가 **세 군데**에 손으로 적혀 있었고
+///   `generate_freshmen` 만 **아예 없었다** — 그래서 매년 들어오는 코호트가
+///   전원 우투/우타였고 시간이 갈수록 좌가 사라졌다(못 돌아오는 단조 변화 ·
+///   실측 `generateFreshmenNative` 2,000명 전원 `handedness` 없음).
+pub fn lefty_ratio(is_pitcher: bool) -> f64 {
+    if is_pitcher { 0.30 } else { 0.35 }
+}
+
+/// 같은 손 — 투수가 유리하다
+pub const PLATOON_SAME_RR: f64 =  0.6;
+/// 좌투 vs 좌타. 실제 야구에서 이 조합이 타자에게 가장 가혹하다
+pub const PLATOON_SAME_LL: f64 =  1.0;
+/// 우투 vs 좌타 — 타자 유리 (가장 흔한 「유리한 매치업」)
+pub const PLATOON_OPP_RL: f64  = -0.9;
+/// 좌투 vs 우타 — 타자 유리
+pub const PLATOON_OPP_LR: f64  = -0.7;
+// 되돌리려면(폭 2배 시절) 1.2 / 2.0 / −1.8 / −1.4 — 실측은 위 주석 ②.
+
+/// 좌우 상성을 켠다 (1.0). **0 이면 결정 ⑫ 이전과 완전히 같다** — 난수도
+/// 한 방울 안 다르다(계수만 0 이 된다). 계측용 환경변수 `PB_PLATOON`.
+pub const PLATOON_MODE: f64 = 1.0;
+pub fn platoon_mode() -> f64 {
+    match std::env::var("PB_PLATOON") {
+        Ok(v) => v.parse::<f64>().unwrap_or(PLATOON_MODE),
+        Err(_) => PLATOON_MODE,
+    }
+}
+
+/// 타석의 좌우 상성 — 공 하나의 **품질 가산**(+ 면 투수 유리).
+///
+/// ⚠ **양손잡이 규칙.** 양타(`S`)는 늘 투수의 반대 손으로 서므로 **반대 손**
+///   조합이다 — 그게 스위치히터의 뜻이다. 양투(`S`)는 반대로 타자에게 맞춰
+///   던지므로 **같은 손** 조합이다. 지금 양손은 주인공만 고를 수 있다.
+pub fn platoon_quality_bonus(pitcher_hand: &str, batter_hand: &str) -> f64 {
+    let m = platoon_mode();
+    if m <= 0.0 { return 0.0; }
+    let is_l = |h: &str| h.eq_ignore_ascii_case("L");
+    let is_s = |h: &str| h.eq_ignore_ascii_case("S");
+    // 양투는 타자와 같은 손을 골라 던진다
+    if is_s(pitcher_hand) {
+        return (if is_l(batter_hand) { PLATOON_SAME_LL } else { PLATOON_SAME_RR }) * m;
+    }
+    let p_left = is_l(pitcher_hand);
+    // 양타는 늘 투수의 반대 손
+    let b_left = if is_s(batter_hand) { !p_left } else { is_l(batter_hand) };
+    let v = match (p_left, b_left) {
+        (false, false) => PLATOON_SAME_RR,
+        (true,  true)  => PLATOON_SAME_LL,
+        (false, true)  => PLATOON_OPP_RL,
+        (true,  false) => PLATOON_OPP_LR,
+    };
+    v * m
+}
+
 pub const PITCH_SPEED_BASE: f64     = 100.0;
 pub const PITCH_SPEED_PER_STAT: f64 = 0.65;
 /// 힘조절 — 화면 표시식과 같은 ±5 km/h
@@ -1351,6 +1447,50 @@ pub const SP_SHARE_OF_PITCHERS: f64 = 0.45;
 ///
 /// 5인 로테이션 + 부상 여유 1. 이 아래로는 선발을 안 내린다.
 pub const FIRST_TEAM_MIN_STARTERS: usize = 6;
+
+#[cfg(test)]
+mod platoon_tests {
+    use super::*;
+
+    /// 🔴 **평균이 0 이어야 한다.** 안 그러면 좌우를 넣는 것만으로 리그 타율이
+    ///   움직여 「좌우 상성」과 「리그 난이도」가 한 변수처럼 섞인다.
+    ///
+    /// 인구 가중은 `lefty_ratio` 하나에서 나온다 — 비율을 고치면 이 검사가
+    /// 먼저 빨강이 된다(그게 이 검사의 일이다).
+    #[test]
+    fn 플래툰_계수의_인구_가중_평균이_0에_가깝다() {
+        let pl = lefty_ratio(true);   // 좌완 비율
+        let bl = lefty_ratio(false);  // 좌타 비율
+        let mean = (1.0 - pl) * (1.0 - bl) * PLATOON_SAME_RR
+                 + pl * bl * PLATOON_SAME_LL
+                 + (1.0 - pl) * bl * PLATOON_OPP_RL
+                 + pl * (1.0 - bl) * PLATOON_OPP_LR;
+        assert!(mean.abs() < 0.10, "인구 가중 평균이 {mean} — 0.10 을 넘으면 리그 타율이 움직인다");
+    }
+
+    /// 같은 손은 투수 유리(+) · 반대 손은 타자 유리(−) — 부호가 뒤집히면
+    /// 플래툰이 거꾸로 걸린 것이다
+    #[test]
+    fn 같은손과_반대손의_부호가_다르다() {
+        assert!(PLATOON_SAME_RR > 0.0 && PLATOON_SAME_LL > 0.0);
+        assert!(PLATOON_OPP_RL  < 0.0 && PLATOON_OPP_LR  < 0.0);
+        // 좌타-좌투가 우타-우투보다 가혹하다 (실제 야구)
+        assert!(PLATOON_SAME_LL > PLATOON_SAME_RR);
+    }
+
+    /// 양타는 늘 **반대 손**, 양투는 늘 **같은 손** — 스위치의 뜻이다.
+    /// ⚠ 환경변수를 안 만진다(병렬 검사에서 새면 다른 검사가 죽는다) —
+    ///   기본 모드 1.0 에서만 본다.
+    #[test]
+    fn 양손잡이는_유리한_쪽으로_선다() {
+        assert_eq!(platoon_quality_bonus("R", "S"), PLATOON_OPP_RL);
+        assert_eq!(platoon_quality_bonus("L", "S"), PLATOON_OPP_LR);
+        assert_eq!(platoon_quality_bonus("S", "R"), PLATOON_SAME_RR);
+        assert_eq!(platoon_quality_bonus("S", "L"), PLATOON_SAME_LL);
+        // 빈 문자열·모르는 값은 우투/우타로 본다(옛 세이브)
+        assert_eq!(platoon_quality_bonus("", ""), PLATOON_SAME_RR);
+    }
+}
 
 #[cfg(test)]
 mod talent_tests {

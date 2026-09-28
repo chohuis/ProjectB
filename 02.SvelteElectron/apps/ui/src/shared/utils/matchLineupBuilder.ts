@@ -15,6 +15,8 @@ export interface StarterStats {
   movement: number;
   clutch: number;
   holdRunners: number;
+  /** 던지는 손 — 안 넘기면 엔진이 우투로 본다(결정 ⑫ 좌우 상성) */
+  handedness: string;
   /** 보유 구종 — 안 넘기면 엔진이 패스트볼 하나로 던진다 */
   arsenal: import("./arsenal").EngineArsenalPitch[];
 }
@@ -72,6 +74,8 @@ export function buildBatterLineup(teamId: string, entities: EntityRow[]): MatchB
       discipline: bat.discipline ?? 50,
       battingClutch: bat.battingClutch ?? 50,
       platoon: bat.platoon ?? 50,
+      // 좌우 — 치는 손. **선수 뿌리에 있다**(`batting` 안이 아니다)
+      handedness: playerOf(e).handedness ?? "R",
       speed: bat.speed ?? 50,
       baseInstinct: bat.baseInstinct ?? 50,
       // 🔴 번트를 안 넘기면 희생번트가 다시 죽는다 — 성장 엔진에만 있던 값이다
@@ -250,6 +254,8 @@ export function buildStarterStats(
     movement: pit.movement ?? 50,
     clutch: pit.clutch ?? 50,
     holdRunners: pit.holdRunners ?? 50,
+    // 좌우 — 던지는 손. **선수 뿌리에 있다**(`pitching` 안이 아니다)
+    handedness: playerOf(candidate).handedness ?? "R",
     // ⚠ NPC 투수도 구종을 갖고 있다(roster_gen이 만든다). 안 넘기면 상대
     // 에이스가 전부 패스트볼만 던지는 세계가 된다
     arsenal: toEngineArsenal(playerOf(candidate).pitches),

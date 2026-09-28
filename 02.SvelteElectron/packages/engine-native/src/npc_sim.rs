@@ -3290,7 +3290,15 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             &talent, params.dev_rate_min, params.dev_rate_max,
             rng.next(), rng.next(), rng.next());
 
+        // 좌우 — **정본은 `tuning::lefty_ratio` 하나다**(결정 ⑫ · 2026-09-28).
+        // 🔴 예전엔 이 줄이 없어서 신입생이 전원 우투/우타였다. 비율은
+        //    `roster_gen` 과 같은 함수에서 온다 — 숫자를 여기 다시 적지 않는다.
+        // ⚠ 난수를 **여기서** 한 번 더 먹는다. 신입생 생성은 세계 생성과 다른
+        //    흐름이라 기존 판이 밀리지만, 안 뽑으면 칸이 영영 안 찬다.
+        let handedness = if rng.next() < crate::tuning::lefty_ratio(is_sp) { "L" } else { "R" };
+
         result.push(NpcSaveState {
+            handedness: Some(handedness.to_string()),
             // 0 = **아직 없음**. 팀 안 빈 번호를 알아야 정하므로
             // `fix_jersey_numbers` 가 채운다 — 여기서 지어내면 겹친다.
             jersey_number: 0,

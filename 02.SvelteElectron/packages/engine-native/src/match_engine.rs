@@ -278,6 +278,8 @@ pub fn build_pitcher(opts: &PartialPitcherStats, cmd: f64, vel: f64, sca: f64, m
         control:     (base_ctl - ctl_pen).max(1.0),
         movement:    opts.movement.unwrap_or(mvt),
         clutch:      opts.clutch.unwrap_or(clt),
+        // ⚠ 안 넘기면 우투다 — `types.rs PitcherStats.handedness` 의 ⚠ 참고
+        handedness:  opts.handedness.clone().unwrap_or_else(crate::types::hand_right),
         hold_runners:opts.hold_runners.unwrap_or(hr),
         // ⚠ **빈 배열을 그대로 두지 않는다.** 비면 구종 선택이 아무것도 못 뽑고
         // 조용히 옛 하드코딩처럼 굴러간다 — 배선 누락이 "아무 일도 안 일어남"으로
@@ -358,6 +360,12 @@ pub fn create_batter(rng: &mut impl Rng, mean: f64) -> BatterStats {
         contact: r!(), power: r!(), eye: r!(), discipline: r!(),
         batting_clutch: r!(), platoon: 50.0,
         speed: r!(), base_instinct: r!(), bunting: Some(r!()), fielding: r!(), arm: r!(),
+        // 🔴 **난수를 한 방울도 더 안 먹는다.** 여기서 `rng` 로 좌우를 뽑으면
+        //   그 뒤 모든 난수가 밀려 **같은 씨앗의 세계가 통째로 달라진다**
+        //   (골든 해시·`check:measurerepro` 가 전부 움직인다). 합성 타자는
+        //   우타로 두고, 아홉 명의 좌우 섞기는 라인업을 만드는 자리에서
+        //   **순번으로** 한다(`create_initial_match_state`).
+        handedness: crate::types::hand_right(),
     }
 }
 
@@ -463,8 +471,25 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
     let batter_mean  = opts.batter_mean.unwrap_or(50.0);
     let inning_limit = opts.inning_limit.unwrap_or(9);
 
-    let fallback_opp: Vec<BatterStats> = (0..9).map(|_| create_batter(rng, batter_mean)).collect();
-    let fallback_my:  Vec<BatterStats> = (0..9).map(|_| create_batter(rng, batter_mean)).collect();
+    // ⚠ **합성 라인업의 좌우는 순번으로 섞는다** (결정 ⑫ · 2026-09-28).
+    //   아홉 중 셋(1·4·7번)이 좌타 — 33%로 `lefty_ratio(false)` 0.35 에 가깝다.
+    //   🔴 **난수를 안 쓴다.** `create_batter` 안에서 뽑으면 그 뒤 난수가 밀려
+    //   같은 씨앗의 세계가 달라진다. 그리고 **섞어야** 플래툰 계수의 평균이
+    //   0 에 붙는다 — 전원 우타로 두면 합성 경로만 `PLATOON_SAME_RR` 을
+    //   상수로 먹어 계측 기준선이 통째로 움직인다.
+    //   ⚠ 실제 리그 경기는 이 폴백을 안 탄다 — TS 가 진짜 라인업을 넘긴다.
+    let mut fallback_opp: Vec<BatterStats> = Vec::with_capacity(9);
+    let mut fallback_my:  Vec<BatterStats> = Vec::with_capacity(9);
+    for i in 0..9 {
+        let mut b = create_batter(rng, batter_mean);
+        if i % 3 == 1 { b.handedness = "L".to_string(); }
+        fallback_opp.push(b);
+    }
+    for i in 0..9 {
+        let mut b = create_batter(rng, batter_mean);
+        if i % 3 == 1 { b.handedness = "L".to_string(); }
+        fallback_my.push(b);
+    }
 
     let (home_lineup, away_lineup) = if protagonist_side == "home" {
         (
@@ -953,6 +978,9 @@ fn calculate_pitch_quality(
     );
     let jam_mod     = jam_pressure_modifier(state, mental, batter.batting_clutch);
     let clutch_mod  = clutch_modifier(state, pitcher.clutch);
+    // 좌우 상성 (결정 ⑫) — 인구 가중 평균이 0 이라 **리그 타율은 안 움직인다**.
+    // 움직이는 것은 조합별 갈림뿐이다. `PB_PLATOON=0` 이면 예전과 완전히 같다
+    let platoon_mod = T::platoon_quality_bonus(&pitcher.handedness, &batter.handedness);
 
     // ⚠ **숙련도가 여기 걸린다.** 예전엔 화면에 "숙련도 4/5"라고 적어놓고
     // 던지면 아무 차이가 없었다 — 계수가 배우는 속도에만 쓰였다.
@@ -975,6 +1003,7 @@ fn calculate_pitch_quality(
         - batter_penalty
         + mental_bonus - stamina_penalty
         + weather_mod + park_mod + pattern_mod + speed_mod + course_mod + jam_mod + clutch_mod
+        + platoon_mod
         + putaway_mod
         + random_noise
     )
@@ -4865,6 +4894,7 @@ mod 완급과코스 {
             id: None, name: None,
             contact: 50.0, power: 50.0, eye: 50.0, discipline: 50.0,
             batting_clutch: 50.0, platoon: 50.0, speed: 50.0, base_instinct: 50.0,
+            handedness: "R".to_string(),
             bunting: None, fielding: 50.0, arm: 50.0,
         }
     }

@@ -196,7 +196,8 @@ pub fn generate_military_roster(p: GenerateMilitaryRosterParams) -> GenerateMili
             is_named: false,
             player_type: if is_pitcher { "pitcher".into() } else { "batter".into() },
             position,
-            handedness: if rng.next() < 0.30 { "L".into() } else { "R".into() },
+            // 비율 정본은 `tuning::lefty_ratio` 하나다 (결정 ⑫ · 2026-09-28)
+            handedness: if rng.next() < crate::tuning::lefty_ratio(is_pitcher) { "L".into() } else { "R".into() },
             jersey_number: i + 1,
             age,
             school_id: String::new(),

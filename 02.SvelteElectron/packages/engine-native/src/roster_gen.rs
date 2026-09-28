@@ -830,7 +830,8 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
             //   편향은 곱셈이 아니라 `pot_mult` 샘플링 자체에 넣어야 한다.
             let potential = (pot_cap * pot_mult).round().clamp(core_ovr.round(), 99.0);
 
-            let handedness = if rng.next() < (if is_pitcher { 0.30 } else { 0.35 }) { "L" } else { "R" };
+            // 비율 정본은 `tuning::lefty_ratio` 하나다 — 숫자를 여기 적지 않는다
+            let handedness = if rng.next() < crate::tuning::lefty_ratio(is_pitcher) { "L" } else { "R" };
 
             // 프로 무학년: 경력 연차. **연봉보다 먼저 정해야 한다** — 연차가 연봉의 입력이다.
             //
@@ -1008,7 +1009,8 @@ pub fn generate_foreign_players(p: GenerateForeignParams) -> GenerateLeagueRoste
             let (pot_mult, dev_rate) = crate::tuning::sample_talent(
                 &talent, f.dev_rate_min, f.dev_rate_max, rng.next(), rng.next(), rng.next());
             let potential = (f.ovr_max * pot_mult).round().clamp(ovr.round(), 99.0);
-            let handedness = if rng.next() < (if is_pitcher { 0.30 } else { 0.35 }) { "L" } else { "R" };
+            // 용병도 같은 정본을 쓴다 — 여기만 따로 두면 정본이 넷이 된다
+            let handedness = if rng.next() < crate::tuning::lefty_ratio(is_pitcher) { "L" } else { "R" };
 
             // 새로 온 용병은 이 리그 연차가 0이다
             let (salary, _years) = estimate_salary_and_contract(

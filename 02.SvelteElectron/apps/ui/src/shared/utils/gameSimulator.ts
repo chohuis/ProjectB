@@ -60,6 +60,14 @@ interface SimPitcher {
   id: string; velocity: number; movement: number; command: number;
   control: number; stamina: number; clutch: number; mentality: number;
   holdRunners: number;
+  /**
+   * 좌우 — `"R"`·`"L"`·`"S"`. **엔진이 타석 판정에 쓴다**(결정 ⑫).
+   *
+   * 🔴 **이 조립부에 빠뜨리면 리그 전체가 우투/우타가 된다.** 위 머리말이
+   *   `clutch`·`speed`·`holdRunners` 로 세 번 겪은 자리라고 적어 뒀다 —
+   *   `handedness` 는 생성·저장·화면까지 다 있는데 엔진까지만 안 왔다.
+   */
+  handedness: string;
   /** 보유 구종 (C-4). npc_sim은 안 쓰지만 풀 엔진이 쓴다 — 없으면 패스트볼 하나가 된다 */
   arsenal?: { type: string; grade: number }[];
 }
@@ -67,6 +75,14 @@ interface SimBatter {
   id: string; contact: number; power: number; eye: number;
   discipline: number; battingClutch: number;
   speed: number; baseInstinct: number;
+  /**
+   * 좌우 — `"R"`·`"L"`·`"S"`. **엔진이 타석 판정에 쓴다**(결정 ⑫).
+   *
+   * 🔴 **이 조립부에 빠뜨리면 리그 전체가 우투/우타가 된다.** 위 머리말이
+   *   `clutch`·`speed`·`holdRunners` 로 세 번 겪은 자리라고 적어 뒀다 —
+   *   `handedness` 는 생성·저장·화면까지 다 있는데 엔진까지만 안 왔다.
+   */
+  handedness: string;
   /** 도루 저지 — 수비 팀에서 포수를 찾는 데 쓴다 */
   position: string; arm: number;
   /** 🔴 **수비 능력.** 예전엔 없어서 리그 경기가 컨택·주력으로 대용값을
@@ -97,6 +113,8 @@ function toSimPitcher(
     mentality: p?.mentality ?? 50,
     // 견제력 — 도루 시도를 누른다. 안 넘기면 엔진이 50(무보정)으로 본다
     holdRunners: p?.holdRunners ?? 50,
+    // 좌우 — 던지는 손. 옛 세이브엔 없을 수 있어 우투로 본다(DB 기본값과 같다)
+    handedness: (e.details.player as EntityPlayerDetails).handedness ?? "R",
     // ⚠ **구종을 싣는다.** 안 실으면 풀 엔진에서 전원 패스트볼 하나가 되고,
     // 구종 1개 페널티(ERA 2배)를 리그 전체가 먹는다
     arsenal: toEngineArsenal(live?.pitches ?? []),
@@ -128,6 +146,11 @@ function toSimBatter(
     //    바로 위 `speed`·`baseInstinct`가 정확히 같은 이유로 빠져 있던 전례가 있다.
     position: (e.details.player as EntityPlayerDetails).position ?? "",
     arm:      b?.arm ?? 50,
+    // 좌우 — 치는 손. 야수는 같은 `handedness` 를 타격 손으로 읽는다.
+    // ⚠ **`fielding` 줄 위에 둔다** — `fielderIdentity.test.ts` 가
+    //   「`fielding` 줄 바로 다음이 닫는 괄호」를 글자로 잠가 놨다.
+    //   아래로 옮기면 그 검사가 빨강이 된다.
+    handedness: (e.details.player as EntityPlayerDetails).handedness ?? "R",
     // ⚠ 안 실으면 리그 경기 수비가 전 팀 50 고정으로 돌아간다
     fielding: b?.fielding ?? 50,
   };
@@ -425,6 +448,7 @@ function toEnginePitcher(p: SimPitcher): Record<string, unknown> {
     staminaCap: p.stamina, mentalResil: p.mentality ?? 50,
     control: p.control, movement: p.movement,
     clutch: p.clutch ?? 50, holdRunners: p.holdRunners ?? 50,
+    handedness: p.handedness ?? "R",
     arsenal: p.arsenal,
   };
 }
@@ -501,7 +525,10 @@ function toEngineBatter(b: SimBatter): Record<string, unknown> {
   return {
     id: b.id, name: b.id,
     contact: b.contact, power: b.power, eye: b.eye, discipline: b.discipline,
+    // ⚠ `platoon` 은 생성이 전원 50 고정이라 레버가 아니다 — 좌우는
+    //   `handedness` 가 낸다(`docs/SIM_103_CLUTCH_PLATOON_2026-09-28.md §2-2`)
     battingClutch: b.battingClutch ?? 50, platoon: 50,
+    handedness: b.handedness ?? "R",
     speed: b.speed, baseInstinct: b.baseInstinct ?? 50,
     // SimBatter엔 수비 필드가 없다 — 엔진 기본값을 쓴다
     fielding: 50, arm: 50,

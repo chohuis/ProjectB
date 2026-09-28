@@ -70,16 +70,22 @@ declare global {
           name?: string; command?: number; velocity?: number; staminaCap?: number;
           mentalResil?: number; control?: number; movement?: number;
           clutch?: number; holdRunners?: number;
+          /** 던지는 손 — 결정 ⑫ 좌우 상성. 안 넘기면 엔진이 우투로 본다 */
+          handedness?: string;
         };
         opponentPitcher?: {
           name?: string; command?: number; velocity?: number; staminaCap?: number;
           mentalResil?: number; control?: number; movement?: number;
           clutch?: number; holdRunners?: number;
+          /** 던지는 손 — 결정 ⑫ 좌우 상성. 안 넘기면 엔진이 우투로 본다 */
+          handedness?: string;
         };
         npcStarterPitcher?: {
           name?: string; command?: number; velocity?: number; staminaCap?: number;
           mentalResil?: number; control?: number; movement?: number;
           clutch?: number; holdRunners?: number;
+          /** 던지는 손 — 결정 ⑫ 좌우 상성. 안 넘기면 엔진이 우투로 본다 */
+          handedness?: string;
         };
         batterMean?: number;
         opponentLineup?: MatchBatterStats[];
@@ -168,7 +174,8 @@ declare global {
          * 넘기려 해도 타입이 막고, 그대로 두면 OVR의 33%가 엔진에 안 간다 */
         pitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string;
           command?: number; velocity?: number; staminaCap?: number; mentalResil?: number;
-          control?: number; movement?: number; clutch?: number; holdRunners?: number; };
+          control?: number; movement?: number; clutch?: number; holdRunners?: number;
+          handedness?: string; };
         batterMean?: number;
         role?: "SP" | "RP" | "CP";
         /** 🔴 이 경기의 리그 — Rust `MatchStartOptions.league_id`. 안 넘기면 투구수 상한이
@@ -189,8 +196,8 @@ declare global {
         /** 🔴 **상대 수비진.** 안 넘기면 엔진이 양 반 모두 `fielders`를 쓴다 —
          *  **주인공 팀이 공격할 때도 주인공 팀 수비수가 잡는다** (2026-08-29) */
         opponentFielders?: MatchFielderStats[];
-        opponentPitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
-        npcStarterPitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
+        opponentPitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; handedness?: string; };
+        npcStarterPitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; handedness?: string; };
       }) => Promise<string>;
       matchAutoFinishFromEntry: () => Promise<string>;
       // ── 게임 저장/불러오기 ──────────────────────────────────
@@ -364,6 +371,14 @@ export interface MatchBatterStats {
   discipline: number;
   battingClutch: number;
   platoon: number;
+  /**
+   * 치는 손 — `"R"`·`"L"`·`"S"`. 결정 ⑫ 좌우 상성.
+   *
+   * ⚠ **`platoon` 과 다른 축이다.** `platoon` 은 생성이 전원 50 고정이라
+   *   레버가 아니고, 실제로 갈리는 것은 이 칸이다.
+   * ⚠ 옛 세이브엔 없다 — 안 넘기면 엔진이 우투/우타로 본다.
+   */
+  handedness?: string;
   speed: number;
   baseInstinct: number;
   fielding: number;

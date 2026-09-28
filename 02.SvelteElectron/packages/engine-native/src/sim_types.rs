@@ -86,6 +86,18 @@ pub struct NpcCareerEvent {
 pub struct NpcSaveState {
     pub npc_id: String,
     pub name: String,
+    /// 좌우 — `"R"`·`"L"`. **정본 비율은 `tuning::lefty_ratio` 하나다.**
+    ///
+    /// 🔴 **이 칸이 없어서 연차 신입이 전원 우투/우타였다** (2026-09-28 실측).
+    ///   `roster_gen`(세계 생성)·`military_roster` 는 좌우를 만드는데
+    ///   `generate_freshmen` 이 내주는 이 구조체에 칸이 아예 없었고,
+    ///   `slotdb.cjs` 가 `?? "R"` 로 채웠다 — **매년 들어오는 코호트가 전원
+    ///   우**라 시간이 갈수록 좌완·좌타가 사라진다(못 돌아오는 단조 변화).
+    ///   `generateFreshmenNative` 2,000명 전원 `handedness` 없음으로 확인했다.
+    /// ⚠ `Option` 이다 — **옛 세이브엔 없다.** 없으면 읽는 쪽이 `"R"` 로 본다
+    ///   (slot.db 의 `DEFAULT 'R'` 와 같은 값이라 마이그레이션이 필요 없다).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub handedness: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name_en: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
