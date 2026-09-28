@@ -1470,12 +1470,19 @@ mod platoon_tests {
 
     /// 같은 손은 투수 유리(+) · 반대 손은 타자 유리(−) — 부호가 뒤집히면
     /// 플래툰이 거꾸로 걸린 것이다
+    /// ⚠ **상수를 직접 `assert!` 하면 clippy `assertions_on_constants` 가
+    ///   막는다**(`-D warnings` 관문). 함수를 거쳐 재면 값이 아니라 **동작**을
+    ///   재는 것이 되고, 계수를 어디서 갈아도 이 검사가 그대로 유효하다.
     #[test]
     fn 같은손과_반대손의_부호가_다르다() {
-        assert!(PLATOON_SAME_RR > 0.0 && PLATOON_SAME_LL > 0.0);
-        assert!(PLATOON_OPP_RL  < 0.0 && PLATOON_OPP_LR  < 0.0);
+        let rr = platoon_quality_bonus("R", "R");
+        let ll = platoon_quality_bonus("L", "L");
+        let rl = platoon_quality_bonus("R", "L");
+        let lr = platoon_quality_bonus("L", "R");
+        assert!(rr > 0.0 && ll > 0.0, "같은 손인데 투수가 안 유리하다: {rr} {ll}");
+        assert!(rl < 0.0 && lr < 0.0, "반대 손인데 타자가 안 유리하다: {rl} {lr}");
         // 좌타-좌투가 우타-우투보다 가혹하다 (실제 야구)
-        assert!(PLATOON_SAME_LL > PLATOON_SAME_RR);
+        assert!(ll > rr, "좌좌({ll})가 우우({rr})보다 크지 않다");
     }
 
     /// 양타는 늘 **반대 손**, 양투는 늘 **같은 손** — 스위치의 뜻이다.

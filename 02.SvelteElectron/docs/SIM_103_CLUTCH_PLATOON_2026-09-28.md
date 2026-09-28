@@ -409,11 +409,11 @@
 | 관문 | 결과 |
 |---|---|
 | `cargo test --release` | **380 통과 · 0 실패** (플래툰 검사 3 추가) |
-| `cargo clippy --all-targets -- -D warnings` | **0** |
+| `cargo clippy --all-targets -- -D warnings` | **0** — ⚠ 처음엔 **3 오류**였다: 상수를 그대로 `assert!` 하면 `assertions_on_constants` 가 막는다. `platoon_quality_bonus()` 를 거쳐 재도록 고쳤고, 그게 **값이 아니라 동작을 재는** 검사라 계수를 갈아도 유효하다 |
 | `npx tsc --noEmit` | **0** |
 | `npm run lint` | **0 오류 · 109 경고** |
 | `npm test`(vitest) | **276파일 · 2,939건 통과** |
-| `npm run check:native` | ✅ 도장 `d110220fa5ee` |
+| `npm run check:native` | ✅ 도장 `2b3f70e0742a` |
 | `npm run check:roundtrip` | **ok** — 심은 칸 48개 전부 살아남고 저장이 고정점 (표 14개 · npc 9,760행) |
 | `probe:a:platoon --games 300` | **2회 바이트 동일** |
 | `check:measurerepro` | **✅ 2회 동일** — 값은 **움직였다**(아래) |
