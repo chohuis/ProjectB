@@ -116,7 +116,7 @@
 
 | 등급 | 칸 | `pitchGrant` | `pitchGradeUp` | `pitchProgressJump` |
 |---|---:|---:|---:|---:|
-| 유니크 | 13 | 5 | 2 | 6 |
+| 유니크 | 13 | 6 | 2 | 5 |
 | **히든** | **2** | **1** | **1** | 0 |
 
 - 히든 둘 — `EVT_HID_PRO_AFTER_CG#grip`(`pitchGradeUp steps 2`) ·
@@ -159,7 +159,7 @@ pitchGrant: { id, grade?: 1 | 2 }        // 기본 1
 
 - **「이미 있는 구종」 갈래는 한 줄도 안 건드린다** — ㉠ 의 겹침이 여기서 사라진다.
 - 검사 ⑥ 의 짝: **`tier === "hidden"` 이고 `pitchGrant` 가 있으면 `grade === 2`**.
-  대조군은 유니크 `pitchGrant` 다섯 — `grade` 없이 초록이어야 한다.
+  대조군은 유니크 `pitchGrant` **여섯** — `grade` 없이 초록이어야 한다.
 - 「크기가 아니라 종류」와의 충돌은 **남는다.** 다만 히든의 다른 보상도
   `statDelta +3` · `potentialDelta +3` 처럼 **크기로** 갈리고 있어(§1 표),
   구종만 예외로 두는 값이 더 커 보인다.
