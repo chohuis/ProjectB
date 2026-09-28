@@ -186,7 +186,24 @@ check("deleteSlot → 파일 제거", call("listSlots").length === 1 && !fs.exis
   const sigDir = fs.mkdtempSync(path.join(os.tmpdir(), "slotdb-sig-"));
   const sigMgr = slotdb.createManager(sigDir, { engine });
   const sig = (cmd, p) => slotdb.dispatch(sigMgr, cmd, p);
-  const DATA = { protagonist: { id: "PLY_HERO", fame: 42 } };
+  // ⚠ **세이브 모양을 갖춘 픽스처다.** 2026-09-27 에 여는 쪽 무결성 검사
+  //   (`verifySlot` · PLAN_103 §4)가 서면서, 예전의 `{ protagonist: { id, fame } }`
+  //   는 「필수 칸 없음」으로 거부됐다. 서명 정책(「변조여도 읽는다」)과
+  //   무결성 정책(「모양이 깨지면 막는다」)은 **다른 일**이라 둘 다 살려야 한다 —
+  //   그래서 픽스처를 진짜 세이브 모양으로 채운다.
+  const HERO = {
+    id: "PLY_HERO",
+    name: "검사용",
+    careerStage: "highschool",
+    age: 16,
+    pitching: { velocity: 50, control: 50, command: 50, stamina: 50, recovery: 50, ovr: 50 },
+  };
+  const saveShape = (fame) => ({
+    version: 1,
+    schoolState: {},
+    protagonist: { ...HERO, fame },
+  });
+  const DATA = saveShape(42);
 
   sig("createSlot", { slotId: "S1", worldSeed: 1, protagonist: {}, season: {}, npcs: [] });
   sig("setProtagonist", { slotId: "S1", data: DATA });
@@ -195,7 +212,7 @@ check("deleteSlot → 파일 제거", call("listSlots").length === 1 && !fs.exis
   // 세이브를 손으로 고친다 — 서명은 그대로 둔다
   const sdb = sigMgr.get("S1");
   sdb.prepare("INSERT OR REPLACE INTO protagonist (id, json) VALUES (1, ?)")
-     .run(JSON.stringify({ protagonist: { id: "PLY_HERO", fame: 9999 } }));
+     .run(JSON.stringify(saveShape(9999)));
   const tampered = sig("getProtagonist", { slotId: "S1" });
   check("서명: 변조를 잡는다", tampered.__sig === "mismatch");
   check("서명: 변조여도 값은 읽힌다", tampered.protagonist && tampered.protagonist.fame === 9999);

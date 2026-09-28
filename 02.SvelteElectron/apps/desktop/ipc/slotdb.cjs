@@ -549,11 +549,296 @@ function slotFilePath(savesDir, slotId) {
   return path.join(savesDir, `slot3_${slotId}.db`);
 }
 
-function openSlot(savesDir, slotId) {
+// ── 세이브 무결성 (2026-09-27 · PLAN_103 §4) ──────────────────────
+//
+// 🔴 **왜 여기인가.** 검사는 **읽는 쪽 정본**에 있어야 한다. 화면이나 store 에
+//   두면 헤드리스 경로(`drive.mjs`·계측·검사 스크립트)가 그대로 통과한다 —
+//   이 저장소가 「화면 가드만 두면 다른 호출부가 샌다」로 두 번 밟은 형태다
+//   (`enlistMilitary` 의 미필 가드가 그것이다). 슬롯을 여는 문이 하나니
+//   여기 한 함수로 둔다.
+//
+// ⚠ **원본은 한 바이트도 안 건드린다.** 거부할 때 지우거나 고치지 않고 **사본을
+//   뜬다** — 못 여는 세이브가 사용자의 유일한 기록일 수 있다.
+// ⚠ **왜 못 여는지 칸 이름으로 말한다.** 「세이브가 손상됐습니다」는 아무 정보가
+//   없다. 어느 표·어느 칸·무엇을 기대했는지를 그대로 실어 화면이 되받아 쓴다.
+
+/** 슬롯이 반드시 가지고 있어야 하는 표 — 없으면 읽는 쪽이 첫 질의에서 죽는다 */
+const REQUIRED_TABLES = ["meta", "protagonist", "npc", "schedule", "standings", "season_stats"];
+
+/**
+ * `npc` 표에서 **하나라도 빠지면 Rust 가 `missing field` 로 던지는** 칼럼.
+ *
+ * 🔴 2026-09-05 실사용자 세이브가 정확히 이 꼴로 죽었다 — `military_status` 가
+ *   결측된 은퇴자 869명이 드래프트 수락에서 크래시를 냈다(`RETIRED_NPC_COLUMNS`
+ *   머리말). 그때는 **칼럼이 아니라 값**이 비었지만, 칼럼이 없으면 같은 곳에서
+ *   같은 방식으로 죽는다. 여는 순간에 잡는다.
+ */
+const REQUIRED_NPC_COLUMNS = [
+  "npc_id",
+  "name",
+  "age",
+  "career_status",
+  "current_league",
+  "current_team",
+  "military_status",
+  "abilities_json",
+];
+
+/** 세이브 겉껍질(`protagonist.json`)이 반드시 들고 있어야 하는 칸 */
+const REQUIRED_SAVE_KEYS = ["version", "protagonist", "schoolState"];
+/** 그 안쪽 주인공이 반드시 들고 있어야 하는 칸 */
+const REQUIRED_PROTAGONIST_KEYS = ["id", "name", "careerStage", "age", "pitching"];
+
+/**
+ * **`refs.json` 밖인데 맞는 리그 id** — 세계가 굴러가며 생기는 것들이다.
+ *
+ * 🔴 `refs.json` 의 `leagues` 는 **여섯뿐**(고교·대학·독립·KBL·ABL·JBL)인데
+ *   실제 세이브에는 **열둘**이 든다(2026-09-27 · 테스터 세이브 실측:
+ *   `LEAGUE_ABL_FARM` 523 · `LEAGUE_DRAFT_POOL` 83 · `LEAGUE_JBL_FARM` 388 ·
+ *   `LEAGUE_KBL_FARM` 361 · `LEAGUE_MILITARY` 54 · `LEAGUE_RETIRED` 846).
+ *   refs 만 보고 거부하면 **정상 세이브가 안 열린다** — 참조 검사를 이 목록
+ *   없이 켜는 것이 제일 위험한 실수다. 그래서 여기 한 자리에 적는다.
+ *
+ * ⚠ 새 파생 리그를 만들면 여기도 늘린다. 안 늘리면 다음 세이브가 안 열린다.
+ */
+const DERIVED_LEAGUE_IDS = [
+  "LEAGUE_KBL_FARM",
+  "LEAGUE_ABL_FARM",
+  "LEAGUE_JBL_FARM",
+  "LEAGUE_DRAFT_POOL",
+  "LEAGUE_MILITARY",
+  "LEAGUE_RETIRED",
+];
+
+/**
+ * `refs.json` 을 찾아 읽는다 — 못 찾으면 **참조 검사만 건너뛴다**.
+ *
+ * ⚠ 못 찾았다고 세이브를 거부하지 않는다. 그건 세이브의 잘못이 아니라 설치의
+ *   문제이고, 여기서 막으면 데이터가 없는 판에서 게임이 통째로 안 열린다.
+ */
+function loadRefIds(refsPath) {
+  const candidates = refsPath
+    ? [refsPath]
+    : [
+        path.join(
+          __dirname,
+          "..",
+          "..",
+          "..",
+          "resource",
+          "data",
+          "master",
+          "entities",
+          "refs.json",
+        ),
+        path.join(process.cwd(), "resource", "data", "master", "entities", "refs.json"),
+      ];
+  for (const p of candidates) {
+    try {
+      if (!fs.existsSync(p)) continue;
+      const refs = JSON.parse(fs.readFileSync(p, "utf8"));
+      const leagues = new Set((refs.leagues ?? []).map((l) => l.id));
+      for (const id of DERIVED_LEAGUE_IDS) leagues.add(id);
+      return { leagues, teams: new Set((refs.teams ?? []).map((t) => t.id)) };
+    } catch {
+      // 다음 후보를 본다 — refs 가 깨진 것도 세이브의 잘못이 아니다
+    }
+  }
+  return null;
+}
+
+/**
+ * **열기 전 세이브를 검사한다 — 한 함수.**
+ *
+ * 무엇을 보나 넷:
+ *   ① 버전    `user_version` 이 코드가 아는 최신보다 **미래**면 거부
+ *   ② 스키마   필수 표와 `npc` 필수 칼럼이 있나
+ *   ③ 필수 칸  주인공 한 행 · 그 JSON 의 필수 키
+ *   ④ 참조    `npc.current_league` · `current_team` 이 `refs` 에 있나
+ *
+ * ⚠ ① 은 **마이그레이션 전에** 봐야 한다 — 미래 버전에 옛 `up()` 을 돌리면
+ *   그 순간 원본이 망가진다. 그래서 `openSlot` 이 ① 만 먼저 본다.
+ *
+ * @returns {{ ok: boolean, problems: Array<{ kind: string, where: string, why: string }> }}
+ */
+function verifySlot(db, opts = {}) {
+  const problems = [];
+  const add = (kind, where, why) => problems.push({ kind, where, why });
+
+  // ① 버전 — 미래에서 온 세이브
+  const v = currentVersion(db);
+  if (v > SCHEMA_VERSION) {
+    add(
+      "version",
+      "PRAGMA user_version",
+      `세이브 스키마 ${v} · 이 버전이 아는 최신 ${SCHEMA_VERSION} — 더 새 버전에서 만든 세이브다`,
+    );
+  }
+
+  // ② 스키마 — 표와 칼럼
+  const tables = new Set(
+    db
+      .prepare("SELECT name FROM sqlite_master WHERE type = 'table'")
+      .all()
+      .map((r) => r.name),
+  );
+  for (const t of REQUIRED_TABLES) {
+    if (!tables.has(t)) add("schema", `표 ${t}`, "표가 없다");
+  }
+  if (tables.has("npc")) {
+    const cols = new Set(
+      db
+        .prepare("PRAGMA table_info(npc)")
+        .all()
+        .map((c) => c.name),
+    );
+    for (const c of REQUIRED_NPC_COLUMNS) {
+      if (!cols.has(c)) add("schema", `npc.${c}`, "칼럼이 없다 — Rust 가 missing field 로 던진다");
+    }
+  }
+
+  // ③ 필수 칸 — 주인공
+  if (tables.has("protagonist")) {
+    const row = db.prepare("SELECT json FROM protagonist WHERE id = 1").get();
+    if (!row) {
+      add("required", "protagonist(id=1)", "주인공 행이 없다 — 누구의 세이브인지 알 수 없다");
+    } else {
+      let saved = null;
+      try {
+        saved = JSON.parse(row.json);
+      } catch (e) {
+        add("required", "protagonist.json", `JSON 이 깨졌다 — ${e.message}`);
+      }
+      if (saved && typeof saved === "object") {
+        for (const k of REQUIRED_SAVE_KEYS) {
+          if (saved[k] === undefined) add("required", `protagonist.json.${k}`, "칸이 없다");
+        }
+        const p = saved.protagonist;
+        if (p && typeof p === "object") {
+          for (const k of REQUIRED_PROTAGONIST_KEYS) {
+            if (p[k] === undefined)
+              add("required", `protagonist.json.protagonist.${k}`, "칸이 없다");
+          }
+        }
+      }
+    }
+  }
+
+  // ④ 참조 — 팀 id · 리그 id 가 refs 에 있나
+  const refIds = loadRefIds(opts.refsPath);
+  if (refIds && tables.has("npc")) {
+    const badLeagues = db
+      .prepare(
+        "SELECT current_league AS v, COUNT(*) AS n FROM npc WHERE current_league <> '' GROUP BY 1",
+      )
+      .all()
+      .filter((r) => !refIds.leagues.has(r.v));
+    for (const r of badLeagues) {
+      add(
+        "refs",
+        "npc.current_league",
+        `"${r.v}" 가 refs 에 없다 (${r.n}명) — 파생 리그면 DERIVED_LEAGUE_IDS 에 없다`,
+      );
+    }
+    const badTeams = db
+      .prepare(
+        "SELECT current_team AS v, COUNT(*) AS n FROM npc WHERE current_team <> '' GROUP BY 1",
+      )
+      .all()
+      .filter((r) => !refIds.teams.has(r.v));
+    for (const r of badTeams) {
+      add(
+        "refs",
+        "npc.current_team",
+        `"${r.v}" 가 refs 에 없다 (${r.n}명) — 그 팀의 선수를 어디에도 못 놓는다`,
+      );
+    }
+  }
+
+  return { ok: problems.length === 0, problems };
+}
+
+/** 사람이 읽는 한 덩이 — 화면이 이걸 **그대로** 띄운다(문안을 다시 짓지 않는다) */
+function describeProblems(problems) {
+  const kindLabel = { version: "버전", schema: "스키마", required: "필수 칸", refs: "참조" };
+  return problems.map((p) => `· [${kindLabel[p.kind] ?? p.kind}] ${p.where} — ${p.why}`).join("\n");
+}
+
+/**
+ * 못 여는 세이브의 **사본을 뜬다** — 원본은 그대로 둔다.
+ *
+ * ⚠ WAL 이 따로 있으므로 `-wal`·`-shm` 도 같이 뜬다. 본체만 복사하면 마지막
+ *   저장이 빠진 사본이 된다.
+ * ⚠ 백업이 실패해도 **거부는 그대로 한다** — 백업이 안 되는 것과 못 여는 것은
+ *   다른 일이고, 못 여는 세이브를 여는 쪽으로 떨어지면 안 된다.
+ */
+function backupBrokenSlot(savesDir, slotId) {
+  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const made = [];
+  for (const suffix of ["", "-wal", "-shm"]) {
+    const src = slotFilePath(savesDir, slotId) + suffix;
+    if (!fs.existsSync(src)) continue;
+    const dst = `${slotFilePath(savesDir, slotId)}.broken-${stamp}${suffix}`;
+    try {
+      fs.copyFileSync(src, dst);
+      made.push(path.basename(dst));
+    } catch {
+      // 사본을 못 떠도 원본은 그대로다 — 거부는 아래에서 그대로 한다
+    }
+  }
+  return made;
+}
+
+/** 무결성 거부를 화면까지 나르는 오류 — `problems` 를 들고 간다 */
+class SaveIntegrityError extends Error {
+  constructor(slotId, problems, backups) {
+    super(
+      `세이브를 열 수 없습니다 (슬롯 ${slotId})\n${describeProblems(problems)}\n` +
+        (backups.length > 0
+          ? `원본은 그대로 두고 사본을 떴습니다: ${backups.join(", ")}`
+          : "원본은 그대로 둡니다 (사본을 뜨지 못했습니다)"),
+    );
+    this.name = "SaveIntegrityError";
+    this.slotId = slotId;
+    this.problems = problems;
+    this.backups = backups;
+  }
+}
+
+function openSlot(savesDir, slotId, opts = {}) {
   fs.mkdirSync(savesDir, { recursive: true });
   const db = new Database(slotFilePath(savesDir, slotId));
   db.pragma("journal_mode = WAL");
+
+  // 🔴 **버전은 마이그레이션 전에 본다.** 미래 버전에 옛 `up()` 을 돌리면
+  //   그 순간 원본이 망가진다 — 「고치려다 부순다」가 여기서 가장 비싸다.
+  const future = currentVersion(db) > SCHEMA_VERSION;
+  if (future) {
+    const { problems } = verifySlot(db, opts);
+    db.close();
+    throw new SaveIntegrityError(slotId, problems, backupBrokenSlot(savesDir, slotId));
+  }
+
   migrate(db);
+
+  // ⚠ 새 슬롯은 마이그레이션 직후 **주인공이 없다**(새 게임이 그다음에 적는다) —
+  //   그걸 「깨졌다」로 읽으면 새 게임이 통째로 막힌다. 그래서 주인공 행이
+  //   있을 때만 나머지를 본다.
+  // ⚠ **표 자체가 없을 수 있다.** `user_version` 이 이미 1 이면 마이그레이션이
+  //   v1(baseline)을 건너뛰므로 `protagonist` 표가 안 생긴다 — 옛 슬롯이
+  //   실제로 그렇다(`test:migration` 8번). 물어보기 전에 표를 먼저 본다.
+  const hasProtagonistTable = !!db
+    .prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'protagonist'")
+    .get();
+  const hasProtagonist =
+    hasProtagonistTable && !!db.prepare("SELECT 1 FROM protagonist WHERE id = 1").get();
+  if (hasProtagonist && opts.verify !== false) {
+    const { ok, problems } = verifySlot(db, opts);
+    if (!ok) {
+      db.close();
+      throw new SaveIntegrityError(slotId, problems, backupBrokenSlot(savesDir, slotId));
+    }
+  }
   return db;
 }
 
@@ -1742,6 +2027,19 @@ function dispatch(manager, cmd, payload) {
     }
     return out;
   } catch (e) {
+    // 🔴 **무결성 거부는 문안을 그대로 나른다** (PLAN_103 §4). `error` 는 사람이
+    //   읽는 여러 줄 그대로이고, `integrity` 는 화면이 표로 그릴 때 쓰는 구조다.
+    //   ⚠ **여기서 문안을 다시 짓지 않는다** — 화면이 자기 말로 바꿔 쓰면
+    //     「어느 칸이 왜」가 사라진다. 그게 이 기능의 전부다.
+    //   ⏸ **화면 몫은 C 다** — 슬롯 목록·불러오기 화면이 `integrity.problems` 를
+    //     줄마다 띄우고 「사본을 떴습니다」를 같이 보이면 된다. 지금은 `error`
+    //     문안이 그대로 올라가므로 손대지 않아도 뜻은 전달된다.
+    if (e instanceof SaveIntegrityError) {
+      return {
+        error: String(e.message),
+        integrity: { slotId: e.slotId, problems: e.problems, backups: e.backups },
+      };
+    }
     return { error: String(e?.message ?? e) };
   }
 }
@@ -1758,6 +2056,15 @@ module.exports = {
   hasColumn,
   addColumn,
   MIGRATIONS,
+  // 세이브 무결성 (PLAN_103 §4) — 여는 쪽 정본. 픽스처 검사가 직접 부른다
+  verifySlot,
+  describeProblems,
+  SaveIntegrityError,
+  REQUIRED_TABLES,
+  REQUIRED_NPC_COLUMNS,
+  REQUIRED_SAVE_KEYS,
+  REQUIRED_PROTAGONIST_KEYS,
+  DERIVED_LEAGUE_IDS,
   // 은퇴자 좁은 읽기 — 회귀 검사가 Rust 계약과 대조한다
   RETIRED_NPC_COLUMNS,
   mapNpcRow,
