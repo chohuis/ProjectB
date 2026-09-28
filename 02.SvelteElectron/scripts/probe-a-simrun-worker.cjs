@@ -39,9 +39,20 @@ if (process.env.PB_STDERR_PROBE === "1") console.error(`PB_STDERR_PROBE #${RUN_N
     app.setCareerPolicy({ draft: true, university: true, independent: true });
     app.resetEventFunnel();
     app.resetMilitaryCounters();
+    // 이벤트 id 계측 칸(PLAN_103 §5-1) — 재기 직전 리셋. `tierCounters`와
+    // 같은 자리·같은 순서다(누계라 회차 사이에 안 섞이게).
+    app.resetEventIdCounts();
 
     let prev = app.tierCounters();
     let prevMil = app.militaryCounters();
+    let prevEventIds = app.eventIdCounts();
+    // 이벤트 id 계측 칸 — 누계 두 스냅샷의 차. 쪼개는 규칙(등급별 표)은
+    // `app.eventIdRow`(정본, `perfEntry.ts`) 하나가 한다 — 여기서는 뺄셈만.
+    const eventIdDelta = (now, prev0) => {
+      const d = {};
+      for (const k of Object.keys(now)) d[k] = (now[k] ?? 0) - (prev0[k] ?? 0);
+      return d;
+    };
     const start = app.currentSeason();
     // 🔴 **그 해 시작 시점의 무대·소속을 든다.** 진로 결정이 시즌 끝 무렵에
     //   처리돼서, 접는 시점에는 이미 다음 무대의 소속이다 — 그대로 적으면
@@ -94,6 +105,8 @@ if (process.env.PB_STDERR_PROBE === "1") console.error(`PB_STDERR_PROBE #${RUN_N
       const preMilNow = app.militaryCounters();
       const preMilD = { 캘린더: preMilNow.캘린더 - prevMil.캘린더, 뽑기: preMilNow.뽑기 - prevMil.뽑기 };
       const preRow = app.simYearRow(preD, preNow.통지 - prev.통지, yearAt, preMilD);
+      const preEventIdsNow = app.eventIdCounts();
+      preRow.이벤트id = app.eventIdRow(eventIdDelta(preEventIdsNow, prevEventIds));
       const preStage = yearAt.무대;
       const preSeason = app.currentSeason();
 
@@ -112,6 +125,8 @@ if (process.env.PB_STDERR_PROBE === "1") console.error(`PB_STDERR_PROBE #${RUN_N
         const nowMil = app.militaryCounters();
         const milD = { 캘린더: nowMil.캘린더 - prevMil.캘린더, 뽑기: nowMil.뽑기 - prevMil.뽑기 };
         const row = app.simYearRow(d, now.통지 - prev.통지, yearAt, milD);
+        const nowEventIds = app.eventIdCounts();
+        row.이벤트id = app.eventIdRow(eventIdDelta(nowEventIds, prevEventIds));
         // 🔴 라벨은 `s.seasonYear` 가 아니라 우리가 접은 순번이다 — 위 큰
         //   주석 ②(군 전역 직후 같은 해가 두 번 찍히는 결함, 5건 실측)가 이
         //   자리다. `s.seasonYear` 가 안 늘어도 줄마다 라벨은 늘어난다.
@@ -119,6 +134,7 @@ if (process.env.PB_STDERR_PROBE === "1") console.error(`PB_STDERR_PROBE #${RUN_N
         years.push(row);
         prev = now;
         prevMil = nowMil;
+        prevEventIds = nowEventIds;
         guard.hit(true);
         await app.seasonRollover();
         yearAt = snap();   // 다음 해의 시작 시점
@@ -142,11 +158,16 @@ if (process.env.PB_STDERR_PROBE === "1") console.error(`PB_STDERR_PROBE #${RUN_N
           const row = y === preSeason
             ? preRow
             : app.simYearRow({ normal: 0, rare: 0, unique: 0, hidden: 0 }, 0, afterSnap, { 캘린더: 0, 뽑기: 0 });
+          // ⚠ **첫 번째(=preRow)만 이벤트id 를 든다.** 그 뒤 채움 줄은 preRow
+          //   때 이미 리셋된 `prevEventIds` 기준으로 새 델타를 잴 수가 없다
+          //   (엔진이 그 사이를 안 알려 준다 — 위 성적 채움과 같은 이유). 빈 칸.
+          if (row.이벤트id === undefined) row.이벤트id = {};
           row.연도 = label++;
           if (afterSnap.무대 !== preStage) row.무대 = `${preStage}→${afterSnap.무대}`;
           years.push(row);
         }
         prev = app.tierCounters();
+        prevEventIds = app.eventIdCounts();
         // ⚠ **`prevMil`은 여기서 안 당긴다** — 실측으로 잡았다(2026-09-18 · D,
         //   전후 비교 진단 중). `tierCounters`는 전 무대가 같이 쓰는 누계라
         //   다른 무대의 사건이 새어 들어올 수 있어 위에서 리셋이 맞다. 그런데

@@ -482,6 +482,87 @@ for (const [k, v] of Object.entries(byStage).sort((a, b) => b[1].n - a[1].n)) {
 }
 log("");
 
+// ── ③-b 이벤트 id — 무대별 등급별 상위 · 지정 아홉이 뽑혔나 ──────────
+//
+// 🔴 **등급 빈도(③)는 「몇 건」만 답한다.** 「레어가 12건 떴다」와 「그 열두
+//   건이 무엇인지」는 다른 물음이다 — `y.이벤트id`(워커가 PLAN_103 §5-1 대로
+//   실은 칸, 없으면 옛 판)를 무대·등급별로 모아 id 까지 본다. 계측 모드
+//   밖에서 돈 옛 판엔 이 칸이 없다 — 그때는 표가 조용히 비고, 그 자체가
+//   신호다(안 잰 것은 초록이 아니다).
+{
+  const idCounts = {}; // `무대/등급/id` → 횟수
+  for (const x of rows) {
+    for (const y of x.ys) {
+      if (!y.이벤트id) continue;
+      // "A→B" 접힌 줄은 A(원 무대) 쪽으로 센다 — ③ byStage 와 같은 규약
+      const stage = stagesOf(y.무대)[0];
+      for (const [grade, list] of Object.entries(y.이벤트id)) {
+        for (const item of list) {
+          // `id×n` 꼴을 정규식 없이 가른다 — "×" 뒤가 전부 숫자면 그게 반복 수다
+          const at = String(item).lastIndexOf("×");
+          const id = at >= 0 ? item.slice(0, at) : item;
+          const n = at >= 0 ? Number(item.slice(at + 1)) || 1 : 1;
+          const k = `${stage}/${grade}/${id}`;
+          idCounts[k] = (idCounts[k] ?? 0) + n;
+        }
+      }
+    }
+  }
+  const 표본있음 = Object.keys(idCounts).length > 0;
+
+  log("## 이벤트 id — 무대·등급별 (PLAN_103 §5-1)");
+  log("");
+  if (!표본있음) {
+    log("🔴 **못 쟀다** — 이 배치의 판에 `이벤트id` 칸이 없다(계측 모드 밖에서 돌았거나, "
+      + "이 칸이 없던 워커로 돈 옛 판이다).");
+    log("");
+  } else {
+    const byStageGrade = {};
+    for (const [k, v] of Object.entries(idCounts)) {
+      const parts = k.split("/");
+      const gk = `${parts[0]}/${parts[1]}`;
+      (byStageGrade[gk] ??= []).push([parts.slice(2).join("/"), v]);
+    }
+    const TOPN = 10;
+    log(`무대/등급별 상위 ${TOPN} — ${runs.length}판 합산`);
+    log("");
+    log("| 무대/등급 | 상위 id (누적 횟수) |");
+    log("|---|---|");
+    for (const [gk, list] of Object.entries(byStageGrade).sort((a, b) => a[0].localeCompare(b[0]))) {
+      const top = [...list].sort((a, b) => b[1] - a[1]).slice(0, TOPN)
+        .map(([id, v]) => `${id}(${v})`).join(" · ");
+      log(`| ${gk} | ${top} |`);
+    }
+    log("");
+
+    // B 가 넣은 폴백 아홉 — 커밋 e1f8c8191(레어 일곱 · 2026-09-21) ·
+    // 51a2d98b2(히든 둘 · 2026-09-27) · 043f85ccc(3학년 창 · 2026-09-21)
+    const 지정 = [
+      ["레어 일곱 · 프로초반/고교 폴백(09-21)", "EVT_HS_Y2_NEW_TERM_SPOT"],
+      ["레어 일곱 · 프로초반/고교 폴백(09-21)", "EVT_HS_Y3_CAPTAIN_BAND"],
+      ["레어 일곱 · 프로초반/고교 폴백(09-21)", "EVT_HS_Y3_JUNIOR_TEACH"],
+      ["레어 일곱 · 프로초반/고교 폴백(09-21)", "EVT_HS_Y3_LAST_TERM_OATH"],
+      ["레어 일곱 · 프로초반/고교 폴백(09-21)", "EVT_PRO_CAMP_ARRIVE"],
+      ["레어 일곱 · 프로초반/고교 폴백(09-21)", "EVT_PRO_EARLY_FIRST_ROAD"],
+      ["레어 일곱 · 프로초반/고교 폴백(09-21)", "EVT_PRO_OPENING_ROSTER"],
+      ["히든 둘 · 고교/hidden 폴백(09-27)", "EVT_HID_HS_STORAGE_TAPE"],
+      ["히든 둘 · 고교/hidden 폴백(09-27)", "EVT_HID_HS_SAME_SEAT"],
+      ["3학년 창(09-21)", "EVT_HS_Y3_SLUMP_NO_K"],
+    ];
+    log("### 지정 열(레어 일곱 · 히든 둘 · `EVT_HS_Y3_SLUMP_NO_K`) — 뽑혔나");
+    log("");
+    log("| 분류 | id | 뽑힘(합) | 무대 |");
+    log("|---|---|---|---|");
+    for (const [분류, id] of 지정) {
+      const hits = Object.entries(idCounts).filter(([k]) => k.endsWith(`/${id}`));
+      const total = hits.reduce((a, [, v]) => a + v, 0);
+      const stages = [...new Set(hits.map(([k]) => k.split("/")[0]))].join(",") || "—";
+      log(`| ${분류} | ${id} | ${total ? total : "🔴 0"} | ${stages} |`);
+    }
+    log("");
+  }
+}
+
 // ── ④ 무대 도달 — 「안 잰 것이지 초록이 아니다」로 남아 있던 자리 ──
 log(`## 무대 도달 — ${SEASONS_ASKED}시즌이면 밟히는가`);
 log("");
