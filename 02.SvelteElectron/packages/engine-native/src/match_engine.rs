@@ -3268,6 +3268,23 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                     PitchResultCode::HomeRun => { line.h += 1; line.hr += 1; }
                     _ => {}
                 }
+                // 득점권 — **타자 쪽과 같은 수여야 한다**(`npc_sim` 의
+                // `assert_eq!(risp_ab, p_risp_ab)` 가 재는 대사다). 같은 정의
+                // (2·3루)·같은 제외(볼넷·사구·희생타)를 쓴다.
+                if pre_state.runners.second.is_some() || pre_state.runners.third.is_some() {
+                    match result_code {
+                        PitchResultCode::HitSingle | PitchResultCode::HitDouble
+                        | PitchResultCode::HitTriple | PitchResultCode::HomeRun
+                            => { line.risp_ab += 1; line.risp_h += 1; }
+                        PitchResultCode::StrikeoutSwing | PitchResultCode::StrikeoutLook
+                        | PitchResultCode::InplayOut | PitchResultCode::GroundOut
+                        | PitchResultCode::FlyOut | PitchResultCode::LineOut
+                        | PitchResultCode::DoublePlay | PitchResultCode::TriplePlay
+                        | PitchResultCode::FieldingError
+                            => { line.risp_ab += 1; }
+                        _ => {}
+                    }
+                }
                 // 자책점 — 이번 투구로 늘어난 점수를 현재 투수 앞으로 단다
                 // (실책 실점 구분은 sim_game도 안 한다 — 같은 수준으로 맞춘다)
                 if scored > 0 { line.er += scored; }
@@ -3378,8 +3395,41 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                     lines.iter_mut().find(|x| x.player_id == *id),
                 _ => lines.get_mut(idx),
             };
+            // 🔴 **득점권(RISP)을 여기서 센다** (2026-09-28 · 결정 ④ 0단계 실측).
+            //   `risp_ab`/`risp_h` 를 올리는 자리가 `npc_sim`(간이 모델)뿐이고
+            //   **풀 엔진엔 한 줄도 없었다** — 어댑터(`collect_player_lines`)가
+            //   0 을 그대로 실어 나르고, `FULL_ENGINE_LEAGUES` 가 전 무대라
+            //   **리그 전체 득점권 성적이 0** 이었다.
+            //
+            //   그게 왜 아픈가: `sim_types.rs` 의 그 필드 주석이 「위기 보정이
+            //   성적을 만드는지 보여주는 유일한 창구」라고 적어 뒀다. 시즌 ERA
+            //   로는 `clutch` 30↔90 차(실측 0.04)가 잡음에 묻힌다 — 9회 1점차
+            //   반이닝만 떼면 실점이 14% 갈리는데도 그렇다.
+            //
+            // ⚠ **검사가 초록인 채로 지나갔다.** `npc_sim.rs` 의
+            //   `assert!(risp_ab > 0, "득점권 타수가 0 — 배선이 안 돌았다")` 는
+            //   `sim_game`(폴백)을 재므로 통과한다. 폴백을 검사하고 본 경로를
+            //   안 검사한 모양이다.
+            //
+            // ⚠ **잣대는 `npc_sim` 과 같다** — 득점권 = 2·3루 주자
+            //   (`npc_sim.rs` 「`npc_clutch_mod` 의 판정과 같은 정의여야 한다」).
+            //   🔴 **`pre_state.runners` 를 본다 — `state.runners` 가 아니다.**
+            //   `pre_state` 는 도루·보크를 반영한 「이 공을 던지는 순간」이고,
+            //   `calculate_pitch_quality` 가 `jam_pressure_modifier` 에 넘기는
+            //   것도 그것이다. `state` 를 보면 **보정을 받은 타석과 기록에
+            //   남는 타석이 어긋난다** — 그러면 스플릿이 보정을 못 보여준다.
+            // ⚠ **볼넷·사구·희생타는 타수가 아니다** — 분모를 피안타율과 맞춘다.
+            let risp = pre_state.runners.second.is_some() || pre_state.runners.third.is_some();
             if let Some(b) = found {
                 use PitchResultCode::*;
+                if risp {
+                    match result_code {
+                        HitSingle | HitDouble | HitTriple | HomeRun => { b.risp_ab += 1; b.risp_h += 1; }
+                        StrikeoutSwing | StrikeoutLook | InplayOut | GroundOut | FlyOut
+                        | LineOut | DoublePlay | TriplePlay | FieldingError => { b.risp_ab += 1; }
+                        _ => {}
+                    }
+                }
                 match result_code {
                     Walk => { b.bb += 1; }
                     // 🔴 **셋 다 타수가 아니다.** 여기서 `ab`를 올리면 타율이

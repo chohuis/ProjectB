@@ -39,7 +39,14 @@ export interface PitchingAttributes {
   movement: number;
   mentality: number;
   recovery: number;
-  clutch: number;  // 위기 집중력: 후반 접전/득점권 압박 시 quality 보정
+  // 🔴 **위기 집중력: 「후반 접전」에만 걸린다** (2026-09-28 실측으로 고친 문안).
+  //   예전엔 「후반 접전/득점권」이라고 적혀 있었는데 풀 엔진에서 득점권 압박
+  //   (`jam_pressure_modifier`)은 `clutch` 가 아니라 `mentality` 를 읽는다 —
+  //   900경기/arm 에서 clutch 30↔90 의 득점권 피안타율 차가 전체와 똑같이
+  //   −.002 였다(걸리면 득점권만 더 갈려야 한다). 간이 모델(`npc_sim`)만
+  //   득점권도 `clutch` 가 본다. 근거 `docs/SIM_103_CLUTCH_PLATOON_2026-09-28.md §1`.
+  //   ⚠ 걸리는 자리에서는 세다 — 9회 1점차 반이닝 실점이 30↔90 에서 14% 갈린다.
+  clutch: number;
   holdRunners: number;  // 견제력: 도루 시도율 억제 계수
 }
 
