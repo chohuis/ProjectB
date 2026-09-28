@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc, gamePathFlat } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -22,7 +23,7 @@ const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 describe("주인공 드래프트 좌석", () => {
-  const store = read("apps/ui/src/shared/stores/game.ts");
+  const store = gamePathSrc();
   const rust = read("packages/engine-native/src/npc_sim.rs");
   const modal = read("apps/ui/src/features/career/ui/DraftBoardModal.svelte");
   const ds = read("apps/ui/src/shared/utils/draftSystem.ts");
@@ -67,8 +68,12 @@ describe("주인공 드래프트 좌석", () => {
   it("주인공의 최종 순번·팀은 보드가 정한 값이다", () => {
     // 산식이 낸 값과 다를 수 있다(앞사람이 밀렸다). 화면·계약이 읽는 건
     // 보드 결과여야 한다 — 두 값이 갈리면 통보 창과 보드가 어긋난다
-    expect(store).toMatch(
-      /draftRound: mine\.round, draftPick: mine\.pick, draftTeamId: mine\.teamId/,
+    //
+    // ⚠ **눌러서 본다**(`gamePathFlat`). Ⅱ-2 로 이 줄이 `usecases/gameStore/`
+    //   로 나가면서 prettier 가 셋을 줄마다 접었다 — 검사가 묻는 것은
+    //   「이 셋을 보드 결과로 적는가」이지 「몇 줄로 적혔는가」가 아니다.
+    expect(gamePathFlat()).toContain(
+      "draftRound: mine.round, draftPick: mine.pick, draftTeamId: mine.teamId,",
     );
   });
 

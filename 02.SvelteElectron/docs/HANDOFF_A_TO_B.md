@@ -1,3 +1,95 @@
+# A → B 인계 12차 (2026-09-27) — 군 관계 예약어 둘·대상 둘이 열렸다 · B 인계 6차 답
+
+> 아래 11차 이하는 그대로 둔다.
+> ⚠ **일감에 적힌 「10차」는 어긋난 번호다** — 10차는 2026-09-21 에 이미
+> 썼다(군 풀 `relationTarget`). 여기가 12차다.
+>
+> `HANDOFF_B_TO_A.md` 6차 §0.1~§0.4 넷에 대한 답이다. 둘은 닫았고(§0.3 ·
+> §0.4 · A 가 문서까지 고쳤다), 둘은 **배선만 열었으니 데이터는 네 몫**이다.
+
+## 0.28 `relationTarget` 예약어가 다섯이 됐다 — `peer` · `officer`
+
+```
+all · subunit · junior · peer · officer
+```
+
+- `peer`(동기 4명) · `officer`(간부 6명)가 늘었다. **이름을 새로 짓지 않았다** —
+  `members.json` 의 `role` 칸 값 그대로다(`junior` 가 이미 그렇다). 「간부」에
+  `cadre` 같은 다른 이름을 붙이면 데이터의 `role` 과 예약어가 갈린다.
+- `senior`(선임 3명)는 **안 넣었다.** 그걸 부르는 힌트가 데이터에 아직 없다 —
+  필요해지면 말해라. 줄 하나다.
+- `check:militarydata` 와 `types/militaryLife.ts` 가 묶여 있다(`militaryLifeRules.test.ts`
+  가 둘을 대조한다). 한쪽만 늘면 빨강이다.
+
+## 0.29 `relationDelta` 가 **대상 둘**을 받는다 — 배열 꼴
+
+```jsonc
+// 옛 꼴 — 그대로 산다. 한 줄도 안 고쳐도 된다
+{ "id": "ok", "label": "…", "relationDelta": 3, "relationTarget": "subunit" }
+
+// 새 꼴 — 대상마다 값이 다를 때
+{ "id": "stand", "label": "…", "relationDelta": [
+    { "target": "MEM_SQ_LDR", "delta": -8 },
+    { "target": "peer",       "delta":  3 }
+] }
+```
+
+**규칙 넷** (`check:militarydata` 가 전부 막는다 · 09-27 대조군 실측 6건 빨강):
+
+| | 빨강 |
+|---|---|
+| 배열이 **1칸** | 대상이 하나면 숫자로 적는다 — 꼴이 둘이 되지 않게 |
+| 배열인데 `relationTarget` 도 있다 | 배열에서는 **안 읽힌다**(칸마다 `target` 이 있다) |
+| `target` 이 예약어 다섯도 부대원 id 도 아니다 | 아무에게도 안 간다 |
+| 같은 `target` 이 두 번 · `delta` 가 0 이거나 숫자가 아니다 | 표시와 동작이 갈린다 |
+
+## 0.30 🔴 **네 몫 — 데이터 다섯 칸.** 힌트의 절반이 지금도 아무 일을 안 한다
+
+`HANDOFF_B_TO_A 6차 §0.2` 의 표 그대로다. 배선이 섰으니 이제 적을 수 있다.
+
+| 자리 | 힌트 | 지금 실제 (09-27 실측) | 적을 것 |
+|---|---|---|---|
+| `MIL_CAL_FESTIVAL#out` | 「동기 관계 +3」 | `3` · 대상 없음 → 재적 **전원** | `relationTarget: "peer"` 한 줄 |
+| `MIL_CAL_FESTIVAL#stay` | 「간부 관계 +2」 | `2` · 대상 없음 → 재적 **전원** | `relationTarget: "officer"` 한 줄 |
+| `MIL_COND_CONFLICT_SENIOR#stand` | 「관계 −8, **동기 관계 +3**」 | `-8` → 이벤트 `member` = `MEM_GUNNER` | 배열 — `MEM_GUNNER` −8 · `peer` +3 |
+| `MIL_COND_JUNIOR_TROUBLE#cover` | 「후임 +8, **간부 −2**」 | `8` → 이벤트 `member` = `MEM_JR_1` | 배열 — `MEM_JR_1` +8 · `officer` −2 |
+| `MIL_COND_JUNIOR_TROUBLE#report` | 「**간부 +3**, 후임 −6」 | `-6` → 이벤트 `member` = `MEM_JR_1` | 배열 — `officer` +3 · `MEM_JR_1` −6 |
+
+⚠ **값은 힌트에 적힌 그대로 옮긴다.** 밸런스는 동결이다 — 힌트와 다른 수를
+넣고 싶으면 `BALANCE_BACKLOG` 에 적고 넘어간다(`CLAUDE.md`).
+
+🔴 **배열을 쓰면 「이벤트 `member` 로 떨어지는」 기본값이 사라진다.** 아래 셋은
+지금 대상을 안 적고도 `member` 덕에 맞는 사람에게 가고 있다 — 배열로 옮길 때
+그 id(`MEM_GUNNER` · `MEM_JR_1`)를 **손으로 적어야** 지금 동작이 안 바뀐다.
+안 적으면 원래 가던 몫이 통째로 사라진다. 그래서 오른쪽 칸에 `junior` 가 아니라
+`MEM_JR_1` 을 적었다 — 「후임 관계」는 **그 후임 한 명**이었지 후임 둘 전부가
+아니었다(`#cover` 를 `junior` 로 바꾸면 값이 움직인다 · 동결 위반).
+
+## 0.31 §0.1 답 — 히든 구종은 `steps ≥ 2` 를 검사가 본다
+
+`check:rewards` 에 ⑥ 을 넣었다: **`tier === "hidden"` 이고 `pitchGradeUp` 이
+있으면 `steps ≥ 2`**. 유니크 둘(`EVT_FARM_U_BATTERY_TIP` · `EVT_PRO_U_OLD_HAND`)은
+`steps` 없이 초록이다(대조군 실측).
+
+🔴 **`pitchGrant` 는 아직 못 가른다 — 사용자 결정 대기다.** 제안을 정본
+`PLAN_REWARDS_2026-09-09.md §7` 에 적었다(길 둘 · A 권장은 「부여 등급 칸을
+**없는 구종** 갈래에만 연다」). **정해지기 전에 `EVT_HID_HS_CHANCE_LESSON` 을
+건드리지 마라** — 지금 그 칸은 유니크의 `pitchGrant` 와 완전히 같다.
+
+## 0.32 §0.3 · §0.4 는 A 가 닫았다 — 네가 할 일 없음
+
+- **§0.3 `startGuarantee` → ㉢ 그대로 둔다.** 「죽은 갈래」가 아니라 **「아직 안
+  부른 것」**이다(`CLAUDE.md` 의 그 구분). 새 통지를 열지도, 다섯 중 하나를
+  통지로 옮기지도 않는다 — 등급 분포를 흔들 값이 아니다. 근거를
+  `types/main.ts` 주석과 `CONTENT_DEAD_SLOTS_2026-09-09.md` 2번 **양쪽에**
+  적었다(문서가 둘이면 한쪽만 고쳐진 채로 남는다).
+- **§0.4 → ㉡ 계약에서 `-는` 을 지웠다.** `PLAN_102_2026-09-12.md §2 B-7`
+  줄을 A 가 고쳤다. 근거는 네 실측 그대로다 — 성격 15/15 가 「…다」로 끝나
+  값은 안전하지만, `check:josa` 에 **열쇠별 예외를 늘리는 값이 표현 하나보다
+  크다**. 09-27 문안 여섯은 이미 다 `-고` 라 고칠 문안이 없다.
+
+---
+
 # A → B 인계 11차 (2026-09-21) — `compare` 가 열렸다 · 이름표로 적는다 (죽은 칸 5)
 
 > 아래 10차 이하는 그대로 둔다.

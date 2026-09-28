@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { allStarSideOf, campusEventFor } from "../campusEvents";
@@ -89,7 +90,7 @@ describe("FA 미계약 → 독립 재도전", () => {
 
   /** 🔴 안 넘기면 갈래가 꺼져 **바로 은퇴**한다 */
   it("호출부가 나이 상한을 넘긴다", () => {
-    expect(read("apps/ui/src/shared/stores/game.ts")).toContain("independentAgeMax?: number");
+    expect(gamePathSrc()).toContain("independentAgeMax?: number");
     expect(read("apps/ui/src/shared/utils/npcEngine.ts")).toContain(
       "...(faIndependentAgeMax != null ? { faIndependentAgeMax } : {})",
     );

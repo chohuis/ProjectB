@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { liveOvrOf, livePitchingOvrOf } from "../../stores/npcLiveStats";
@@ -88,12 +89,12 @@ describe("배선 — 드래프트가 생성값을 읽지 않는다", () => {
   });
 
   it("NPC 지명 순서 정렬이 live를 쓴다", () => {
-    const s = read("apps/ui/src/shared/stores/game.ts");
+    const s = gamePathSrc();
     expect(s).toMatch(/const ovrOf = \(n: NpcSaveState\) => liveOvrOf\(n, _live\)/);
   });
 
   it("지명 로그 OVR이 live를 쓴다 — 루프 밖에서 한 번만 읽는다", () => {
-    const s = read("apps/ui/src/shared/stores/game.ts");
+    const s = gamePathSrc();
     // 범위를 넉넉히 둔다 — 사이에 주석·주인공 분기가 들어와도 "루프 밖에서
     // 한 번 읽어 안에서 쓴다"는 성질은 그대로다. 좁게 잡았더니 주인공을
     // 보드에 편입하면서 넣은 몇 줄에 검사가 먼저 깨졌다

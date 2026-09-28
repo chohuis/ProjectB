@@ -12,6 +12,7 @@
  *   ③ 최소 보상         갈래 둘 이상인데 전부 효과 없음 · 갈래들의 효과가 서로 같음
  *   ④ XP 범위          노말 XP 4 이상 · 레어 XP 11 이상
  *   ⑤ (자리 비움) 구종 보상 조건 — 아래 참고
+ *   ⑥ 히든 구종 등급업  히든의 `pitchGradeUp` 은 `steps ≥ 2` (정본 §1)
  *
  * 🔴 **효과에 두 꼴이 있다 — 객체형과 배열형(`"xp.command:+2"`).** 배열형을
  *   「효과 없음」으로 세면 **없는 결함 141건이 잡힌다**(2026-09-09 실측: 182 로
@@ -72,7 +73,7 @@ const PITCH_KEYS = ["pitchGrant", "pitchGradeUp", "pitchProgressJump"];
 const BIG_KEYS = ["statDelta", "stat", "potentialDelta"];
 const GRADES = ["normal", "rare", "unique", "hidden"];
 
-const bigInNormal = [], statInRare = [], pitchLow = [], noCost = [], xpOver = [], allEmpty = [], sameKind = [], pitchPair = [];
+const bigInNormal = [], statInRare = [], pitchLow = [], noCost = [], xpOver = [], allEmpty = [], sameKind = [], pitchPair = [], hiddenSteps = [];
 /**
  * 구종 보상의 **짝 조건** (정본 §2 · 사용자 확정).
  *
@@ -106,6 +107,15 @@ for (const r of RULES) {
     if (r.tier === "normal" || r.tier === "rare") {
       for (const k of PITCH_KEYS) if (ks.has(k)) pitchLow.push([`${r.id}#${o.id}`, r.tier, k]);
     }
+    // ⑥ 히든의 구종 등급업은 **두 단계**다 (정본 §1 「히든 … 구종 등급 두 단계」)
+    //   `steps` 를 안 적으면 `game.ts:1219` 가 `?? 1` 로 **한 단계만** 먹이고
+    //   오류도 로그도 없이 넘어간다 — 히든이 유니크와 같아지는 자리라 검사로 잡는다.
+    //   유니크는 `steps` 가 없어도 맞다(한 단계가 유니크의 몫) — 히든만 본다.
+    if (r.tier === "hidden" && ks.has("pitchGradeUp")) {
+      const g = Array.isArray(o.effects) ? null : o.effects.pitchGradeUp;
+      const steps = Math.round(g?.steps ?? 1);
+      if (steps < 2) hiddenSteps.push([`${r.id}#${o.id}`, steps]);
+    }
     // 짝 조건 — 숨은 조건에 있어도 된다(히든은 그쪽에 적는다)
     const pl = [...(r.conditions ?? []), ...(r.hiddenCondition ?? [])].find((c) => c.type === "pitch_learning");
     for (const k of PITCH_KEYS) {
@@ -135,5 +145,6 @@ rule(xpOver, "XP 가 등급 범위를 넘는다 (노말 4+ · 레어 11+)", ([w,
 rule(allEmpty, "갈래 둘 이상인데 전부 효과가 없다", ([id, t, n]) => `${id.padEnd(40)}${t} · 갈래 ${n}`);
 rule(sameKind, "갈래들의 효과가 서로 같다 — 고를 뜻이 없다", ([id, t, s]) => `${id.padEnd(40)}${t} · ${s}`);
 rule(pitchPair, "구종 보상인데 짝 조건(`pitch_learning`)이 없거나 어긋난다", ([w, k, got]) => `${w.padEnd(40)}${k} · ${got}`);
+rule(hiddenSteps, "히든인데 구종 등급업이 두 단계가 아니다", ([w, n]) => `${w.padEnd(40)}steps ${n}`);
 log("");
 if (bad) { log(`  🔴 어긴 규칙 ${bad}개`); log(""); process.exitCode = 1; }

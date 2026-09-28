@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -69,7 +70,7 @@ describe("주인공 투수 페이로드", () => {
 
   it("뷰모델 타입이 여덟 개를 선언한다", () => {
     // 타입이 좁으면 호출부가 넘기려 해도 막힌다 — 실제로 그래서 막혔다
-    const s = read("apps/ui/src/shared/stores/game.ts");
+    const s = gamePathSrc();
     const m = s.match(/pitcherStats:\s*\{[\s\S]*?\};/);
     expect(m).not.toBeNull();
     for (const k of STATS) expect(m![0]).toContain(k);

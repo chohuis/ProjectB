@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc, gamePathFlat } from "./gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -30,10 +31,19 @@ const block = (src: string, start: string, end: string) => {
 };
 
 describe("군 복무 중 소속 리그", () => {
-  const game = read("shared/stores/game.ts");
+  const game = gamePathSrc();
+  const gameFlat = gamePathFlat();
 
   it("입대하면 leagueId 가 LEAGUE_MILITARY 다", () => {
-    const enlist = block(game, "enlistMilitary(", "markMilitaryAsked(");
+    // ⚠ **구현을 집는 표식을 쓴다.** Ⅱ-2 로 병역이 `usecases/gameStore/military.ts`
+    //   로 나가면서 store 에는 같은 이름의 **위임자**가 남았다. 이름만으로
+    //   잘라내면 위임자에서 시작해 딴 함수로 끝나는 토막을 보게 된다 —
+    //   실제로 그렇게 새어 나갔다. `export function` 을 붙여 구현만 집는다.
+    const enlist = block(
+      game,
+      "export function enlistMilitary(",
+      "export function applyMilitaryDischarge(",
+    );
     expect(enlist).toContain('leagueId: "LEAGUE_MILITARY"');
   });
 
@@ -57,9 +67,12 @@ describe("군 복무 중 소속 리그", () => {
   // ⚠ **환산(`applyMilitaryDischarge`)이 아니라 `completeMilitaryService` 에 적는다** —
   //   환산은 현역 병영생활만 타므로 거기 두면 상무 출신이 통째로 빠진다.
   it("전역하면 그 시점을 남긴다 — 상무도 지나는 자리에", () => {
-    const done = block(game, 'militaryStatus: "군필"', "militaryHiatusStage: null");
+    // ⚠ **눌러서 본다**(`gamePathFlat`) — prettier 가 칸 맞춤
+    //   (`dischargedWeek:   at?.week`)을 폈다. 묻는 것은 「그 칸에 시점을
+    //   적는가」이지 「칸을 맞췄는가」가 아니다.
+    const done = block(gameFlat, 'militaryStatus: "군필"', "militaryHiatusStage: null");
     expect(done).toContain("dischargedSeason: at?.season");
-    expect(done).toContain("dischargedWeek:   at?.week");
+    expect(done).toContain("dischargedWeek: at?.week");
     // 호출부가 실제로 넘기는가 — 옵셔널 인자라 안 넘기면 조용히 안 적힌다
     const md = read("shared/usecases/militaryDecision.ts");
     expect(md).toContain("completeMilitaryService({ season: s.seasonYear, week: s.currentWeek })");

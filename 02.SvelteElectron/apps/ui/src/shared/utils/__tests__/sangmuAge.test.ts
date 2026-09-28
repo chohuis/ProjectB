@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathFlat } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -34,7 +35,10 @@ describe("상무 나이 — 생성과 선발이 갈리지 않는다", () => {
   const rules = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
     militaryRules: { ageMin: number; ageMax: number };
   };
-  const GAME = read("apps/ui/src/shared/stores/game.ts");
+  // ⚠ **눌러서 본다**(`gamePathFlat`). Ⅱ-2 로 이 조건이 `usecases/gameStore/`
+  //   로 나가면서 prettier 가 `&&` 에서 줄을 접었다. 검사가 묻는 것은
+  //   「선발 후보를 이 나이 범위로 거르는가」이지 「몇 줄로 적혔는가」가 아니다.
+  const GAME = gamePathFlat();
 
   it("선발 후보 필터가 아직 그 자리에 있다", () => {
     // 없어지면 아래 대조가 무의미해진다 — 조용히 통과하지 않게 먼저 본다

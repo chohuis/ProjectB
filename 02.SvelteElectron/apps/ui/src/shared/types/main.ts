@@ -1,3 +1,6 @@
+// 군 전용 모양은 `types/militaryLife.ts` 가 정본이다 — 여기서 다시 적지 않는다
+import type { MemberRelationPair } from "./militaryLife";
+
 /**
  * 사이드바 6칸. (U4 — 11개에서 줄였다)
  *
@@ -47,9 +50,12 @@ export interface DecisionEffect {
   // ── 현역 병영생활 전용 (PLAN_MILITARY_LIFE §28) — `militaryLife` 가 있을 때만 읽는다 ──
   // ⚠ 이름이 `memberRelationDelta` 인 이유: 아래 `relationDelta`(코치·동료 관계도 · {kind, delta})가 이미 있다.
   //   이벤트 JSON 의 선택지 필드는 `relationDelta`(§28)이고, 루프가 pending 으로 옮길 때 이 이름으로 바꾼다.
-  memberRelationDelta?: number; // 부대원 관계 ± (대상은 relationTarget)
+  // 🔴 **배열도 받는다**(2026-09-27 · B 인계 6차 §0.2) — 「관계 −8, 동기 관계 +3」처럼
+  //   대상마다 값이 다른 선택지가 있다. 숫자는 옛 꼴 그대로고, 펴는 자리는
+  //   `militaryLifeRules.memberRelationPairs` **하나**다(읽는 쪽이 갈리지 않게).
+  memberRelationDelta?: number | readonly MemberRelationPair[]; // 부대원 관계 ± (숫자면 대상은 relationTarget)
   // 예약어 정본은 `types/militaryLife.ts` 의 `MILITARY_RELATION_TARGETS` 하나 — 늘릴 때 거기부터
-  relationTarget?: string; // 부대원 id · "all" · "subunit" · "junior" (없으면 이벤트의 member → 없으면 all)
+  relationTarget?: string; // 부대원 id · "all" · "subunit" · "junior" · "peer" · "officer" (없으면 이벤트의 member → 없으면 all)
   ballDelta?: number; // 야구 감각 ±
   award?: string; // 표창 id
   penalty?: string; // 징계 id
@@ -215,6 +221,13 @@ export interface DecisionEffect {
    *   것은 세계가 하는 일이지 주사위가 할 일이 아니므로 `STATE_EFFECT_KEYS`
    *   에 넣어 **통지에서만** 먹게 했다. 감독 관계는 그 통지가 뜨는 **조건**
    *   자리에서 본다(`relation_gte` manager) — 그것이 결정 2번의 뜻이다.
+   *
+   * ⚠ **2026-09-27 재확인 · 쓸 자리 없음.** B 가 통지 13종을 전수했는데 자리를
+   *   주는 것은 하나도 없고, 빼앗는 것이 하나 있다(`EVT_PRO_ROLE_DEMOTE`).
+   *   위 셋은 여전히 감독 관계 +6 을 준다. **「죽은 갈래」가 아니라 「아직 안
+   *   부른 것」이다** — 배선 넷(부여·깊이·반영·차감)이 다 이어져 있고
+   *   `rewardKeys.test.ts` 가 누적까지 잰다. 통지가 생기면 그날 데이터만
+   *   적으면 된다. 자세한 것은 `CONTENT_DEAD_SLOTS_2026-09-09.md` 2번.
    */
   startGuarantee?: { games: number };
   /**

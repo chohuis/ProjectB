@@ -130,11 +130,18 @@ function walk(dir, out = []) {
   return out;
 }
 
+// ⚠ **주석은 코드가 아니다.** 2026-09-27 Ⅱ-2 로 계약 함수들이
+//   `usecases/gameStore/contracts.ts` 로 나갔는데, 그 안의 주석 한 줄
+//   (「`applyDraftDecision`은 이미 이렇게 지우는데」)에 이름이 적혀 있어
+//   **가드 없는 학적 변경**으로 잡혔다. 설명을 적었다고 결함이 되면 안 된다.
+const stripComments = (src) =>
+  src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "").replace(/^\s*\*.*$/gm, "");
+
 const UI_SRC = path.join(__dirname, "../apps/ui/src");
 const sources = walk(UI_SRC);
 const offenders = [];
 for (const file of sources) {
-  const src = fs.readFileSync(file, "utf8");
+  const src = stripComments(fs.readFileSync(file, "utf8"));
   if (!MUTATES_RE.test(src)) continue;
   if (GUARD_RE.test(src)) continue;
   // 위임만 하는 파일은 통과 — 부르는 usecase에 가드가 있으면 된다
@@ -150,7 +157,8 @@ const files = {
   "진로 신청 허브": "../apps/ui/src/features/career/ui/CareerChoiceHubModal.svelte",
 };
 {
-  const g = fs.readFileSync(path.join(__dirname, files["game.ts applyDraftDecision"]), "utf8");
+  // 스토어 경로 **전체** — Ⅱ-2 로 덩이가 `usecases/gameStore/` 로 나가도 안 깨진다
+  const g = require("./game-path-src.cjs").gamePathSrc();
   check("  applyDraftDecision 이 거부 시 상태를 안 건드린다",
     /transitionReason[\s\S]{0,400}return s;/.test(g),
     "거부 경로가 return s 로 끝나지 않는다");

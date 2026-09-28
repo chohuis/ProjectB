@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "./gamePathSrc";
 import { get } from "svelte/store";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { gameStore } from "../game";
 import { universityGradeOf, UNIVERSITY_FINAL_GRADE } from "../../utils/careerTransition";
 import { WEEKS_PER_SEASON } from "../../utils/seasonWeeks";
@@ -64,7 +63,7 @@ describe("대학 학년 거울 — 계수기가 움직일 때 같이 닦는다",
  *   결함이 바로 그것이었다. 시즌 끝 블록에 그 문장이 **없어야** 한다.
  */
 describe("🔴 대조군 — 적는 자리는 하나다", () => {
-  const SRC = readFileSync(resolve(__dirname, "../game.ts"), "utf8");
+  const SRC = gamePathSrc();
 
   it("시즌 끝 블록이 대학 학년을 안 적는다 — 옛 문장이 돌아오면 잡는다", () => {
     expect(SRC).not.toContain(

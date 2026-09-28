@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { gamePathSrc } from "./gamePathSrc";
 
 /**
  * 프로 연차는 **팀을 옮겨도 유지된다.**
@@ -17,7 +16,7 @@ import { resolve } from "node:path";
  * ⚠ 통합 실행으로는 재현이 어렵다. 주인공이 프로에 가서 이적까지 하는 전개가
  * 실행마다 갈린다(시즌 진행 비결정성). 그래서 소스로 고정한다.
  */
-const SRC = readFileSync(resolve(__dirname, "../game.ts"), "utf8");
+const SRC = gamePathSrc();
 
 describe("프로 연차 리셋 방지", () => {
   it("🔴 팀이 바뀌었다고 연차를 0으로 되돌리지 않는다", () => {

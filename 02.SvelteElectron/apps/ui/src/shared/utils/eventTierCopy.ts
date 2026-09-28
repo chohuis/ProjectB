@@ -1,4 +1,6 @@
 import type { DecisionEffect } from "../types/main";
+// 부대원 관계는 숫자일 수도 짝 배열일 수도 있다 — 펴는 자리는 거기 하나다
+import { memberRelationPairs } from "./militaryLifeRules";
 import type { EventGrade } from "./tierRules";
 
 /**
@@ -175,7 +177,9 @@ function kindsOf(e: DecisionEffect | undefined): { gain: Set<string>; lose: Set<
   if (e.startGuarantee) gain.add("chance");
   if (e.mentor) gain.add("people");
   if (e.relationDelta) put("people", e.relationDelta.delta);
-  put("people", e.memberRelationDelta ?? 0);
+  // 🔴 대상마다 값이 다를 수 있다(09-27) — **짝마다** 센다. 합치면 「−8 과 +3」이
+  //   −5 한 덩이로 보여 「얻고 잃는다」가 사라진다
+  for (const p of memberRelationPairs(e)) put("people", p.delta);
 
   put("money", e.moneyDelta ?? 0);
   if (e.luxurySpend) lose.add("money");

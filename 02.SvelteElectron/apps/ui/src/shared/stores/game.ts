@@ -15,11 +15,9 @@ import type {
   CareerAward,
   CareerSeasonRecord,
   InjuryState,
-  NpcCareerEntry,
   NpcCareerEvent,
   NpcSaveState,
   PitchEntry,
-  PitchingStatKey,
   PlayerSeasonStats,
   ProtagonistSave,
   SaveGame,
@@ -28,51 +26,35 @@ import type {
   TrainingPreset,
 } from "../types/save";
 import { makeSaveGame, migrateSaveGame } from "../types/save";
-import {
-  advanceAllGrades,
-  advanceAllAges,
-  advanceProtagonistGrade,
-  initHighSchoolNpcs,
-  entityToProNpcState,
-} from "../utils/gradeAdvance";
-import {
-  applyDraftToNpcs,
-  runDraftSimulation,
-  selectDraftCandidates,
-  DRAFT_ROUNDS,
-  DRAFT_ROUTE_LABELS,
-  KBL_TEAM_IDS,
-  draftDestinationTeams,
-  draftOrderOf,
-  placementRulesFrom,
-  teamNeedsOf,
-} from "../utils/draftSystem";
-import { loadRosterRules, buildSalaryIndex } from "../repo/newGameV3";
-import type {
-  DraftPick,
-  DraftSimResult,
-  HighSchoolMaster,
-  NamedNpcMeta,
-  SchoolScenario,
-} from "../types/save";
+// 진급·나이 함수들은 **덩이 여섯과 함께 나갔다** — 여기 남는 건 새 게임 몫 둘이다
+import { initHighSchoolNpcs, entityToProNpcState } from "../utils/gradeAdvance";
+// 🔴 드래프트·오프시즌 함수들은 **덩이와 함께 나갔다**(Ⅱ-2) — 여기 남기면
+//   쓰는 곳 없는 이름이 store 를 다시 무겁게 만든다
+import type { DraftPick, SchoolScenario } from "../types/save";
 import type { ProContract } from "../types/save";
-import { shiftContract, type ContractStamp } from "../utils/contractHistory";
+// 계약 도장은 위임자의 인자 타입으로만 쓴다 — 찍는 곳은 덩이 셋이다
+import { type ContractStamp } from "../utils/contractHistory";
 import { transitionReason, universityGradeOf, universityWeekOnEnroll } from "../utils/careerTransition";
 import { careerSummaryOf } from "../utils/careerSummary";
 import { pitchingOvrOf, battingOvrOf } from "../utils/ovr";
-import { runOffseasonProcessing, rosterLimitsFrom, foreignParamsFrom } from "../utils/npcEngine";
-import { getFaThreshold } from "../utils/faEngine";
-// 인센티브를 구분하는 열쇠 — **식이 둘이 되면 자물쇠가 안 맞는다**
-import { incentiveKey } from "../utils/contractTerms";
 import { masterStore } from "./master";
+// store 밖으로 뺀 게임 로직 덩이 — `PLAN_103 §3` Ⅱ-2. 검사는 `gamePathSrc()` 가
+// 이 파일과 `usecases/gameStore/*` 를 한 덩이로 읽는다
+import { processNpcDraft as processNpcDraftChunk } from "../usecases/gameStore/npcDraft";
+import { processAllLeaguesSeasonEnd as processAllLeaguesSeasonEndChunk } from "../usecases/gameStore/seasonEndLeagues";
+import * as contracts from "../usecases/gameStore/contracts";
+import * as military from "../usecases/gameStore/military";
+import { applyEffectToProtagonist } from "../usecases/gameStore/rewards";
+import * as seasonBoundary from "../usecases/gameStore/seasonBoundary";
+// 🔴 **이름으로 다시 내보낸다.** `applyEffectToProtagonist` 는 효과 계산의
+//   정본이고 부르는 자리가 열 곳이다 — `from "../game"` 로 부르던 길을 그대로 둔다
+export { applyEffectToProtagonist } from "../usecases/gameStore/rewards";
 
-import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "./autoAdvance";
-import { npcLiveStatsStore, liveOvrOf } from "./npcLiveStats";
+import { autoLog } from "./autoAdvance";
+import { npcLiveStatsStore } from "./npcLiveStats";
 import { slotRepo } from "../repo/slotRepo";
 import { dehydrateToRepo } from "../repo/npcAdapter";
 import { collectScheduleDelta, rollbackScheduleDelta } from "../repo/scheduleDelta";
-import { SANGMU_LEAGUE_ID, SANGMU_TEAM_ID } from "../utils/ids";
-import { sportsUnitLimits, protagonistTookSportsSlot, sportsVacatingPositions } from "../utils/militaryRules";
 import { isV3SlotActive } from "../repo/v3Mode";
 import type { SeasonEndSummary } from "../utils/npcEngine";
 export type { SeasonEndSummary } from "../utils/npcEngine";
@@ -574,7 +556,8 @@ function profilesFromMaster(): Record<string, import("./master").ProTeamProfile>
   return out;
 }
 
-function toPlayerCompat(p: ProtagonistSave): GameStoreState["player"] {
+// `export` 는 Ⅱ-2 덩이 셋(계약·군·진로)이 같은 호환 객체를 만들기 때문이다 — 정본은 여기 하나다
+export function toPlayerCompat(p: ProtagonistSave): GameStoreState["player"] {
   const gradeLabel = p.grade ? `${p.grade}학년` : "-";
   const throws = p.handedness === "L" ? "좌투" : p.handedness === "S" ? "양투" : "우투";
   const bats   = p.handedness === "L" ? "좌타" : p.handedness === "S" ? "양타" : "우타";
@@ -603,7 +586,7 @@ function toPlayerCompat(p: ProtagonistSave): GameStoreState["player"] {
 }
 
 // ── 헬퍼: school 호환 객체 ────────────────────────────────────
-function toSchoolCompat(
+export function toSchoolCompat(
   careerStage: ProtagonistSave["careerStage"],
   s: SchoolState,
 ): GameStoreState["school"] {
@@ -851,12 +834,6 @@ function applyStudyQuality<T extends { semesterQualityAccum?: number; semesterWe
 }
 
 /** 태그를 더하고 뺀다. 없는 태그 제거는 조용히 넘어간다 */
-function applyTags(cur: string[], add?: string[], remove?: string[]): string[] {
-  if (!add && !remove) return cur;
-  const out = new Set(add ? [...cur, ...add] : cur);
-  for (const r of remove ?? []) out.delete(r);
-  return [...out];
-}
 /**
  * 세이브의 구단 성향 + 파생 — **정책 하나**(2026-09-22 · 2단계 ③).
  *
@@ -1067,211 +1044,6 @@ export function resetMailboxDupStats(): void {
   mailboxDupStats.byId = {};
 }
 
-/**
- * 선택지 효과를 주인공에게 적용한다 — **효과 계산의 정본이다.**
- *
- * ⚠ 예전엔 `resolveDecision`(화면 선택)과 `applyEventEffect`(자동 진행)가
- * 같은 `DecisionEffect`를 받으면서 **각자 계산을 갖고 있었고, 적용하는 필드가
- * 달랐다**:
- *
- *   resolveDecision   컨디션·피로·사기·돈·명성·인기·성실·태그·XP·스탯
- *   applyEventEffect  컨디션·피로·사기·돈·XP·스탯          ← 넷이 빠졌다
- *
- * 당시 데이터가 우연히 그 넷을 안 써서 안 터졌을 뿐이다. 병역 이벤트에
- * "성실도 +5"를 하나 넣는 순간 **에러 없이 조용히 무시된다** — 이 프로젝트가
- * 반복해 겪은 "아무 일도 안 일어남" 형태다. 계산을 한 곳에 둬서 한쪽만
- * 고치는 일이 생기지 않게 한다.
- *
- * 관계도·사치품은 여기서 못 한다(slot.db·Rust 왕복이라 비동기다) —
- * `usecases/decisions.ts`의 `applySideEffects`가 맡는다.
- */
-export function applyEffectToProtagonist(
-  p: ProtagonistSave,
-  fx: import("../types/main").DecisionEffect,
-): ProtagonistSave {
-  const clamp = (v: number) => Math.max(0, Math.min(100, v));
-  const clampStat = (v: number) => Math.max(1, Math.min(99, v));
-
-  // ── 보상 대상: 투구 / 타격 (2026-08-24) ──────────────────────
-  //
-  // 🔴 **예전엔 투구만 건드렸다.** `xp`·`statDelta`가 `pitchingXP`·`pitching`
-  // 고정이라 **타자 주인공이 이벤트로 성장할 길이 아예 없었다.**
-  //
-  // 키 이름으로 가른다:
-  //   "command"          → 투구 (예전 그대로. 데이터 296곳이 이 형태다)
-  //   "pitching.command" → 투구 (명시)
-  //   "batting.contact"  → 타격
-  //
-  // ⚠ **접두사 없는 키를 타격으로 보내면 안 된다.** `ovr`처럼 양쪽에 다 있는
-  //   이름이 있어서, 기존 데이터가 조용히 타격으로 새면 아무도 모른다.
-  const pitchingXP = { ...p.pitchingXP };
-  const battingXP  = { ...p.battingXP };
-  if (fx.xp) {
-    for (const [key, amt] of Object.entries(fx.xp)) {
-      const [bucket, stat] = key.includes(".") ? key.split(".") : ["pitching", key];
-      if (bucket === "batting") {
-        (battingXP as Record<string, number>)[stat] = ((battingXP as Record<string, number>)[stat] ?? 0) + amt;
-      } else {
-        pitchingXP[stat as PitchingStatKey] = (pitchingXP[stat as PitchingStatKey] ?? 0) + amt;
-      }
-    }
-  }
-
-  const pitching = { ...p.pitching };
-  // ⚠ **`batting`이 없는 세이브가 있다.** 옛 저장·검사 픽스처가 그렇다 —
-  // 스프레드가 undefined를 만나면 빈 객체가 되고, 그 상태로 `stat in target`을
-  // 물으면 조용히 아무것도 안 하는 대신 **위쪽에서 터진다.** 빈 객체로 받는다
-  const batting  = { ...(p.batting ?? {}) } as typeof p.batting;
-  // 🔴 **파생값을 다시 계산한다** (2026-09-06). 예전엔 능력치만 올리고
-  //   `ovr`은 그대로 뒀다 — 아래 주석이 "능력치에서 계산된다"고 적어 놓고
-  //   **계산하는 코드가 없었다.** 그래서 이벤트로 오른 만큼 OVR 이 뒤처졌고
-  //   **불러오기 전까지 안 맞았다**(`normalizeProtagonist` 가 그때 고쳐 준다).
-  //   왕복 검사가 `batting.ovr 30 → 35` 로 잡았다.
-  //   ⚠ 화면만의 문제가 아니다 — `pitching.ovr` 은 주인공의 `overall` 로
-  //     나가 스카우트·드래프트 순위가 읽는다.
-  let pTouched = false, bTouched = false;
-  if (fx.statDelta) {
-    for (const [key, amt] of Object.entries(fx.statDelta)) {
-      const [bucket, stat] = key.includes(".") ? key.split(".") : ["pitching", key];
-      // `ovr`은 파생값이라 못 바꾼다 — 능력치에서 계산된다
-      if (stat === "ovr") continue;
-      const target = bucket === "batting" ? batting : pitching;
-      if (stat in target) {
-        (target as unknown as Record<string, number>)[stat] =
-          clampStat((target as unknown as Record<string, number>)[stat] + amt);
-        if (bucket === "batting") bTouched = true; else pTouched = true;
-      }
-    }
-  }
-  if (pTouched) pitching.ovr = pitchingOvrOf(pitching);
-  // ⚠ 옛 세이브엔 `batting`이 통째로 없다(바로 위 주석) — 빈 객체에 식을
-  //   돌리면 NaN 이 된다. 실제로 값이 바뀐 때만 다시 계산한다
-  if (bTouched) batting.ovr = battingOvrOf(batting);
-
-  // ── 새 보상 열쇠 (2026-09-08 · PLAN_EVENT_TIERS §5 · A 4-3) ────
-  //
-  // 🔴 **상한은 커리어 누계로 잰다.** 「한 번에 +3 까지」로 재면 +1 짜리를
-  //   세 번 받아 넘는다 — 이 저장소가 「한 해에 한 번」 가드에서 두 번 밟은
-  //   형태다. 준 만큼(`potentialGranted`·`devRateGranted`)을 적어 둔다.
-  const POTENTIAL_CAREER_CAP = 3;
-  const DEVRATE_CAREER_CAP   = 10;
-
-  let potentialHidden  = p.potentialHidden;
-  let potentialGranted = p.potentialGranted ?? 0;
-  if (fx.potentialDelta) {
-    const room = Math.max(0, POTENTIAL_CAREER_CAP - potentialGranted);
-    const give = Math.min(fx.potentialDelta, room);
-    if (give > 0) {
-      // 잠재력은 99 가 상한이다(생성 규칙과 같은 눈금)
-      potentialHidden  = Math.min(99, potentialHidden + give);
-      potentialGranted += give;
-    }
-    if (give < fx.potentialDelta) {
-      // ⚠ **조용히 버리지 않는다.** 「아무 일도 안 일어남」이 이 저장소의 단골이다
-      console.warn(`[보상] 잠재력 커리어 상한(+${POTENTIAL_CAREER_CAP}) — `
-        + `${fx.potentialDelta} 중 ${give}만 반영 (누계 ${potentialGranted})`);
-    }
-  }
-
-  let developmentRate = p.developmentRate;
-  let devRateGranted  = p.devRateGranted ?? 0;
-  if (fx.devRateDelta) {
-    const room = Math.max(0, DEVRATE_CAREER_CAP - devRateGranted);
-    const give = Math.min(fx.devRateDelta, room);
-    if (give > 0) { developmentRate += give; devRateGranted += give; }
-    if (give < fx.devRateDelta) {
-      console.warn(`[보상] 성장률 커리어 상한(+${DEVRATE_CAREER_CAP}) — `
-        + `${fx.devRateDelta} 중 ${give}만 반영 (누계 ${devRateGranted})`);
-    }
-  }
-
-  // 훈련 효율·부상 위험 — **겹치면 긴 쪽이 남는다**(§5). 짧은 쪽으로 덮으면
-  // 준 보상을 뺏는 꼴이고, 더하면 같은 이벤트 두 번에 무한이 된다
-  const longerOf = (
-    cur: { pct: number; weeksLeft: number } | undefined,
-    add: { pct: number; weeks: number } | undefined,
-  ) => {
-    if (!add) return cur;
-    if (!cur || add.weeks >= cur.weeksLeft) return { pct: add.pct, weeksLeft: add.weeks };
-    return cur;
-  };
-
-  // 구종 — 습득·등급·진행도. 규칙은 `startPitchTraining`/`completePitchLearning`
-  // 과 같은 눈금이다(상한 5 · 보유 5종)
-  let pitches = p.pitches ?? [];
-  if (fx.pitchGrant) {
-    const has = pitches.find((e) => e.id === fx.pitchGrant!.id);
-    if (has) {
-      // 🔴 이미 있으면 **등급 +1** 이다(§5) — 「배웠다」가 아무 일도 안 하면 안 된다
-      pitches = pitches.map((e) => e.id === fx.pitchGrant!.id
-        ? { ...e, grade: Math.min(5, e.grade + 1) as PitchEntry["grade"] } : e);
-    } else if (pitches.length < 5) {
-      pitches = [...pitches, { id: fx.pitchGrant.id, grade: 1 }];
-    } else {
-      console.warn(`[보상] 구종 5종이 차서 ${fx.pitchGrant.id} 습득을 못 했다`);
-    }
-  }
-  if (fx.pitchGradeUp) {
-    const has = pitches.find((e) => e.id === fx.pitchGradeUp!.id);
-    if (has) {
-      // 🔴 **단계 수를 받는다** (2026-09-09). 히든은 두 단계다(보상안 §1) —
-      //   없으면 1 이라 옛 데이터는 그대로 돈다. 상한 5 는 그대로 걸린다
-      const steps = Math.max(1, Math.round(fx.pitchGradeUp.steps ?? 1));
-      pitches = pitches.map((e) => e.id === fx.pitchGradeUp!.id
-        ? { ...e, grade: Math.min(5, e.grade + steps) as PitchEntry["grade"] } : e);
-    } else {
-      console.warn(`[보상] 없는 구종의 등급을 올리려 했다: ${fx.pitchGradeUp.id}`);
-    }
-  }
-  // ⚠ 훈련 중이 아니면 아무 일도 안 한다 — 없는 훈련을 만들어 주지 않는다
-  const trainingPitchState = fx.pitchProgressJump && p.trainingPitchState
-    ? { ...p.trainingPitchState, progress: Math.min(100, p.trainingPitchState.progress + fx.pitchProgressJump.pct) }
-    : p.trainingPitchState;
-
-  // 특성 — **중복은 무시한다.** 같은 특성을 두 번 받아도 계수가 두 번 곱하면 안 된다
-  const traits = fx.trait && !(p.traits ?? []).includes(fx.trait.id)
-    ? [...(p.traits ?? []), fx.trait.id] : p.traits;
-
-  // 누적 카운터 — `count` 조건의 입력(§12). 이름 표는 `eventCounters.COUNTERS`
-  let counters = p.counters;
-  if (fx.counterDelta) {
-    counters = { ...(counters ?? {}) };
-    for (const [k, v] of Object.entries(fx.counterDelta)) {
-      if (typeof v === "number" && Number.isFinite(v)) counters[k] = (counters[k] ?? 0) + v;
-    }
-  }
-
-  return {
-    ...p,
-    potentialHidden, potentialGranted,
-    developmentRate, devRateGranted,
-    trainEffBoost: longerOf(p.trainEffBoost, fx.trainEffBoost),
-    injuryRiskMod: longerOf(p.injuryRiskMod, fx.injuryRiskMod),
-    // 멘토는 **한 명**이다 — 둘째가 오면 덮는다(§5). 쌓으면 보너스가 무한이 된다
-    mentor: fx.mentor
-      ? { id: fx.mentor.npcId ?? fx.mentor.role ?? "mentor", role: fx.mentor.role, pct: fx.mentor.pct }
-      : p.mentor,
-    // 선발 보장은 **더한다** — 「N경기 더 보장」이 두 번 오면 그만큼 더 보장이다
-    startGuaranteeGames: fx.startGuarantee
-      ? (p.startGuaranteeGames ?? 0) + Math.max(0, fx.startGuarantee.games)
-      : p.startGuaranteeGames,
-    pitches, trainingPitchState, traits, counters,
-    condition:  clamp(p.condition + (fx.conditionDelta ?? 0)),
-    fatigue:    clamp(p.fatigue   + (fx.fatigueDelta   ?? 0)),
-    morale:     clamp(p.morale    + (fx.moraleDelta    ?? 0)),
-    money:      Math.max(0, p.money + (fx.moneyDelta ?? 0)),
-    fame:       Math.max(0, Math.min(200, p.fame       + (fx.fameDelta       ?? 0))),
-    popularity: Math.max(0, Math.min(100, p.popularity + (fx.popularityDelta ?? 0))),
-    diligence:  Math.max(1, Math.min(99,  p.diligence  + (fx.diligenceDelta  ?? 0))),
-    // ⚠ **더한 뒤 뺀다.** 한 선택지가 같은 태그를 넣고 빼면 결과는 "없음"이다 —
-    //   반대로 하면 넣은 것이 남아 연계가 안 닫힌다
-    tags:       applyTags(p.tags, fx.addTag, fx.removeTag),
-    pitchingXP,
-    battingXP,
-    pitching,
-    batting,
-  };
-}
 
 /**
  * 소식함에서 **id가 겹치는 사본을 걷어낸다** — 앞(최신)에 있는 것을 남긴다.
@@ -1323,7 +1095,8 @@ function dedupeMailbox(list: MessageItem[]): MessageItem[] {
 }
 
 /** 들어오는 소식을 집계하고 상한을 적용한다. 메일함에 넣는 유일한 문이다 */
-function pushMailbox(incoming: MessageItem[], current: MessageItem[]): MessageItem[] {
+// `export` 는 Ⅱ-2 덩이 둘(시즌 종료)이 같은 합치기를 쓰기 때문이다 — 정본은 여기 하나다
+export function pushMailbox(incoming: MessageItem[], current: MessageItem[]): MessageItem[] {
   for (const m of incoming) {
     mailboxProduceStats.total++;
     const k = messageKindOf(m.id);
@@ -1433,7 +1206,8 @@ function updateAchievementProgress(
 
 
 // ── NPC 스탯라인 생성 헬퍼 ──────────────────────────────────────
-function buildNpcStatLine(stat: PlayerSeasonStats): string {
+// `export` 는 Ⅱ-2 덩이 여섯(시즌 경계)이 같은 줄을 만들기 때문이다 — 정본은 여기 하나다
+export function buildNpcStatLine(stat: PlayerSeasonStats): string {
   if (stat.type === "pitcher") {
     return `${stat.w}승 ${stat.l}패 ERA ${eraLabel(stat.era)} ${ipLabel(stat.ip)}이닝 ${stat.k}K`;
   }
@@ -2041,13 +1815,6 @@ function createGameStore() {
       }));
     },
 
-    saveTop10Snapshot(snapshot: import("../types/save").Top10Snapshot) {
-      update((s) => ({
-        ...s,
-        lastTop10Pitcher: snapshot.type === "pitcher" ? snapshot : s.lastTop10Pitcher,
-        lastTop10Batter:  snapshot.type === "batter"  ? snapshot : s.lastTop10Batter,
-      }));
-    },
 
     // ⚠ **`updateFame`을 지웠다** (2026-09-01). `applyFameChange`와 같은 일을
     //   하면서 상한만 100으로 달랐다 — `applyFameChange`·`applyEventEffects`
@@ -2162,16 +1929,6 @@ function createGameStore() {
     },
 
     // 시즌 시작 시 주인공 스탯 스냅샷 저장 (능력치 트렌드 화살표용)
-    saveSeasonStartSnapshot() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          seasonStartPitching: { ...s.protagonist.pitching },
-          seasonStartBatting:  { ...s.protagonist.batting  },
-        },
-      }));
-    },
 
     /**
      * 훈련 계획을 바꾼다.
@@ -2518,6 +2275,10 @@ function createGameStore() {
      * 진학·입단 같은 학적 전이가 아니라 같은 구단 안의 이동이다.
      * 2군 일정·순위표는 이미 있으므로 `leagueId`만 맞으면 그대로 뛴다.
      */
+    // ── 병역 ───────────────────────────────────────────────────
+    //
+    // 실제 처리는 `usecases/gameStore/military.ts` 다 — store 는 넘기기만 한다.
+    // 이름·인자·돌려주는 값은 그대로다(호출부 불변).
     /**
      * 국제대회 성적으로 병역 면제 (Phase 7-3).
      *
@@ -2525,39 +2286,47 @@ function createGameStore() {
      * 미필만 면제로 바꾼다. 주인공도 같은 경로를 탄다.
      */
     grantMilitaryExemption(npcIds: string[], seasonYear: number, tournamentName: string) {
-      const target = new Set(npcIds);
-      update((s) => {
-        const npcs = s.npcs.map((n) => {
-          if (!target.has(n.npcId) || n.militaryStatus !== "미필") return n;
-          return {
-            ...n,
-            militaryStatus: "면제" as const,
-            careerEvents: [
-              ...(n.careerEvents ?? []),
-              { year: seasonYear, eventType: "military_exempt" as const,
-                detail: `${tournamentName} 입상` },
-            ],
-          };
-        });
-        // ⚠ **주인공만 커리어 이벤트가 없었다.** NPC는 `military_exempt`를
-        // 남기는데 주인공은 `militaryStatus`만 바뀌어서, 연도별 인생 기록에
-        // "아시안게임 우승 → 병역 면제"가 **한 줄도 안 떴다.**
-        // 국제대회 입상은 병역을 벗어나는 두 길 중 하나다 — 커리어의 분기점인데
-        // 기록에 없으면 플레이어가 무슨 일이 있었는지 되짚을 수 없다.
-        const protoExempt = target.has(s.protagonist.id) && s.protagonist.militaryStatus === "미필";
-        const proto = protoExempt
-          ? {
-              ...s.protagonist,
-              militaryStatus: "면제" as const,
-              careerEvents: [
-                ...(s.protagonist.careerEvents ?? []),
-                { year: seasonYear, eventType: "military_exempt" as const,
-                  detail: `${tournamentName} 입상` },
-              ],
-            }
-          : s.protagonist;
-        return { ...s, npcs, protagonist: proto };
-      });
+      military.grantMilitaryExemption({ update }, npcIds, seasonYear, tournamentName);
+    },
+    addMilitaryDeferPenalty(points: number) {
+      military.addMilitaryDeferPenalty({ update }, points);
+    },
+    setSportsUnitApplied(flag: boolean) {
+      military.setSportsUnitApplied({ update }, flag);
+    },
+    markSportsUnitPrompted(seasonYear: number) {
+      military.markSportsUnitPrompted({ update }, seasonYear);
+    },
+    markMilitaryAsked(seasonYear: number) {
+      military.markMilitaryAsked({ update }, seasonYear);
+    },
+    enlistMilitary(
+      unit: "sports" | "general",
+      enlistWeek = MILITARY_RESULT_WEEK,
+      sportsUnitSelected = false,
+      enlistYear?: number,
+    ) {
+      military.enlistMilitary({ update }, unit, enlistWeek, sportsUnitSelected, enlistYear);
+    },
+    applyMilitaryDischarge(args: {
+      statDelta: number;
+      velocityDelta: number;
+      recoveryWeeks: number;
+      record: import("../types/militaryLife").MilitaryRecord;
+    }) {
+      military.applyMilitaryDischarge({ update }, args);
+    },
+    setMilitaryLife(next: import("../types/militaryLife").MilitaryLifeState | null) {
+      military.setMilitaryLife({ update }, next);
+    },
+    advanceMilitaryWeek() {
+      military.advanceMilitaryWeek({ update });
+    },
+    completeMilitaryService(at?: { season: number; week: number }) {
+      military.completeMilitaryService({ update }, at);
+    },
+    advanceMilitaryRecoveryWeek() {
+      military.advanceMilitaryRecoveryWeek({ update });
     },
 
     setProtagonistTeam(teamId: string, leagueId: string) {
@@ -2673,161 +2442,54 @@ function createGameStore() {
       });
     },
 
-    signContract(contract: ProContract, stamp: ContractStamp = {}) {
-      update((s) => {
-        const shift = shiftContract(s.protagonist.contract, contract, stamp,
-                                    s.protagonist.contractHistory);
-        const leagueStage =
-          contract.leagueId === "LEAGUE_ABL"         ? "pro_abl" :
-          contract.leagueId === "LEAGUE_JBL"         ? "pro_jbl" :
-          contract.leagueId === "LEAGUE_INDEPENDENT" ? "independent" :
-          "pro_kbl";
-        const protagonist: ProtagonistSave = {
-          ...s.protagonist,
-          contract: { ...shift.contract, status: "active" },
-          // 지나간 계약은 기록 탭 「계약 이력」이 읽는다 (§7-4). 소식은 밀려나도
-          // 여기는 남는다 — 그게 이 필드가 있는 이유다
-          contractHistory: shift.history,
-          money: Math.max(0, s.protagonist.money + contract.signingBonus),
-          careerStage: leagueStage,
-          // 학년은 고교에서만 의미가 있다. `applyDraftDecision`은 이미 이렇게
-          // 지우는데 여기만 빠져 있어서, 드래프트로 프로에 간 선수가
-          // `grade: 3`을 달고 다녔다 — 시즌 종료 화면 헤더가 `p.grade`를 먼저
-          // 보므로 프로 선수에게 "3학년"이 찍혔다
-          grade: undefined,
-          teamId: contract.teamId,
-          leagueId: contract.leagueId,
-          faNegotiationRound: 0,
-          faUnsignedWeeks: 0,
-          tradeAdaptationWeeks: 0,
-          // 🔴 **팀을 옮겼다고 연차를 0으로 되돌리지 않는다.**
-          //
-          // 예전엔 `isNewTeam ? 0 : ...`이었다. 그런데 `isNewTeam`은 "프로에 처음
-          // 들어왔다"가 아니라 **"팀이 바뀜다"**다 — FA 이적·트레이드·
-          // 2군 이동으로 `teamId`가 바뀔 때마다 연차가 사라졌다.
-          // 실측(씨앗 424242 · 12시즌): 연차 **4 → 0**으로 리셋됐다.
-          // 그러면 FA 자격(5년)에 영영 못 닿고 은퇴 판정도 어긋난다.
-          //
-          // ⚠ 프로 등록일수는 리그 전체 기준이다. 신인은 어차피 이 값이 0이라
-          //   따로 리셋할 이유가 없다.
-          proServiceYears: s.protagonist.proServiceYears,
-        };
-        return {
-          ...s,
-          protagonist,
-          player: toPlayerCompat(protagonist),
-          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
-        };
-      });
-    },
 
-    // 오프시즌 계약 서명 — 즉시 시즌 초기화 없이 pendingNextContract에 보관
+    // ── 계약·FA·트레이드 ───────────────────────────────────────
+    //
+    // 실제 처리는 `usecases/gameStore/contracts.ts` 다 — store 는 넘기기만 한다.
+    // 이름·인자·돌려주는 값은 그대로다(호출부 불변).
+    //
+    // 오프시즌 계약 서명 — 즉시 시즌 초기화 없이 pendingNextContract에 보관.
     // W52 SeasonEndModal에서 applyPendingNextContract 호출 시 실제 적용
-    setPendingNextContract(contract: ProContract, stamp: ContractStamp = {}) {
-      update((s) => {
-        // 🔴 **여기서 옛 계약을 밀지 않는다.** 서명은 오프시즌이고 옛 계약은
-        //    W52 까지 살아 있다 — 지금 밀면 「계약 정보」가 빈 채로 한 달이
-        //    지나간다. 이력은 `applyPendingNextContract` 가 넘길 때 쌓는다.
-        //    찍는 것(연도·종류)은 지금 해야 한다 — 그때는 몇 년에 서명했는지
-        //    모른다.
-        const shift = shiftContract(undefined, contract, stamp);
-        const leagueStage =
-          contract.leagueId === "LEAGUE_ABL"         ? "pro_abl" :
-          contract.leagueId === "LEAGUE_JBL"         ? "pro_jbl" :
-          contract.leagueId === "LEAGUE_INDEPENDENT" ? "independent" :
-          "pro_kbl";
-        const protagonist: ProtagonistSave = {
-          ...s.protagonist,
-          pendingNextContract: { ...shift.contract, status: "active" },
-          careerStage: leagueStage,
-          teamId: contract.teamId,
-          leagueId: contract.leagueId,
-          money: Math.max(0, s.protagonist.money + contract.signingBonus),
-          faNegotiationRound: 0,
-          faUnsignedWeeks: 0,
-          // 🔴 **팀을 옮겼다고 연차를 0으로 되돌리지 않는다.**
-          //
-          // 예전엔 `isNewTeam ? 0 : ...`이었다. 그런데 `isNewTeam`은 "프로에 처음
-          // 들어왔다"가 아니라 **"팀이 바뀜다"**다 — FA 이적·트레이드·
-          // 2군 이동으로 `teamId`가 바뀔 때마다 연차가 사라졌다.
-          // 실측(씨앗 424242 · 12시즌): 연차 **4 → 0**으로 리셋됐다.
-          // 그러면 FA 자격(5년)에 영영 못 닿고 은퇴 판정도 어긋난다.
-          //
-          // ⚠ 프로 등록일수는 리그 전체 기준이다. 신인은 어차피 이 값이 0이라
-          //   따로 리셋할 이유가 없다.
-          proServiceYears: s.protagonist.proServiceYears,
-        };
-        return {
-          ...s,
-          protagonist,
-          player: toPlayerCompat(protagonist),
-          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
-        };
-      });
+    signContract(contract: ProContract, stamp: ContractStamp = {}) {
+      contracts.signContract({ update }, contract, stamp);
     },
-
+    setPendingNextContract(contract: ProContract, stamp: ContractStamp = {}) {
+      contracts.setPendingNextContract({ update }, contract, stamp);
+    },
     // W52 SeasonEndModal에서 호출 — pendingNextContract를 contract로 확정
     applyPendingNextContract() {
-      update((s) => {
-        const pending = s.protagonist.pendingNextContract;
-        if (!pending) return s;
-        // 옛 계약이 자리를 내주는 순간이 여기다 — 재계약·FA 가 이 길로 온다
-        const shift = shiftContract(s.protagonist.contract, pending, {},
-                                    s.protagonist.contractHistory);
-        const protagonist: ProtagonistSave = {
-          ...s.protagonist,
-          contract: shift.contract,
-          contractHistory: shift.history,
-          pendingNextContract: undefined,
-        };
-        return { ...s, protagonist, player: toPlayerCompat(protagonist) };
-      });
+      contracts.applyPendingNextContract({ update });
     },
-
     applyTradeTransfer(toTeamId: string, toLeagueId?: string) {
-      update((s) => {
-        const current = s.protagonist.contract;
-        const newLeagueId = toLeagueId ?? s.protagonist.leagueId;
-        const leagueStage: import("../types/save").CareerStage =
-          newLeagueId === "LEAGUE_ABL"         ? "pro_abl" :
-          newLeagueId === "LEAGUE_JBL"         ? "pro_jbl" :
-          newLeagueId === "LEAGUE_INDEPENDENT" ? "independent" :
-          "pro_kbl";
-        const protagonist: ProtagonistSave = {
-          ...s.protagonist,
-          teamId:    toTeamId,
-          leagueId:  newLeagueId,
-          careerStage: leagueStage,
-          tradeAdaptationWeeks: 3,
-          contract: current
-            ? { ...current, teamId: toTeamId, leagueId: newLeagueId }
-            : current,
-        };
-        return {
-          ...s,
-          protagonist,
-          player: toPlayerCompat(protagonist),
-          logs: [`트레이드 이적: ${toTeamId}`, ...s.logs].slice(0, 30),
-        };
-      });
+      contracts.applyTradeTransfer({ update }, toTeamId, toLeagueId);
+    },
+    markIncentivesSettled(seasonYear: number, keys: readonly string[]) {
+      contracts.markIncentivesSettled({ update }, seasonYear, keys);
+    },
+    applySeasonContractProgress() {
+      contracts.applySeasonContractProgress({ update });
+    },
+    incrementFaNegotiationRound() {
+      contracts.incrementFaNegotiationRound({ update });
+    },
+    incrementFaUnsignedWeek() {
+      contracts.incrementFaUnsignedWeek({ update });
+    },
+    resetFaProgress() {
+      contracts.resetFaProgress({ update });
+    },
+    advanceTradeAdaptationWeek() {
+      contracts.advanceTradeAdaptationWeek({ update });
+    },
+    applyOptionResult(payload: {
+      exercised: boolean;
+      nextSalary: number;
+      optionType: "team" | "player";
+    }) {
+      contracts.applyOptionResult({ update }, payload);
     },
 
-    addMilitaryDeferPenalty(points: number) {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          militaryDeferPenalty: (s.protagonist.militaryDeferPenalty ?? 0) + points,
-        },
-      }));
-    },
 
-    setSportsUnitApplied(flag: boolean) {
-      update((s) => ({
-        ...s,
-        protagonist: { ...s.protagonist, sportsUnitApplied: flag },
-      }));
-    },
 
     /** 은퇴 확정 — 커리어가 여기서 끝난다 */
     retire(rec: { year: number; week: number; reason: import("../types/save").RetirementReason }) {
@@ -2838,169 +2500,22 @@ function createGameStore() {
     },
 
     /** 체육부대 후보 공개를 이 시즌에 물어봤다고 표시 — 같은 주 무한 반복 방지 */
-    markSportsUnitPrompted(seasonYear: number) {
-      update((s) => ({
-        ...s,
-        protagonist: { ...s.protagonist, sportsUnitPromptedYear: seasonYear },
-      }));
-    },
 
     /** 입대 여부를 이 시즌에 물어봤다고 표시 — 같은 주 무한 반복 방지 */
-    markMilitaryAsked(seasonYear: number) {
-      update((s) => ({
-        ...s,
-        protagonist: { ...s.protagonist, militaryAskedYear: seasonYear },
-      }));
-    },
 
-    enlistMilitary(unit: "sports" | "general", enlistWeek = MILITARY_RESULT_WEEK, sportsUnitSelected = false, enlistYear?: number) {
-      update((s) => {
-        const now = s.protagonist;
-        const isPro = now.careerStage === "pro_kbl" || now.careerStage === "pro_abl" || now.careerStage === "pro_jbl" || now.careerStage === "independent";
-        // 유효한 계약(잔여 > 0)만 군 복무 기간만큼 연장; 만료된 계약은 연장 없이 전역 후 FA/재계약
-        const extendedContract = isPro && now.contract && now.contract.remainingYears > 0
-          ? { ...now.contract, remainingYears: now.contract.remainingYears + 2 }
-          : now.contract;
-        // ⚠ **미필만 입대한다.** 화면 가드만 두면 다른 호출부(헤드리스·
-        // 이벤트)가 그대로 통과한다 — 실제로 조사에서 군 복무를 세 번 하는
-        // 커리어가 나왔다. 되돌릴 수 없는 상태 전이라 여기서도 막는다.
-        if (now.militaryStatus !== "미필") return s;
-
-        const protagonist: ProtagonistSave = {
-          ...now,
-          careerStage: "military",
-          // 🔴 **소속 리그도 군으로 옮긴다** (2026-09-02).
-          //
-          // 예전엔 단계만 바꾸고 `leagueId` 는 입대 전 것을 그대로 뒀다.
-          // 배경 시뮬은 `lid === 주인공.leagueId` 를 건너뛰므로, 학생 입대자는
-          // 복무 2년 내내 **고교 리그가 통째로 멈췄고**(실측 `HIGHSCHOOL 1020/0`),
-          // 프로 입대자면 **그 프로 리그가 멈춘다.** 소속은 NPC 처럼
-          // `LEAGUE_MILITARY` 다(AUDIT_STAGES §8). 원래 리그는 전역 때
-          // 복구 단계(`militaryHiatusStage`)에서 되돌린다.
-          leagueId: "LEAGUE_MILITARY",
-          militaryUnit: unit,
-          militaryServiceWeeks: 0,
-          militaryRecoveryWeeks: 0,
-          militaryStatus: "현역",
-          militaryEnlistWeek: enlistWeek,
-          militaryEnlistYear: enlistYear ?? null,
-          militaryDischargeYear: enlistYear != null ? enlistYear + 2 : null,
-          militaryHiatusStage: now.careerStage,
-          sportsUnitSelected,
-          contract: extendedContract,
-        };
-        return {
-          ...s,
-          protagonist,
-          player: toPlayerCompat(protagonist),
-          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
-        };
-      });
-    },
 
     /**
      * 전역 환산 (PLAN_MILITARY_LIFE §30) — 복무 중 안 건드린 능력치를 야구 감각으로 한 번에 환산하고
      * 군 경력 한 장을 남긴다. 값은 usecases/militaryDecision 이 rules.json 에서 계산해 넘긴다 — 여기선 적기만.
      * ⚠ `completeMilitaryService` 뒤에 불러야 회복 주(고정 6)를 덮는다.
      */
-    applyMilitaryDischarge(args: {
-      statDelta: number; velocityDelta: number; recoveryWeeks: number;
-      record: import("../types/militaryLife").MilitaryRecord;
-    }) {
-      update((s) => {
-        const p = s.protagonist;
-        const c99 = (v: number) => Math.max(1, Math.min(99, v));
-        const pitching = {
-          ...p.pitching,
-          command:  c99(p.pitching.command  + args.statDelta),
-          control:  c99(p.pitching.control  + args.statDelta),
-          recovery: c99(p.pitching.recovery + args.statDelta),
-          velocity: c99(p.pitching.velocity + args.velocityDelta),
-        };
-        const protagonist: ProtagonistSave = {
-          ...p, pitching,
-          militaryRecoveryWeeks: args.recoveryWeeks,
-          militaryLife: null,
-          militaryRecord: args.record,
-        };
-        return { ...s, protagonist, player: toPlayerCompat(protagonist) };
-      });
-    },
     /** 병영생활 상태 얇은 패처 — 계산은 usecases/militaryLife.ts · utils/militaryLifeRules.ts */
-    setMilitaryLife(next: import("../types/militaryLife").MilitaryLifeState | null) {
-      update((s) => {
-        const protagonist = { ...s.protagonist, militaryLife: next };
-        return { ...s, protagonist, player: toPlayerCompat(protagonist) };
-      });
-    },
-    advanceMilitaryWeek() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          militaryServiceWeeks: s.protagonist.militaryServiceWeeks + 1,
-        },
-      }));
-    },
 
     /**
      * @param at 실제로 전역한 시점. **상무·현역 둘 다 여기를 지난다** —
      *   전역 환산(`applyMilitaryDischarge`)은 현역만 타므로 거기 두면 상무가 빠진다.
      *   안 넘기면 안 적는다(옛 호출부·검사 호환).
      */
-    completeMilitaryService(at?: { season: number; week: number }) {
-      update((s) => {
-        const p = s.protagonist;
-        // 휴학 단계 복구: militaryHiatusStage 우선, 없으면 leagueId 기반.
-        //
-        // ⚠ **학교로는 돌아가지 않는다.** 고교·대학에서 입대하면 hiatusStage가
-        // 그 학적이라 그대로 복구했는데, 그러면 2년 복무한 21세가 고등학교로
-        // 돌아간다(실측). `careerTransition`이 "고교 재입학 불가"를 이미
-        // 명시하고 있고, 전이표에서도 학교로 가는 화살표는 없다.
-        // 학생 신분에서 입대했으면 갈 곳은 독립리그다.
-        const hiatus = p.militaryHiatusStage as import("../types/save").CareerStage | null;
-        const restored = (hiatus === "highschool" || hiatus === "university") ? null : hiatus;
-        const stage: import("../types/save").CareerStage =
-          restored ??
-          (p.leagueId === "LEAGUE_ABL" ? "pro_abl" :
-           p.leagueId === "LEAGUE_JBL" ? "pro_jbl" :
-           p.leagueId === "LEAGUE_KBL" ? "pro_kbl" : "independent");
-        const protagonist: ProtagonistSave = {
-          ...p,
-          careerStage: stage,
-          // 입대 때 `LEAGUE_MILITARY` 로 옮겼으니 여기서 되돌린다 — 단계가
-          // 정본이고 리그는 그 파생이다. 학생 출신은 독립으로 간다(위 주석).
-          // ⚠ 독립의 **팀**은 `dischargeProtagonist` 가 정한다 — 여기는 리그만.
-          leagueId:
-            stage === "pro_abl" ? "LEAGUE_ABL" :
-            stage === "pro_jbl" ? "LEAGUE_JBL" :
-            stage === "pro_kbl" ? "LEAGUE_KBL" : "LEAGUE_INDEPENDENT",
-          // ⚠ **다녀온 부대는 남긴다.** 지우면 전역 후 상무/현역 구분이 사라져
-          // 선수 상세·인생 기록에 표시할 수 없다 (NPC 쪽도 같이 고쳤다)
-          militaryServedUnit: p.militaryUnit ?? p.militaryServedUnit,
-          militaryUnit: null,
-          militaryServiceWeeks: 0,
-          militaryRecoveryWeeks: p.militaryUnit === "sports" ? 2 : 6,
-          militaryStatus: "군필",
-          // 전역 뒤 경과를 재는 유일한 기준점 (B-20 §30). `militaryRecoveryWeeks` 는
-          // 0에서 멈춰 그 뒤를 못 센다
-          dischargedSeason: at?.season ?? p.dischargedSeason,
-          dischargedWeek:   at?.week   ?? p.dischargedWeek,
-          militaryHiatusStage: null,
-          // 학년은 학생일 때만 의미가 있다. 전역자는 학교로 안 돌아가므로
-          // 지운다 — 안 그러면 독립리그 선수가 `grade: 3`을 달고 다니고
-          // 시즌 종료 화면 헤더가 그걸 먼저 읽어 "3학년"이 찍힌다
-          // (`signContract`·`applyDraftDecision`이 이미 같은 이유로 지운다)
-          grade: undefined,
-        };
-        return {
-          ...s,
-          protagonist,
-          player: toPlayerCompat(protagonist),
-          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
-        };
-      });
-    },
 
     /**
      * 인센티브 정산 자물쇠 (PLAN_CONTRACT_TERMS §7 ⑤).
@@ -3011,100 +2526,12 @@ function createGameStore() {
      *
      * ⚠ 계산은 `usecases/incentiveSettlement.ts` 가 한다 — 여기는 패치만이다.
      */
-    markIncentivesSettled(seasonYear: number, keys: readonly string[]) {
-      if (keys.length === 0) return;
-      const set = new Set(keys);
-      update((s) => {
-        const c = s.protagonist.contract;
-        if (!c?.incentives?.length) return s;
-        return {
-          ...s,
-          protagonist: {
-            ...s.protagonist,
-            contract: {
-              ...c,
-              incentives: c.incentives.map((i) => {
-                if (!set.has(incentiveKey(i))) return i;
-                const paid = i.paidSeasons ?? [];
-                if (paid.includes(seasonYear)) return i;
-                return { ...i, paidSeasons: [...paid, seasonYear] };
-              }),
-            },
-          },
-        };
-      });
-    },
 
-    applySeasonContractProgress() {
-      update((s) => {
-        const current = s.protagonist.contract;
-        if (!current) return s;
-        const remainingYears = Math.max(0, current.remainingYears - 1);
-        const status = remainingYears > 0 ? "active" : "expired";
-        return {
-          ...s,
-          protagonist: {
-            ...s.protagonist,
-            contract: {
-              ...current,
-              remainingYears,
-              status,
-            },
-          },
-        };
-      });
-    },
 
-    incrementFaNegotiationRound() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          faNegotiationRound: Math.min(2, (s.protagonist.faNegotiationRound ?? 0) + 1),
-        },
-      }));
-    },
 
-    incrementFaUnsignedWeek() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          faUnsignedWeeks: (s.protagonist.faUnsignedWeeks ?? 0) + 1,
-        },
-      }));
-    },
 
-    resetFaProgress() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          faNegotiationRound: 0,
-          faUnsignedWeeks: 0,
-        },
-      }));
-    },
 
-    advanceMilitaryRecoveryWeek() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          militaryRecoveryWeeks: Math.max(0, (s.protagonist.militaryRecoveryWeeks ?? 0) - 1),
-        },
-      }));
-    },
 
-    advanceTradeAdaptationWeek() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          tradeAdaptationWeeks: Math.max(0, (s.protagonist.tradeAdaptationWeeks ?? 0) - 1),
-        },
-      }));
-    },
 
     /**
      * **일어난 일**을 적는다 (2026-09-08 · L1 · `PLAN_MESSAGE_LANES`).
@@ -3142,48 +2569,6 @@ function createGameStore() {
       }));
     },
 
-    applyOptionResult(payload: {
-      exercised: boolean;
-      nextSalary: number;
-      optionType: "team" | "player";
-    }) {
-      update((s) => {
-        const current = s.protagonist.contract;
-        if (!current) return s;
-        if (!payload.exercised) {
-          return {
-            ...s,
-            protagonist: {
-              ...s.protagonist,
-              contract: {
-                ...current,
-                status: "expired",
-              },
-            },
-          };
-        }
-        return {
-          ...s,
-          protagonist: {
-            ...s.protagonist,
-            contract: {
-              ...current,
-              salary: payload.nextSalary,
-              remainingYears: 1,
-              status: "active",
-              teamOptionYears:
-                payload.optionType === "team"
-                  ? Math.max(0, current.teamOptionYears - 1)
-                  : current.teamOptionYears,
-              playerOptionYears:
-                payload.optionType === "player"
-                  ? Math.max(0, current.playerOptionYears - 1)
-                  : current.playerOptionYears,
-            },
-          },
-        };
-      });
-    },
 
     // 구종 습득 시작
     startPitchTraining(pitchId: string) {
@@ -3248,41 +2633,6 @@ function createGameStore() {
      *
      * ⚠ 안 넘기면 예전대로 `careerStage`만 본다 — 구 호출부 호환.
      */
-    advanceSeasonYear(_seasonYear?: number, playedLeagueId?: string) {
-      update((s) => {
-        const p = s.protagonist;
-        const isPro = countsAsProSeason(p.careerStage, playedLeagueId);
-        const protagonist: ProtagonistSave = {
-          ...p,
-          age: p.age + 1,
-          proServiceYears: isPro ? p.proServiceYears + 1 : p.proServiceYears,
-          condition: Math.min(100, p.condition + 20),
-          fatigue: Math.max(0, p.fatigue - 30),
-          seasonHealth: { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 },
-          sportsUnitApplied: false,
-          // ── 같은 팀에서 보낸 해 (2026-09-08 · §12 `count`) ──────
-          //
-          // 🔴 **팀이 바뀌면 1 로 되돌린다** — 「3년 내내 같은 팀」이 물으려는
-          //   것은 누적 연차가 아니라 **끊기지 않은 기간**이다. 트레이드·이적·
-          //   진학이 그걸 끊는다.
-          // ⚠ 첫 시즌은 `lastSeasonTeamId` 가 없어 1 이다(그게 맞다 — 한 해를
-          //   보냈으니 1년이다). 구 세이브도 여기서 1부터 다시 센다.
-          counters: {
-            ...(p.counters ?? {}),
-            sameTeamYears: p.lastSeasonTeamId === p.teamId
-              ? (p.counters?.sameTeamYears ?? 0) + 1 : 1,
-          },
-          lastSeasonTeamId: p.teamId,
-        };
-
-        return {
-          ...s,
-          protagonist,
-          player: toPlayerCompat(protagonist),
-          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
-        };
-      });
-    },
 
     /**
      * 등판 하나가 남기는 누적 카운터 (2026-09-08 · §12 `count`).
@@ -3322,859 +2672,16 @@ function createGameStore() {
     },
 
     // L6: 전체 리그 NPC 오프시즌 처리 (에이징·감퇴·UNIV졸업·군입대·전역·FA·은퇴·로스터 정리)
+    // 실제 처리는 `usecases/gameStore/seasonEndLeagues.ts` 다 — store 는 상태를 적는 자리다.
+    //   이름·인자·돌려주는 값은 그대로다(호출부 둘 불변).
     async processAllLeaguesSeasonEnd(seasonYear: number) {
-      const s = get({ subscribe });
-
-      // before 스냅샷: FA 추적 (프로 FA 자격 NPC) + 병역 상태 추적 (전체)
-      const proLeagues = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
-      const beforeTeam = new Map<string, string>(
-        s.npcs
-          .filter(n => proLeagues.has(n.currentLeague) && (n.proServiceYears ?? 0) >= getFaThreshold(n.currentLeague))
-          .map(n => [n.npcId, n.currentTeam])
+      return processAllLeaguesSeasonEndChunk(
+        { subscribe, update, seasonData: _getSeasonData },
+        seasonYear,
       );
-      const beforeMilitary = new Map(
-        s.npcs.map(n => [n.npcId, { name: n.name, status: n.militaryStatus, unit: n.militaryUnit, league: n.currentLeague, team: n.currentTeam }])
-      );
-
-      // TS에서 이미 FA/재계약 결정된 named NPC ID → Rust FA 랜덤 재결정 방지
-      const namedNpcIds = s.npcs.map(n => n.npcId);
-      // 로스터 상한·연봉 규칙을 규칙 파일에서 넘긴다. 예전엔 Rust에 하드코딩된
-      // 표(KBL 상한 65)를 썼고 그게 1군+2군 합산에 걸려 프로가 700명까지 부풀었다
-      const offRules = await loadRosterRules();
-      // 방출·FA 미계약자의 진로 — 미지명 졸업생과 **같은 로직**을 태운다.
-      // 안 넘기면 Rust가 그 사람들을 전부 은퇴시킨다
-      const offDest = draftDestinationTeams(get(masterStore).teams);
-      // FA 입찰 — **상한은 팀 예산 지수에서 유도한다**(새 표를 만들지 않는다).
-      // 지금 총연봉에 지수와 여유를 곱한다: 부자 구단은 더 부를 수 있고
-      // 가난한 구단은 못 부른다. `buildSalaryIndex`는 외국인 영입도 쓰는 함수다.
-      const faParams = await (async () => {
-        const min = (offRules.faRules as { bidInterestMin?: number } | undefined)?.bidInterestMin ?? 0;
-        // 성적 배수 폭 — 0이면 성적을 안 본다(예전 동작)
-        const span = (offRules.faRules as { perfSpan?: number } | undefined)?.perfSpan ?? 0;
-        // 재계약 성적 배수 — FA보다 좁다
-        const rSpan = (offRules.faRules as { renewPerfSpan?: number } | undefined)?.renewPerfSpan ?? 0;
-        // 입찰 상한의 하한 — 팀 총연봉 대비. 0이면 하한이 없다(예전 동작).
-        // 🔴 예산 지수가 0.8 미만인 구단은 상한이 **음수**였다(cap < 총연봉).
-        //    자세한 건 Rust `fa_bid_floor_ratio` 주석에 있다.
-        const floor = (offRules.faRules as { bidFloorRatio?: number } | undefined)?.bidFloorRatio ?? 0;
-        if (!min) return undefined;
-        const { buildSalaryIndex } = await import("../repo/newGameV3");
-        const idx = buildSalaryIndex(get(masterStore).teams);
-        const payroll = new Map<string, number>();
-        for (const n of s.npcs) {
-          if (n.careerStatus !== "active" || !n.currentTeam) continue;
-          payroll.set(n.currentTeam, (payroll.get(n.currentTeam) ?? 0) + (n.currentSalary ?? 0));
-        }
-        const cap: Record<string, number> = {};
-        // 🔴 **FA 상한을 예산에서 낸다** (사용자 확정 2026-08-31).
-        //
-        //   예전엔 "지금 총연봉 × 팀지수 × 1.25" 였다 — 즉 **많이 쓰는 팀일수록
-        //   상한이 높았다.** `refs.json` 의 팀별 예산(KBL 120~350억)은 어느
-        //   판정에도 안 들어갔다.
-        //
-        //   지금은 **남은 예산**이 상한이다. 생성 때 예산을 적게 쓴 팀이
-        //   그만큼 시장에서 큰손이 된다 — 실측에서 사용률이 19~66% 로
-        //   갈렸다(창원 19% · 대전 66%).
-        //
-        // ⚠ 예산이 없는 팀(2군·상무·아마추어)은 **예전 식으로 떨어진다** —
-        //   상한이 0이 되면 그 팀은 FA 입찰을 통째로 못 한다.
-        const budgetOfTeam = new Map(get(masterStore).teams.map((t) =>
-          [t.id, ((t as unknown as { history?: { budget?: number } }).history?.budget ?? 0) / 10000]));
-        for (const [tid, cur] of payroll) {
-          const saved = s.clubBudgets?.[tid];
-          const budget = saved != null ? saved : (budgetOfTeam.get(tid) ?? 0);
-          cap[tid] = budget > 0
-            ? Math.max(0, Math.round(budget - cur))
-            : Math.round(cur * (idx.get(tid) ?? 1) * 1.25);
-        }
-        return { teamPayrollCap: cap, bidInterestMin: min, perfSpan: span, renewPerfSpan: rSpan,
-                 bidFloorRatio: floor };
-      })();
-      // 🔴 **그해 성적 → 방출 판정.** Rust는 `recent_performance_rating`에
-      // 능력치를 넣고 있었고 그 능력치마저 생성 시점 값이라, 사실상 "태어날
-      // 때 실력"으로 방출을 정했다. 성적은 **바로 이 시점까지 살아 있다** —
-      // `seasonRollover`가 두 줄 위에서 같은 값을 연감에 넘긴다.
-      //
-      // ⚠ 리그를 골라 담지 않는다. 배경 리그 전부가 `playerLines`를 쌓으므로
-      // (`backgroundLeague.accumulateStats`) 독립리그도 여기 들어온다 —
-      // 프로만 담으면 독립이 통째로 방출 대상에서 빠진다.
-      const offPerfScores: Record<string, number> = {};
-      let offWorldSeed = 0;
-      {
-        const { seasonStore: _ss } = await import("./season");
-        const _s = get(_ss);
-        const { calcNpcPerfScore } = await import("../usecases/weekPhases/market");
-        const put = (rows: Record<string, import("../types/save").PlayerSeasonStats>) => {
-          for (const [pid, st] of Object.entries(rows ?? {})) {
-            if (!st) continue;
-            offPerfScores[pid] = calcNpcPerfScore(st);
-          }
-        };
-        offWorldSeed = (_s.worldSeed ?? 0) >>> 0;
-        put(_s.stats);
-        for (const ls of Object.values(_s.leagueState ?? {})) put(ls?.stats ?? {});
-      }
-      const result = await runOffseasonProcessing(
-        s.npcs, s.pendingDraft, seasonYear, namedNpcIds,
-        rosterLimitsFrom(offRules.rosterRules), offRules.salaryRules,
-        {
-          universityTeamIds: offDest.univIds,
-          independentTeamIds: offDest.indIds,
-          farmTeamIds: offDest.farmIds,
-          rules: placementRulesFrom(
-            offRules.rosterRules,
-            offRules.developmentPlayerRules?.salary,
-            offRules.developmentPlayerRules?.intakeMax),
-        },
-        (offRules.faRules as { release?: unknown } | undefined)?.release,
-        // 🔴 **안 넘기면 웨이버가 통째로 꺼진다.** `serde(default)` 라
-        //   Rust 는 조용히 통과하고 방출자가 곧장 시장으로 간다.
-        (offRules as { waiverRules?: unknown }).waiverRules,
-        // ⚠ 안 넘기면 FA 미계약자가 **바로 은퇴한다** — 독립 재도전 갈래가 꺼진다
-        (offRules.faRules as { independentAgeMax?: number } | undefined)?.independentAgeMax,
-        foreignParamsFrom(offRules),
-        // 🔴 **지금 능력치.** 안 넘기면 오프시즌이 생성 시점 값으로 돈다 —
-        // 은퇴·정원 정리·방출·FA·콜업 정렬 22곳이 전부 그랬다
-        get(npcLiveStatsStore),
-        offPerfScores,
-        s.proTeamProfiles,
-        // 세계 씨앗 — 안 넘기면 모든 세계가 같은 오프시즌을 낸다
-        offWorldSeed,
-        faParams,
-        // 🔴 **팀별 예산** — 총연봉이 넘으면 방출한다 (사용자 확정 2026-08-31).
-        //   저장된 예산(전년 정산 · `clubFinance`)이 있으면 그게 우선이고,
-        //   없으면 `refs.json` 의 팀별 예산을 만원으로 바꿔 쓴다.
-        // ⚠ 안 넘기면 예산 방출이 통째로 꺼진다 — `serde(default)` 라 오류가 안 난다.
-        (() => {
-          const out: Record<string, number> = {};
-          for (const t of get(masterStore).teams) {
-            const saved = s.clubBudgets?.[t.id];
-            const base = saved != null ? saved
-              : ((t as unknown as { history?: { budget?: number } }).history?.budget ?? 0) / 10000;
-            if (base > 0) out[t.id] = Math.round(base);
-          }
-          return out;
-        })(),
-      );
-      // 이 배열은 아래 시즌종료 처리들이 인덱스로 직접 덮어쓴다 (careerHistory·병역·드래프트).
-      // 예전엔 여기서 감정 9축의 dormant 감쇠·은퇴 archive도 했는데, 6C에서
-      // 관계도로 대체했다 — 감쇠는 slot.db relationship에서 시즌 단위로 돈다.
-      const nextNpcs = [...result.npcs];
-
-      // 프로·독립리그 NPC 시즌 careerHistory 엔트리 추가 (_getSeasonData 통해 순환 의존 없이 접근)
-      {
-        const seasonData = _getSeasonData?.();
-        if (seasonData) {
-          // ⚠ **2군(LEAGUE_KBL_FARM)이 빠져 있었다.** 고교·대학은 Rust 학년
-          // 진급이 연도 기록을 남기고 프로·독립은 여기서 남기는데, 2군만
-          // 아무도 안 써서 **그 해가 통째로 비었다** — 궤적을 따라가면
-          // 프로 선수의 특정 연도가 없어진 채로 보인다.
-          const proIndLeagues = new Set([
-            "LEAGUE_KBL", "LEAGUE_KBL_FARM", "LEAGUE_ABL", "LEAGUE_JBL", "LEAGUE_INDEPENDENT",
-          ]);
-          const npcPreState = new Map(
-            s.npcs
-              .filter(n => proIndLeagues.has(n.currentLeague ?? ""))
-              .map(n => [n.npcId, { league: n.currentLeague, team: n.currentTeam }]),
-          );
-          const buildStatLine = (stat: PlayerSeasonStats): string => {
-            if (stat.type === "pitcher") return `${stat.w}승 ${stat.l}패 ERA ${stat.era.toFixed(2)}`;
-            return `타율 .${Math.round(stat.avg * 1000).toString().padStart(3, "0")} ${stat.hr}홈런 ${stat.rbi}타점`;
-          };
-          for (let i = 0; i < nextNpcs.length; i++) {
-            const npc = nextNpcs[i];
-            const pre = npcPreState.get(npc.npcId);
-            if (!pre) continue;
-            if (npc.careerHistory.some(h => h.year === seasonYear)) continue;
-            const npcStat = seasonData.leagueState[pre.league]?.stats?.[npc.npcId];
-            const entry: NpcCareerEntry = {
-              year:       seasonYear,
-              leagueId:   pre.league,
-              teamId:     pre.team,
-              statLine:   npcStat ? buildStatLine(npcStat) : "-",
-              highlights: [],
-            };
-            nextNpcs[i] = { ...npc, careerHistory: [...npc.careerHistory, entry] };
-          }
-        }
-      }
-
-      const slotId = s.currentSlotId;
-      const _t0SeasonEnd = Date.now();
-      const _faEntries: PlayerEventEntry[] = [];
-      const _liveStats = get(npcLiveStatsStore);
-
-      if (slotId) {
-        // FA 재배치 기록: 오프시즌 처리 후 팀이 바뀐 FA 자격 선수
-        const faRows: import("../types/save").LeagueTransactionRow[] = [];
-        for (const n of result.npcs) {
-          const prev = beforeTeam.get(n.npcId);
-          if (prev && prev !== n.currentTeam && proLeagues.has(n.currentLeague) && n.careerStatus === "active") {
-            const _live = _liveStats[n.npcId];
-            const ovr = _live?.pitching?.ovr ?? _live?.batting?.ovr ?? 0;
-            const prevShort = prev.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
-            const nextShort = n.currentTeam.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
-            autoLog(`  [FA이동] ${n.name} | ${prevShort}→${nextShort} | OVR:${ovr} | ${n.currentLeague.replace("LEAGUE_", "")}`);
-            _faEntries.push({
-              npcId: n.npcId, name: n.name,
-              fromTeamId: prev, toTeamId: n.currentTeam,
-              fromLeagueId: n.currentLeague, toLeagueId: n.currentLeague,
-              detail: `OVR:${ovr} | 서비스:${n.proServiceYears ?? 0}년`,
-            });
-            faRows.push({
-              seasonYear,
-              category: "fa",
-              playerId: n.npcId,
-              playerName: n.name,
-              fromTeamId: prev,
-              fromLeagueId: n.currentLeague,
-              toTeamId: n.currentTeam,
-              toLeagueId: n.currentLeague,
-              detail: "FA 계약",
-            });
-          }
-        }
-        let _faDbOk = true;
-        if (faRows.length > 0) {
-          const faRes = JSON.parse(
-            await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: faRows }))
-          );
-          if (faRes.error) { autoLog(`[NPC FA오류] ${faRes.error}`); _faDbOk = false; }
-          else autoLog(`[NPC FA] FA 이동 ${faRows.length}명 DB ✓`);
-        }
-        if (_faEntries.length > 0) {
-          logEvent({
-            id: `fa-result-Y${seasonYear}`,
-            type: "fa_result",
-            seasonYear,
-            players: _faEntries,
-            counts: { input: beforeTeam.size, processed: _faEntries.length, saved: faRows.length },
-            dbOk: _faDbOk,
-            durationMs: Date.now() - _t0SeasonEnd,
-          });
-        }
-      }
-
-      // before/after 비교로 전역·입대 추출 및 careerEvents 기록
-      const militaryEnlistedSports: string[] = [];
-      const militaryEnlistedGeneral: string[] = [];
-      const militaryDischargedNames: string[] = [];
-      // 🔴 **전역의 정본은 Rust다** (사용자 확정 2026-08-24).
-      //    엔진이 `military_discharge_year <= season_year`로 상태를 바꾸고,
-      //    여기서는 그 **변화를 감지해 기록만** 남긴다.
-      //    예전엔 아래에서 TS가 `enlistYear + 2`로 **따로 계산**해서,
-      //    두 조건이 갈려 전역자가 43명이 됐다(상무 정원은 26).
-      const rustDischargedIds = new Set<string>();
-      const dischargeRows: import("../types/save").LeagueTransactionRow[] = [];
-      const _dischargeEntries: PlayerEventEntry[] = [];
-      for (const n of result.npcs) {
-        const before = beforeMilitary.get(n.npcId);
-        if (!before) continue;
-        const decIdx = nextNpcs.findIndex(d => d.npcId === n.npcId);
-        if (before.status === "현역" && n.militaryStatus !== "현역") {
-          militaryDischargedNames.push(before.name);
-          rustDischargedIds.add(n.npcId);
-          const returnLeague = proLeagues.has(n.currentLeague) ? n.currentLeague : undefined;
-          const _liveDis = _liveStats[n.npcId];
-          const ovr = _liveDis?.pitching?.ovr ?? _liveDis?.batting?.ovr ?? 0;
-          autoLog(`  [전역] ${before.name} | 군→${returnLeague?.replace("LEAGUE_", "") ?? "미확정"} | OVR:${ovr}`);
-          _dischargeEntries.push({
-            npcId: n.npcId, name: n.name,
-            fromLeagueId: before.league,
-            toLeagueId: returnLeague,
-            toTeamId: n.currentTeam,
-            detail: `군→${returnLeague?.replace("LEAGUE_", "") ?? "미확정"} | OVR:${ovr}`,
-          });
-          dischargeRows.push({
-            seasonYear,
-            category: "military",
-            playerId: n.npcId,
-            playerName: n.name,
-            fromLeagueId: before.league,
-            toLeagueId: returnLeague,
-            detail: "전역",
-          });
-          if (decIdx >= 0) {
-            nextNpcs[decIdx] = {
-              ...nextNpcs[decIdx],
-              careerEvents: [
-                ...(nextNpcs[decIdx].careerEvents ?? []),
-                { year: seasonYear, eventType: "military_discharge" as const,
-                  toLeagueId: returnLeague },
-              ],
-            };
-          }
-        } else if (before.status !== "현역" && n.militaryStatus === "현역") {
-          if (decIdx >= 0) {
-            nextNpcs[decIdx] = {
-              ...nextNpcs[decIdx],
-              careerEvents: [
-                ...(nextNpcs[decIdx].careerEvents ?? []),
-                { year: seasonYear, eventType: "military_enlist" as const,
-                  fromTeamId: before.team, fromLeagueId: before.league },
-              ],
-            };
-          }
-        }
-      }
-      let _dischargeDbOk = true;
-      if (slotId && dischargeRows.length > 0) {
-        const milRes = JSON.parse(
-          await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: dischargeRows }))
-        );
-        if (milRes.error) { autoLog(`[NPC전역오류] ${milRes.error}`); _dischargeDbOk = false; }
-        else autoLog(`[NPC전역] ${dischargeRows.length}명 DB ✓`);
-      }
-      if (_dischargeEntries.length > 0) {
-        logEvent({
-          id: `discharge-Y${seasonYear}`,
-          type: "discharge",
-          seasonYear,
-          players: _dischargeEntries,
-          counts: { input: beforeMilitary.size, processed: _dischargeEntries.length, saved: dischargeRows.length },
-          dbOk: _dischargeDbOk,
-          durationMs: Date.now() - _t0SeasonEnd,
-        });
-      }
-
-      // ── Phase 4: 병역 통합 처리 (단일 소스: masterStore.entities) ─────────────
-      if (slotId) {
-        const mNow = get(masterStore);
-        const npcMap = new Map(nextNpcs.map(n => [n.npcId, n]));
-        const npcLiveStats = get(npcLiveStatsStore);
-
-        // Phase 4-0: 외국인 선수 면제 일괄 패치
-        // 국적 기반 판별: originLeagueId ABL/JBL이면 외국인, notes에 "국적:한국"이면 한국인
-        const isKoreanEntity = (e: import("./master").EntityRow): boolean => {
-          if (e.notes?.includes("국적:한국")) return true;
-          const orig = e.originLeagueId;
-          if (orig === "LEAGUE_ABL" || orig === "LEAGUE_JBL") return false;
-          return true;
-        };
-        const foreignExempt = mNow.entities.filter(e =>
-          e.role === "player" &&
-          !isKoreanEntity(e) &&
-          e.militaryStatus !== "면제" &&
-          e.militaryStatus !== "군필" &&
-          e.militaryStatus !== "현역"
-        );
-        if (foreignExempt.length > 0) {
-          const exemptedIdSet = new Set(foreignExempt.map(e => e.id));
-          for (let i = 0; i < nextNpcs.length; i++) {
-            if (exemptedIdSet.has(nextNpcs[i].npcId) && nextNpcs[i].militaryStatus === "미필") {
-              nextNpcs[i] = { ...nextNpcs[i], militaryStatus: "면제" };
-            }
-          }
-          autoLog(`[외국인면제] ${foreignExempt.length}명 면제 처리`);
-        }
-
-        // 1. 전역: 2년 경과 모든 현역 선수 (top-level || 하위 호환 nested 체크)
-        // ⚠ **위에서 Rust가 이미 전역시킨 사람만 본다.**
-        //   예전엔 `enlistYear + 2`로 여기서 다시 계산했고, 그 조건이 Rust와
-        //   갈려 **같은 사람이 해마다 다시 전역자로 잡혔다**(43명 · 정원 26).
-        //   그 수가 상무 선발 Phase 1의 공백 목록으로 가서, 정원을 다 먹고
-        //   **Phase 2(OVR 순)가 안 돌게** 만들었다.
-        const discharging = mNow.entities.filter(e => rustDischargedIds.has(e.id));
-        const dischargedIds = new Set<string>();
-
-        // ⚠ 거래 기록은 **위에서 `dischargeRows`로 이미 남겼다** — 여기서 또 남기면
-        //   같은 전역이 두 번 쌓인다. 이 집합은 입대 후보 제외·공백 포지션에만 쓴다.
-        discharging.forEach(e => dischargedIds.add(e.id));
-        if (discharging.length > 0) autoLog(`[전역] 엔티티 ${discharging.length}명`);
-
-        // 2. 체육부대 입대: 프로 소속 한국인 선수 후보.
-        //
-        // **2군(FARM)도 후보다.** 예전엔 1군 리그만 봤는데, 실제로 상무는
-        // 2군 유망주가 많이 간다. Phase 7-1에서 신인 대부분이 2군에서 시작하게
-        // 되면서 그 누락이 더 커졌다 — 갓 지명된 선수는 후보조차 못 됐다
-        const proLeagues = new Set([
-          "LEAGUE_KBL", "LEAGUE_KBL_FARM",
-          "LEAGUE_ABL", "LEAGUE_ABL_FARM",
-          "LEAGUE_JBL", "LEAGUE_JBL_FARM",
-        ]);
-        const milCandidates = mNow.entities.filter(e =>
-          e.role === "player" &&
-          e.status !== "retired" &&
-          e.militaryStatus !== "현역" && e.militaryStatus !== "군필" && e.militaryStatus !== "면제" &&
-          e.details?.player?.militaryStatus !== "현역" &&
-          !e.details?.player?.militaryEnlistYear &&
-          proLeagues.has(e.leagueId ?? "") &&
-          isKoreanEntity(e) &&
-          e.teamId && e.teamId !== "" &&
-          !dischargedIds.has(e.id) &&
-          // 한국 나이 기준 고졸 20세부터 (generation_rules.json ageBase 16 → 고3 = 19세).
-          // 예전엔 18이었는데 그건 고3 나이라 재학생이 후보에 섞였다.
-          e.age >= 20 && e.age <= 29
-        ).map(e => {
-          const live = npcLiveStats[e.id];
-          const dp = e.details?.player;
-          const rawOvr = live?.pitching?.ovr ?? live?.batting?.ovr ?? (dp as any)?.pitching?.ovr ?? (dp as any)?.batting?.ovr;
-          const ovr = Math.round((typeof rawOvr === "number" && isFinite(rawOvr)) ? rawOvr : 50);
-          return { id: e.id, name: e.name || e.id, ovr, teamId: e.teamId!, position: (dp?.position ?? "") as string, isProtagonist: false };
-        });
-        autoLog(`[병역통합] 체육부대 후보 ${milCandidates.length}명`);
-
-        const selectedSportsIds = new Set<string>();
-
-        if (milCandidates.length > 0) {
-          const topRaw = JSON.parse(
-            await window.projectB!.militaryCalcCandidates(JSON.stringify({
-              candidates: milCandidates,
-              topN: 70,
-            }))
-          ) as { topCandidates?: { id: string; name: string; ovr: number; teamId: string }[]; error?: string };
-
-          if (topRaw.error) {
-            autoLog(`[병역통합오류] militaryCalcCandidates: ${topRaw.error}`);
-          } else if ((topRaw.topCandidates?.length ?? 0) > 0) {
-            // 연간 입대 인원 = 정원 / 복무연수. 예전엔 여기 20이 박혀 있어
-            // 정상상태가 40명(정원 26의 1.5배)이었다 — 상무는 복무자라
-            // `career_status: "military"`고, 로스터 캡이 active만 세므로
-            // **아무도 막지 않았다.** 규칙 파일이 정본이다.
-            //
-            // ⚠ 계산을 여기서 다시 적지 않는다 — 주인공 경로(`advanceWeek`)와
-            // **같은 함수**를 쓴다. 따로 적었더니 그쪽만 10으로 박혀 있었다.
-            const milLimits = await sportsUnitLimits();
-            const milSalary = milLimits.salary;
-            // ⚠ **주인공이 뽑힌 해엔 한 자리를 뺀다.** 두 선발이 별개 추첨이라
-            // 둘 다 뽑히면 그 해 입대가 정원 + 1이 된다 — 상무는 로스터 캡이
-            // 안 걸리니 이런 누수가 해마다 쌓인다.
-            const protoTook = protagonistTookSportsSlot(get({ subscribe }).protagonist, seasonYear);
-            const npcIntake = Math.max(0, milLimits.annualIntake - (protoTook ? 1 : 0));
-
-            const selRes = npcIntake === 0 ? { selectedIds: [] } : JSON.parse(
-              await window.projectB!.militaryCalcSelection(JSON.stringify({
-                applicants: topRaw.topCandidates!.map(c => ({ ...c, isProtagonist: false })),
-                maxTotal: Math.min(npcIntake, topRaw.topCandidates!.length),
-                maxPerTeam: milLimits.maxPerTeam,
-                // 🔴 **상무 전역자 포지션만.** 안 넘기면 Phase 1(공백 메우기)이
-                //    통째로 안 돌고 OVR 순으로만 뽑는다 — 상무가 포지션 균형을 잃는다.
-                //
-                // ⚠ **거르는 규칙은 `sportsVacatingPositions`가 정본이다.**
-                //   여기 인라인으로 적었더니 주인공 경로(`advanceWeek`)에는
-                //   아예 안 넘어가서 **주인공만 다른 잣대**로 뽑혔다.
-                vacatingPositions: sportsVacatingPositions(discharging),
-                // 🔴 **Phase 1 몫을 자른다.** 없으면 Phase 1이 정원을 다 먹고
-                //    Phase 2(OVR 순 + 팀당 상한)가 한 번도 안 돈다.
-                phase1Max: milLimits.phase1Max,
-              }))
-            ) as { protagonistSelected?: boolean; selectedIds?: string[]; error?: string };
-
-            if (selRes.error) {
-              autoLog(`[병역통합오류] militaryCalcSelection: ${selRes.error}`);
-            } else if ((selRes.selectedIds?.length ?? 0) > 0) {
-              const selectedSet = new Set(selRes.selectedIds!);
-              const enlTxRows: import("../types/save").LeagueTransactionRow[] = [];
-
-              const sportsEnlistEntities = mNow.entities
-                .filter(e => selectedSet.has(e.id))
-                .map(e => ({
-                  ...e,
-                  militaryStatus: "현역" as const,
-                  // 상무는 **독립리그 소속**이고 ID는 refs의 실제 팀이다.
-                  // 예전엔 LEAGUE_UNIVERSITY / TEAM_SPORTS_UNIT 이었는데
-                  // 그 팀은 refs에 없어서 입대자가 존재하지 않는 팀으로 갔다
-                  leagueId: SANGMU_LEAGUE_ID,
-                  teamId:   SANGMU_TEAM_ID,
-                  details: { ...e.details, player: {
-                    ...e.details?.player,
-                    militaryStatus:     "현역",
-                    militaryUnit:       "sports",
-                    militaryEnlistYear: seasonYear,
-                    originalLeagueId:   e.leagueId,
-                    originalTeamId:     e.teamId,
-                  }},
-                  slotId,
-                }));
-
-              const _sportsEntries: PlayerEventEntry[] = [];
-
-              if (sportsEnlistEntities.length > 0) {
-                sportsEnlistEntities.forEach(e => {
-                  selectedSportsIds.add(e.id);
-                  militaryEnlistedSports.push(e.name);
-                  const orig = mNow.entities.find(o => o.id === e.id)!;
-                  const live = npcLiveStats[e.id];
-                  const dp = e.details?.player;
-                  const rawOvr = live?.pitching?.ovr ?? live?.batting?.ovr ?? (dp as any)?.pitching?.ovr ?? (dp as any)?.batting?.ovr;
-                  const ovr = Math.round((typeof rawOvr === "number" && isFinite(rawOvr)) ? rawOvr : 50);
-                  const fromShort = (orig.teamId ?? "").replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
-                  autoLog(`  [체육부대] ${e.name} | ${fromShort} | OVR:${ovr} | ${e.age ?? "?"}세`);
-                  _sportsEntries.push({
-                    npcId: e.id, name: e.name,
-                    fromTeamId: orig.teamId, fromLeagueId: orig.leagueId,
-                    toLeagueId: "LEAGUE_UNIVERSITY",
-                    detail: `OVR:${ovr} | ${e.age ?? "?"}세 | 제대예정 Y${seasonYear + 2}`,
-                  });
-                  enlTxRows.push({
-                    seasonYear, category: "military" as const,
-                    playerId: e.id, playerName: e.name,
-                    fromTeamId: orig.teamId, fromLeagueId: orig.leagueId,
-                    detail: "체육부대 입대",
-                  });
-                });
-              }
-
-              // gameStore.npcs 동기화
-              for (let i = 0; i < nextNpcs.length; i++) {
-                if (!selectedSet.has(nextNpcs[i].npcId)) continue;
-                  // 🔴 **세이브가 이미 은퇴면 입대시키지 않는다.**
-                  //    후보는 마스터 `e.status`로 거르는데 `originalLeagueId`는
-                  //    세이브 `n.currentLeague`에서 온다 — 둘이 어긋나면
-                  //    **`LEAGUE_RETIRED`가 원소속으로 박히고**, 2년 뒤 전역할 때
-                  //    FA로 나와 갈 팀이 없어 **100% 미계약**이 된다.
-                  //    실측(2026-08-26): 전역 시즌마다 3~8명 · 전원이 전역자였다.
-                if (nextNpcs[i].careerStatus !== "active"
-                    || nextNpcs[i].currentLeague === "LEAGUE_RETIRED") continue;
-                const n = nextNpcs[i];
-                nextNpcs[i] = {
-                  ...n,
-                  originalLeagueId:      n.currentLeague,
-                  originalTeamId:        n.currentTeam,
-                  careerStatus:          "military",
-                  militaryStatus:        "현역",
-                  militaryUnit:          "sports",
-                  militaryEnlistYear:    seasonYear,
-                  militaryDischargeYear: seasonYear + 2,
-                  // ⚠ 바로 위 entity 갱신은 `SANGMU_LEAGUE_ID`를 쓰는데 여기만
-                  // `"LEAGUE_UNIVERSITY"` 하드코딩이 남아 있었다 — 같은 선수의
-                  // 리그가 두 곳에서 달라져 팀(독립)과 어긋났다.
-                  // 2362줄 주석이 고쳤다고 적은 그 결함이 여기 그대로 있었다.
-                  currentLeague:         SANGMU_LEAGUE_ID,
-                  currentTeam:           SANGMU_TEAM_ID,
-                  // 🔴 **군인 봉급이다** (2026-08-31). 예전엔 원 소속 연봉을
-                  //   그대로 들고 왔다 — 실측에서 상무 최고연봉이 **9.97억**
-                  //   이었고 상위 6명이 전부 상무였다. 연봉 10억짜리 군인이다.
-                  //   `militaryRules.salary`(300만원)는 **생성된 26명에게만**
-                  //   걸리고 선발로 들어온 사람은 안 걸렸다.
-                  // ⚠ 전역할 때는 **새 계약**이다 — 원 소속 리그 기준으로
-                  //   엔진이 다시 잡는다(`npc_sim` 전역 처리). 새 세이브 칸을 안 만든다.
-                  currentSalary:         milSalary,
-                };
-              }
-
-              let _sportsDbOk = true;
-              if (enlTxRows.length > 0) {
-                const enlTxRes = JSON.parse(
-                  await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: enlTxRows }))
-                ) as { ok?: boolean; error?: string };
-                if (enlTxRes.error) { autoLog(`[병역입대오류] TX 저장 실패: ${enlTxRes.error}`); _sportsDbOk = false; }
-                else autoLog(`[체육부대입대] ${sportsEnlistEntities.length}명 DB ✓`);
-              }
-              if (_sportsEntries.length > 0) {
-                logEvent({
-                  id: `enlist-sports-Y${seasonYear}`,
-                  type: "enlist_sports",
-                  seasonYear,
-                  players: _sportsEntries,
-                  counts: { input: milCandidates.length, processed: _sportsEntries.length, saved: enlTxRows.length },
-                  dbOk: _sportsDbOk,
-                  durationMs: Date.now() - _t0SeasonEnd,
-                  extra: `후보풀 ${milCandidates.length}명 중 TOP70 → ${_sportsEntries.length}명 선발`,
-                });
-              }
-            }
-          }
-        }
-
-        // 3. 일반병 강제 입대
-        const candidateIdSet = new Set(milCandidates.map(c => c.id));
-        const mGeneral = get(masterStore);
-
-        // 공통 입대 자격 조건
-        const isEnlistEligible = (e: import("./master").EntityRow) =>
-          e.role === "player" &&
-          e.status !== "retired" &&
-          isKoreanEntity(e) &&
-          e.militaryStatus !== "현역" && e.militaryStatus !== "군필" && e.militaryStatus !== "면제" &&
-          e.details?.player?.militaryStatus !== "현역" &&
-          !e.details?.player?.militaryEnlistYear &&
-          !dischargedIds.has(e.id) &&
-          !selectedSportsIds.has(e.id);
-
-        // 프로리그(KBL/ABL/JBL): 28세+ 또는 체육부대 탈락 27세
-        const generalPoolPro = mGeneral.entities.filter(e =>
-          isEnlistEligible(e) &&
-          proLeagues.has(e.leagueId ?? "") &&
-          (e.age >= 28 || (e.age === 27 && candidateIdSet.has(e.id)))
-        );
-
-        // 독립/대학리그: 26세+ (프로 입단 가능성 낮아지기 전에 처리)
-        const nonProMilLeagues = new Set(["LEAGUE_INDEPENDENT", "LEAGUE_UNIVERSITY"]);
-        const generalPoolNonPro = mGeneral.entities.filter(e =>
-          isEnlistEligible(e) &&
-          nonProMilLeagues.has(e.leagueId ?? "") &&
-          e.age >= 26
-        );
-
-        // KBL 조기 입대 자발적 선택 (25~27세, 주전 경쟁 탈락 선수)
-        const earlyEnlistPool = mGeneral.entities.filter(e =>
-          isEnlistEligible(e) &&
-          e.leagueId === "LEAGUE_KBL" &&
-          (e.age ?? 0) >= 25 && (e.age ?? 0) <= 27
-        );
-        const earlyEnlistEntities = await (async () => {
-          if (earlyEnlistPool.length === 0) return [];
-          // KBL 전체 OVR 정렬 → 상대 순위 계산
-          const kblOvrs = mGeneral.entities
-            .filter(e2 => e2.leagueId === "LEAGUE_KBL" && e2.role === "player")
-            .map(e2 => {
-              const ls = npcLiveStats[e2.id];
-              return ls?.pitching?.ovr ?? ls?.batting?.ovr
-                ?? (e2.details?.player as any)?.pitching?.ovr
-                ?? (e2.details?.player as any)?.batting?.ovr ?? 50;
-            })
-            .sort((a, b) => a - b);
-          const res = JSON.parse(
-            await window.projectB!.militaryEarlyEnlistDecisions(JSON.stringify({
-              candidates: earlyEnlistPool.map(e => {
-                const ls = npcLiveStats[e.id];
-                const ovr = ls?.pitching?.ovr ?? ls?.batting?.ovr
-                  ?? (e.details?.player as any)?.pitching?.ovr
-                  ?? (e.details?.player as any)?.batting?.ovr ?? 50;
-                const idx = kblOvrs.findIndex(v => v >= ovr);
-                const ovrRankPct = kblOvrs.length > 0 ? (idx < 0 ? 1 : idx / kblOvrs.length) : 0.5;
-                const dp = e.details?.player as any;
-                return {
-                  id: e.id,
-                  age: e.age ?? 26,
-                  ovrRankPct,
-                  playingTimePct: 0.5,
-                  contractYearsLeft: dp?.contract?.remainingYears ?? 2,
-                };
-              }),
-              seed: seasonYear + 100,
-            }))
-          ) as { earlyEnlistIds?: string[]; error?: string };
-          if (res.error || !res.earlyEnlistIds) return [];
-          const earlySet = new Set(res.earlyEnlistIds);
-          return earlyEnlistPool.filter(e => earlySet.has(e.id));
-        })();
-        if (earlyEnlistEntities.length > 0)
-          autoLog(`[조기입대] KBL 25~27세 후보 ${earlyEnlistPool.length}명 → 자발적 선택 ${earlyEnlistEntities.length}명`);
-
-        const generalPool = [...generalPoolPro, ...generalPoolNonPro, ...earlyEnlistEntities];
-        autoLog(`[일반병후보] 강제28세+ ${generalPoolPro.length}명 + 독립/대학26세+ ${generalPoolNonPro.length}명 + 조기입대 ${earlyEnlistEntities.length}명 = ${generalPool.length}명`);
-
-        // Rust LCG로 최대 30명 랜덤 선택
-        const generalEnlistEntities = await (async () => {
-          if (generalPool.length === 0) return [];
-          if (generalPool.length <= 30) return generalPool;
-          const pickRes = JSON.parse(
-            await window.projectB!.militaryPickGeneral(JSON.stringify({
-              ids: generalPool.map(e => e.id),
-              maxCount: 30,
-              seed: seasonYear,
-            }))
-          ) as { selectedIds?: string[]; error?: string };
-          if (pickRes.error || !pickRes.selectedIds) return generalPool.slice(0, 30);
-          const pickedSet = new Set(pickRes.selectedIds);
-          return generalPool.filter(e => pickedSet.has(e.id));
-        })();
-
-        if (generalEnlistEntities.length > 0) {
-          const _generalEntries: PlayerEventEntry[] = [];
-          const genTxRows = generalEnlistEntities.map(e => ({
-            seasonYear, category: "military" as const,
-            playerId: e.id, playerName: e.name,
-            fromTeamId: e.teamId, fromLeagueId: e.leagueId,
-            detail: "일반병 입대",
-          }));
-          let _generalDbOk = true;
-          const genTxRes = JSON.parse(
-            await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: genTxRows }))
-          ) as { ok?: boolean; error?: string };
-          if (genTxRes.error) { autoLog(`[일반병입대오류] TX: ${genTxRes.error}`); _generalDbOk = false; }
-
-          const genIdSet = new Set(generalEnlistEntities.map(e => e.id));
-          generalEnlistEntities.forEach(e => {
-            militaryEnlistedGeneral.push(e.name);
-            const fromShort = (e.teamId ?? "").replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
-            const live = npcLiveStats[e.id];
-            const dp = e.details?.player;
-            const rawOvr = live?.pitching?.ovr ?? live?.batting?.ovr ?? (dp as any)?.pitching?.ovr ?? (dp as any)?.batting?.ovr;
-            const ovr = Math.round((typeof rawOvr === "number" && isFinite(rawOvr)) ? rawOvr : 50);
-            autoLog(`  [일반병] ${e.name} | ${fromShort} | OVR:${ovr} | ${e.age ?? "?"}세`);
-            _generalEntries.push({
-              npcId: e.id, name: e.name,
-              fromTeamId: e.teamId, fromLeagueId: e.leagueId,
-              toLeagueId: "LEAGUE_MILITARY",
-              detail: `OVR:${ovr} | ${e.age ?? "?"}세 | 제대예정 Y${seasonYear + 2}`,
-            });
-          });
-          for (let i = 0; i < nextNpcs.length; i++) {
-            if (!genIdSet.has(nextNpcs[i].npcId)) continue;
-            // 🔴 **세이브가 이미 은퇴면 입대시키지 않는다.**
-            //    후보는 마스터 `e.status`로 거르는데 `originalLeagueId`는
-            //    세이브 `n.currentLeague`에서 온다 — 둘이 어긋나면
-            //    **`LEAGUE_RETIRED`가 원소속으로 박히고**, 2년 뒤 전역할 때
-            //    FA로 나와 갈 팀이 없어 **100% 미계약**이 된다.
-            //    실측(2026-08-26): 전역 시즌마다 3~8명 · 전원이 전역자였다.
-            if (nextNpcs[i].careerStatus !== "active"
-                || nextNpcs[i].currentLeague === "LEAGUE_RETIRED") continue;
-            const n = nextNpcs[i];
-            nextNpcs[i] = {
-              ...n,
-              originalLeagueId:      n.currentLeague,
-              originalTeamId:        n.currentTeam,
-              careerStatus:          "military",
-              militaryStatus:        "현역",
-              militaryUnit:          "general",
-              militaryEnlistYear:    seasonYear,
-              militaryDischargeYear: seasonYear + 2,
-              currentLeague:         "LEAGUE_MILITARY",
-              currentTeam:           "",
-            };
-          }
-          autoLog(`[일반병입대] ${generalEnlistEntities.length}명 (후보 ${generalPool.length}명 중) ${_generalDbOk ? "DB ✓" : "DB ✗"}`);
-          if (_generalEntries.length > 0) {
-            logEvent({
-              id: `enlist-general-Y${seasonYear}`,
-              type: "enlist_general",
-              seasonYear,
-              players: _generalEntries,
-              counts: { input: generalPool.length, processed: _generalEntries.length, saved: _generalEntries.length },
-              dbOk: _generalDbOk,
-              durationMs: Date.now() - _t0SeasonEnd,
-              extra: `후보 ${generalPool.length}명 중 ${_generalEntries.length}명 입대`,
-            });
-          }
-        }
-      }
-
-      (window as any).__lastOffseasonSummary = {
-        militaryEnlistedSports,
-        militaryEnlistedGeneral,
-        militaryDischargedNames,
-      };
-
-      logVerify(`Y${seasonYear} 시즌종료 오프시즌 완료 (${Date.now() - _t0SeasonEnd}ms)`, [
-        { name: `FA이동 ${_faEntries.length}명`, ok: true },
-        { name: `전역 ${_dischargeEntries.length}명`, ok: _dischargeDbOk },
-        { name: `체육부대 ${militaryEnlistedSports.length}명`, ok: true },
-        { name: `일반병 ${militaryEnlistedGeneral.length}명`, ok: true },
-      ]);
-
-      update((st) => ({
-        ...st,
-        npcs: nextNpcs,
-        pendingDraft: result.pendingDraft,
-        seasonEndSummary: result.summary,
-        logs: [...result.logs, ...st.logs].slice(0, 30),
-        mailbox: result.mailboxEntry
-          ? pushMailbox([result.mailboxEntry], st.mailbox)
-          : st.mailbox,
-      }));
-
-      // ── 스태프 생애주기 (Phase 6B) ─────────────────────────
-      // 이 566줄과 얽히지 않는다 — 스태프는 병역·FA·드래프트에 의존하지 않으므로
-      // usecases/seasonEnd/staffLifecycle.ts에서 독립적으로 처리하고 여기서 호출만 한다.
-      try {
-        const slotId = get({ subscribe }).currentSlotId;
-        if (slotId) {
-          const { processStaffSeasonEnd, describeStaffEvent } =
-            await import("../usecases/seasonEnd/staffLifecycle");
-          const { seasonStore } = await import("./season");
-          const seasonNow = get(seasonStore);
-          const r = await processStaffSeasonEnd(
-            slotId, seasonYear, seasonNow.worldSeed ?? 0, seasonNow.staffSlumpSeasons ?? {},
-          );
-          seasonStore.setStaffSlumpSeasons(r.slumpSeasons);
-
-          if (r.events.length > 0) {
-            const teamName = (id: string) =>
-              get(masterStore).teams.find((t) => t.id === id)?.name ?? id;
-            const lines = r.events.map((e) => describeStaffEvent(e, teamName)).filter(Boolean);
-            update((st) => ({
-              ...st,
-              logs: [...lines.slice(0, 8), ...st.logs].slice(0, 30),
-            }));
-          }
-        }
-      } catch (e) {
-        // 스태프 처리가 실패해도 시즌 종료 자체는 끝나야 한다 — 여기서 던지면
-        // 병역·FA까지 다 처리한 시즌이 통째로 롤백된다
-        console.error("[processAllLeaguesSeasonEnd] 스태프 생애주기 실패", e);
-      }
-
-      // ── 관계도 시즌 총평 + 비접촉 감쇠 (Phase 6C) ──────────
-      // 스태프 생애주기 **다음에** 돈다. 은퇴·경질로 사라진 사람을 ended로
-      // 접은 뒤에 총평을 얹어야 이미 떠난 감독에게 시즌 평가가 붙지 않는다.
-      try {
-        const st = get({ subscribe });
-        const slotId = st.currentSlotId;
-        if (slotId) {
-          const { applySeasonRelations, endRelationships } =
-            await import("../usecases/relationships");
-          const { seasonStore } = await import("./season");
-          const seasonNow = get(seasonStore);
-
-          // 사라진 상대를 먼저 동결한다 (값은 기록으로 남는다)
-          const { slotRepo } = await import("../repo/slotRepo");
-          const activeStaff = new Set(
-            (await slotRepo.getStaff(slotId, { status: "active" })).map((x) => x.staffId),
-          );
-          const rows = await slotRepo.getRelationships(slotId);
-          const gone = rows
-            .filter((r) => r.contact !== "ended"
-              && (r.kind === "manager" || r.kind === "coach" || r.kind === "owner")
-              && !activeStaff.has(r.personId))
-            .map((r) => r.personId);
-          if (gone.length > 0) await endRelationships(slotId, gone);
-
-          const myStats = seasonNow.stats[st.protagonist.id] as
-            import("../types/save").PitcherSeasonStats | null ?? null;
-          const standings = seasonNow.standings ?? [];
-          const myIdx = standings.findIndex((x) => x.teamId === st.protagonist.teamId);
-          // 순위를 못 찾으면 중간(0.5)으로 둔다 — 구단주 관계가 임의로 요동치는 것보다 낫다
-          const rankPct = myIdx >= 0 && standings.length > 1
-            ? myIdx / (standings.length - 1)
-            : 0.5;
-
-          await applySeasonRelations({
-            slotId,
-            week: 52,
-            era: myStats?.era ?? 0,
-            teamRankPct: rankPct,
-            pitchedAny: (myStats?.ip ?? 0) > 0,
-          });
-        }
-      } catch (e) {
-        console.error("[processAllLeaguesSeasonEnd] 관계도 시즌 처리 실패", e);
-      }
     },
 
     // 시즌 종료 후 주인공 에이징 감퇴 적용 (advanceSeasonYear 이전에 호출 — seasonHealth 기반)
-    async applyAgingDecay() {
-      const s = get({ subscribe });
-      const p = s.protagonist;
-      const sh = p.seasonHealth ?? { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 };
-      const raw = JSON.parse(
-        await window.projectB!.growthCalcProtagonistAging(JSON.stringify({
-          age:               p.age,
-          lowConditionWeeks: sh.lowConditionWeeks,
-          highFatigueWeeks:  sh.highFatigueWeeks,
-          injuryCount:       sh.injuryCount,
-          totalWeeks:        sh.totalWeeks,
-          pitching:          p.pitching,
-          batting:           p.batting,
-          playerType:        p.playerType,
-        }))
-      );
-      if (raw.error) {
-        autoLog(`[에이징오류] applyAgingDecay 실패: ${raw.error}`);
-        return;
-      }
-      update((st) => {
-        const updated: ProtagonistSave = { ...st.protagonist, pitching: raw.pitching, batting: raw.batting };
-        return {
-          ...st,
-          protagonist: updated,
-          player: toPlayerCompat(updated),
-          logs: [...raw.logs, ...st.logs].slice(0, 30),
-        };
-      });
-    },
 
     /**
      * 이벤트 등급의 **커리어 누계** (2026-09-08 · §9 · 업적 셋의 입력).
@@ -4284,59 +2791,6 @@ function createGameStore() {
     // 시즌 종료 처리: ① 학년 진급 → ② 나이 일괄 +1
     // 신입생은 다음 시즌 W1에 `generateFreshmenV3`(Rust)가 만든다
     // (예전엔 master.db `entry_year` 기반이었다 — 09-04에 접었다)
-    async processSeasonEnd(seasonYear: number) {
-      const s = get({ subscribe });
-
-      // ⚠ **한 해에 한 번만.** 세계 오프시즌(`runWorldSeasonEnd`)이 이걸 먼저
-      // 돌려야 졸업생이 드래프트 풀에 들어가는데, 정상 롤오버도 따로 부른다.
-      // 가드가 없으면 학년이 두 번 오르고 나이가 두 살 늘어난다.
-      if (s.lastSeasonEndYear === seasonYear) {
-        autoLog(`[시즌종료] Y${seasonYear}는 이미 진행됨 — 건너뛴다`);
-        return;
-      }
-
-      // ① HS + 대학 전체 NPC 학년 진급 (나이 증가 없음)
-      const { updated, hsGraduated, univGraduated } = await advanceAllGrades(s.npcs, seasonYear);
-      autoLog(`[시즌종료] NPC 진급: 재학 ${updated.length}명, HS졸업 ${hsGraduated.length}명, 대학졸업 ${univGraduated.length}명`);
-
-      // ② 전체 NPC 나이 +1 (단일 호출 — 졸업생 포함)
-      const allNpcs = [...updated, ...hsGraduated, ...univGraduated];
-      const agedNpcs = await advanceAllAges(allNpcs);
-      const hsGradIds   = new Set(hsGraduated.map(n => n.npcId));
-      const univGradIds = new Set(univGraduated.map(n => n.npcId));
-      const agedUpdated      = agedNpcs.filter(n => !hsGradIds.has(n.npcId) && !univGradIds.has(n.npcId));
-      const agedHsGraduated  = agedNpcs.filter(n => hsGradIds.has(n.npcId));
-      const agedUnivGraduated = agedNpcs.filter(n => univGradIds.has(n.npcId));
-
-      // ③ 주인공 학년 진급 (나이는 advanceSeasonYear에서)
-      //
-      // ⚠ **대학은 여기서 +1 하면 안 된다.** 대학 학년의 실제 계수기는
-      // `schoolState.universityWeek`이고 매주 오른다. 진학은 시즌 도중(W47)에
-      // 확정되므로, 그때 넣은 `grade: 1`을 시즌 종료에서 또 +1 하면
-      // **첫 대학 시즌을 2학년으로 뛴다** (실측 — 1학년이 통째로 사라진다).
-      // 고교는 계수기가 따로 없어 +1이 맞다.
-      //
-      // 🔴 **대학은 여기서 아무것도 안 적는다** (2026-09-27 · `BALANCE_BACKLOG`
-      //   「`protagonist.grade` 가 대학에서 한 해 뒤처진다」 · 제안 ㉯).
-      //   예전엔 이 자리에서 `grade = universityGradeOf(undefined, uw)` 를 적었다.
-      //   이 블록은 시즌 **끝**에 도는데 그때 `uw` 는 정확히 52 라(`universityAxis`
-      //   「1년째 W52 에 uw 52 · 아직 1학년」) **직전 시즌 학년**이 남았다.
-      //   지금은 계수기가 움직이는 자리(`incrementUniversityWeek`)에서 같이
-      //   비춘다 — 거울을 두 곳에서 닦으면 한쪽만 닦인 채 남는다.
-      const proto = s.protagonist;
-      let updatedProto: ProtagonistSave = proto;
-      if (proto.grade != null && proto.careerStage === "highschool") {
-        updatedProto = { ...proto, ...advanceProtagonistGrade(proto.grade, proto.careerStage).patch };
-      }
-
-      update((st) => ({
-        ...st,
-        npcs: agedUpdated,
-        protagonist: updatedProto,
-        pendingDraft: [...st.pendingDraft, ...agedHsGraduated, ...agedUnivGraduated],
-        lastSeasonEndYear: seasonYear,
-      }));
-    },
 
     /**
      * 그 해 `careerHistory` 항목에 수상 내역을 얹는다.
@@ -4361,86 +2815,10 @@ function createGameStore() {
      * ⚠ 그 해 항목이 **먼저 있어야 한다** — `appendCareerRecord`가 끝난 뒤에
      * 부른다(`seasonRollover` 참고). 없으면 붙일 곳이 없어 조용히 넘어간다.
      */
-    addProtagonistAwards(seasonYear: number, awards: CareerAward[]) {
-      if (awards.length === 0) return;
-      update((s) => {
-        const recs = s.protagonist.careerRecords ?? [];
-        const i = recs.findIndex((r) => r.year === seasonYear);
-        if (i < 0) return s;
-        const next = [...recs];
-        next[i] = { ...next[i], awards: [...(next[i].awards ?? []), ...awards] };
-        return { ...s, protagonist: { ...s.protagonist, careerRecords: next } };
-      });
-    },
 
-    addSeasonHighlights(seasonYear: number, byPlayer: Map<string, string[]>) {
-      update((s) => ({
-        ...s,
-        npcs: s.npcs.map((n) => {
-          const titles = byPlayer.get(n.npcId);
-          if (!titles?.length) return n;
-          const hist = n.careerHistory ?? [];
-          const i = hist.findIndex((h) => h.year === seasonYear);
-          if (i < 0) {
-            return { ...n, careerHistory: [...hist, {
-              year: seasonYear, leagueId: n.currentLeague, teamId: n.currentTeam,
-              statLine: "-", highlights: [...titles],
-            }] };
-          }
-          const next = [...hist];
-          next[i] = { ...next[i], highlights: [...(next[i].highlights ?? []), ...titles] };
-          return { ...n, careerHistory: next };
-        }),
-      }));
-    },
 
     // L4: 시즌 종료 시 NPC careerHistory 기록
-    applySeasonHistory(
-      seasonStats: Record<string, PlayerSeasonStats>,
-      leagueStats: Record<string, Record<string, PlayerSeasonStats>>,
-      seasonYear: number,
-    ) {
-      update((s) => {
-        const merged: Record<string, PlayerSeasonStats> = { ...seasonStats };
-        for (const stats of Object.values(leagueStats)) {
-          for (const [id, st] of Object.entries(stats)) {
-            if (!merged[id]) merged[id] = st;
-          }
-        }
-        const npcs = s.npcs.map((npc) => {
-          if (npc.careerStatus !== "active") return npc;
-          const stat = merged[npc.npcId];
-          if (!stat) return npc;
-          // 연도 기록은 Rust 학년 진급도 남긴다 — 방어가 없으면 고교생이
-          // 같은 해에 두 줄이 된다 (실측으로 확인)
-          if (npc.careerHistory.some(h => h.year === seasonYear)) return npc;
-          const statLine = buildNpcStatLine(stat);
-          const entry: NpcCareerEntry = {
-            year:      seasonYear,
-            leagueId:  npc.currentLeague,
-            teamId:    npc.currentTeam,
-            statLine,
-            highlights: [],
-            stats:     stat,
-          };
-          return { ...npc, careerHistory: [...npc.careerHistory, entry] };
-        });
-        return { ...s, npcs };
-      });
-    },
 
-    appendCareerRecord(record: CareerSeasonRecord, seasonStats?: PlayerSeasonStats) {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          careerRecords: [
-            ...(s.protagonist.careerRecords ?? []),
-            seasonStats ? { ...record, stats: seasonStats } : record,
-          ],
-        },
-      }));
-    },
 
     // 드래프트 시뮬레이션 실행 → NPC 반영 + 주인공 결과 반환
     // ── `processDraft` 제거됨 (2026-07-31) ────────────────────────
@@ -4463,334 +2841,55 @@ function createGameStore() {
      *
      * @returns 이번 호출에서 실제로 드래프트를 돌렸으면 결과, 이미 했으면 null
      */
+    // 실제 처리는 `usecases/gameStore/npcDraft.ts` 다 — store 는 상태를 적는 자리다.
+    //   이름·인자·돌려주는 값은 그대로다(호출부 셋 불변).
     async processNpcDraft(
       year: number,
       universityTeamIds: string[],
       independentTeamIds: string[],
     ): Promise<{ picks: DraftPick[] } | null> {
-      const _t0Draft = Date.now();
-      const s = get({ subscribe });
-
-      if (s.lastDraftYear === year) {
-        autoLog(`[드래프트] Y${year}는 이미 진행됨 — 건너뛴다`);
-        return null;
-      }
-
-      // 후보 풀은 졸업 예정자 + **소속을 유지한 신청자**(대학 재학·독립)다.
-      // 예전엔 pendingDraft(졸업생)만 봐서 대학 저학년과 독립리그 선수는
-      // 영원히 드래프트에 나올 수 없었다.
-      const npcIdSet = new Set(s.npcs.map(n => n.npcId));
-      const combined = [
-        ...s.npcs,
-        ...s.pendingDraft.filter(n => !npcIdSet.has(n.npcId)),
-      ];
-
-      const rulesFile = await loadRosterRules();
-      const draftRules = rulesFile.draftRules;
-      if (!draftRules) {
-        autoLog(`[드래프트오류] generation_rules.json에 draftRules가 없다 — 드래프트를 건너뛴다`);
-        return null;
-      }
-
-      // 지명 순서는 **전 시즌 성적 역순**이다. 예전엔 팀 목록을 아예 안 넘겨
-      // 기본값(알파벳 순)으로 돌았다 — 매년 같은 팀이 1순위를 가져갔다
-      // 정본은 `draftOrderOf` 하나다 — 주인공 지명도 같은 순서를 받아야
-      // 순번과 팀이 맞는다(`determine_protagonist_draft` 주석 참고)
-      const draftOrder = draftOrderOf(_getSeasonData?.()?.prevSeasonKblStandings ?? []);
-      const teamIndex = Object.fromEntries(buildSalaryIndex(get(masterStore).teams));
-      const univGradeMax = rulesFile.rosterRules["LEAGUE_UNIVERSITY"]?.gradeMax ?? 4;
-      const hsGradeMax = rulesFile.rosterRules["LEAGUE_HIGHSCHOOL"]?.gradeMax ?? 3;
-      const { candidates, counts } =
-        await selectDraftCandidates(combined, draftRules, univGradeMax, hsGradeMax);
-      if (candidates.length === 0) return null;
-
-      const byId = new Map(combined.map(n => [n.npcId, n]));
-      const candidateNpcs = candidates
-        .map(c => byId.get(c.npcId))
-        .filter((n): n is NpcSaveState => n !== undefined);
-      const routeOf = new Map(candidates.map(c => [c.npcId, c.route]));
-
-      autoLog(
-        `[드래프트] Y${year} 후보 ${candidates.length}명 ` +
-        `(고졸 ${counts[0]} · 대졸 ${counts[1]} · 대학재학 ${counts[2]} · 독립 ${counts[3]})`
+      return processNpcDraftChunk(
+        { subscribe, update, store: this, seasonData: _getSeasonData },
+        year,
+        universityTeamIds,
+        independentTeamIds,
       );
-      // 지명 대상 풀 배수 — 보드에 싣는 수와 **같은 값**을 쓴다.
-      // 다르면 "화면엔 220명인데 실제로는 1,682명에서 뽑는" 상태가 된다
-      const poolMult = (draftRules as { boardCandidateMultiplier?: number }).boardCandidateMultiplier ?? 2;
-      // 팀 사정 — **안 넘기면 구단이 뭐가 모자란지 모른 채 최고점만 뽑는다.**
-      // 야수 10명인 팀도 최고점 투수가 남아 있으면 그 투수를 뽑았다.
-      // 하한은 규칙 파일에서 유도한다(표를 새로 두지 않는다)
-      const needBonus = (draftRules as { needBonus?: number }).needBonus ?? 0;
-      const teamNeeds = needBonus > 0
-        ? teamNeedsOf(get({ subscribe }).npcs, draftOrder, rulesFile.rosterRules)
-        : {};
-      const simResult = await runDraftSimulation(
-        candidateNpcs, [], year, draftRules.rounds ?? DRAFT_ROUNDS, draftOrder, poolMult,
-        // 🔴 **팀마다 다른 눈으로 보게 한다.** 안 넘기면 전 구단이 진짜
-        //   능력을 정확히 알던 예전 동작이다 — `serde(default)` 라 조용하다.
-        (() => {
-          const sp = (rulesFile as unknown as { draftScoutingRules?: { span?: number } })
-            .draftScoutingRules?.span ?? 0;
-          if (sp <= 0) return undefined;
-          const quality: Record<string, number> = {};
-          for (const tid of KBL_TEAM_IDS) {
-            // 성향은 스토어가 정본이다 — 없으면 50(기준)
-            quality[tid] = get({ subscribe }).proTeamProfiles?.[tid]?.scoutingQuality ?? 50;
-          }
-          return { quality, span: sp };
-        })(),
-        needBonus > 0 ? { teamNeeds, needBonus, needSaturation: (draftRules as { needSaturation?: number }).needSaturation ?? 0 } : undefined,
-      );
+    },
 
-      // ── 주인공을 보드에 끼워 넣는다 ──────────────────────────
-      //
-      // ⚠ **주인공이 NPC 드래프트와 같은 판 위에 있지 않았다.** 지명 여부는
-      // `determine_protagonist_draft`가 따로 정하고, 보드는 NPC 110명으로
-      // 꽉 차 있었다. 화면은 주인공을 그 자리에 **끼워 넣기만** 했고
-      // (`DraftBoardModal`) 누구도 밀려나지 않아서:
-      //
-      //   · 행이 111개가 되고 주인공이 뽑은 번호만 **두 줄**로 뜬다
-      //   · 마지막 번호 자리는 빈다 (실측: 56 두 줄 · 111 없음)
-      //   · 그 자리를 이미 가진 NPC도 그대로 지명 처리된다
-      //
-      // 실제 드래프트는 한 순번에 한 명이다. 주인공이 들어가면 **그 뒤가
-      // 한 칸씩 밀리고 마지막 지명자 하나가 미지명이 된다.**
-      const heroPick = s.schoolState.careerResults;
-      let displacedNpcId: string | null = null;
-      if (heroPick?.draftDrafted && heroPick.draftPick != null) {
-        const at = Math.max(0, Math.min(simResult.picks.length, heroPick.draftPick - 1));
-        // 밀려나는 사람 = 마지막 지명자. 이 사람은 미지명 경로를 타야 한다
-        if (simResult.picks.length >= (draftRules.rounds ?? DRAFT_ROUNDS) * draftOrder.length) {
-          displacedNpcId = simResult.picks[simResult.picks.length - 1]?.npcId ?? null;
-          simResult.picks.pop();
-        }
-        simResult.picks.splice(at, 0, {
-          round: heroPick.draftRound ?? 1,
-          pick: heroPick.draftPick,
-          teamId: heroPick.draftTeamId ?? draftOrder[0],
-          npcId: s.protagonist.id,
-        });
-        // 번호를 다시 매긴다 — 끼워 넣은 뒤 자리가 한 칸씩 밀렸다
-        const perRound = draftOrder.length;
-        simResult.picks = simResult.picks.map((p, i) => ({
-          ...p,
-          pick: i + 1,
-          round: Math.floor(i / perRound) + 1,
-          teamId: draftOrder[i % perRound],
-        }));
-        // 주인공의 최종 순번·팀은 **보드가 정한 값**이다 — 산식이 낸 값과
-        // 다를 수 있고(앞사람이 밀렸다), 화면·계약이 이걸 읽어야 맞는다
-        const mine = simResult.picks.find((p) => p.npcId === s.protagonist.id);
-        if (mine) {
-          this.setCareerResults({
-            ...heroPick,
-            draftRound: mine.round, draftPick: mine.pick, draftTeamId: mine.teamId,
-          });
-          // 🔴 **지명을 주인공 경력에 남긴다** (2026-09-01 · 트랙 C 요청).
-          //
-          //   `addCareerEvent` 호출부 여섯 곳 어디에도 드래프트가 없었다.
-          //   NPC 는 Rust `apply_draft` 가 `draft_picked` 를 남기는데
-          //   **주인공만 안 남았다.** 그래서 엔딩 화면 "주요 사건" 절이
-          //   졸업·트레이드·입대·전역·면제·은퇴는 다 보여주는데 **지명만
-          //   비었다** — 커리어에서 제일 큰 사건이다.
-          //
-          // ⚠ **여기여야 한다.** 위에서 번호를 다시 매겼으므로 산식이 낸
-          //   값과 최종 순번이 다를 수 있다(앞사람이 밀렸다). 화면·계약이
-          //   읽는 값과 **같은 값**을 남긴다.
-          // ⚠ `toLeagueId` 는 팀에서 끌어온다 — 드래프트 목적지가 KBL 1군만
-          //   은 아니다(2군 지명이 있다). 못 찾으면 비운다.
-          const draftTeam = get(masterStore).teams.find((t) => t.id === mine.teamId);
-          this.addCareerEvent({
-            year,
-            eventType: "draft_picked",
-            toTeamId: mine.teamId,
-            toLeagueId: draftTeam?.leagueId ?? "",
-            detail: `${mine.round}라운드 ${mine.pick}순위`,
-          });
-        }
-        // ⚠ **밀려난 사람을 미지명 목록에 넣는다.** `apply_draft`는 `picks`에
-        // 없으면 KBL로 안 옮기고, `undraftedIds`에도 없으면 진로 배정
-        // (`Placer`)도 안 탄다 — 어디에도 안 속한 채 원 소속에 남는다.
-        // 오류도 로그도 안 나는 종류라 검사로 잡는다
-        if (displacedNpcId) {
-          simResult.undraftedIds = [...simResult.undraftedIds, displacedNpcId];
-          autoLog(`[드래프트] 주인공 편입으로 마지막 지명 1건이 미지명이 됐다`);
-        }
-      }
-
-      // 픽별 상세 로그
-      const npcInfoMap = new Map(candidateNpcs.map(n => [n.npcId, n]));
-      const _draftEntries: PlayerEventEntry[] = [];
-      const _liveForLog = get(npcLiveStatsStore);
-      for (const pick of simResult.picks) {
-        // ⚠ 주인공은 `npcs`에 없다 — 조회가 빗나가면 이름 자리에 `PLY_HERO`가
-        // 찍히고 OVR이 0으로 남는다. 보드에 편입한 이상 같은 줄에 제대로 뜬다
-        const isHero = pick.npcId === s.protagonist.id;
-        const npc = npcInfoMap.get(pick.npcId);
-        const ovr = isHero ? s.protagonist.pitching.ovr : (npc ? liveOvrOf(npc, _liveForLog) : 0);
-        const pos = isHero ? "P" : (npc?.playerType === "pitcher" ? "P" : (npc?.position ?? "?"));
-        const age = isHero ? (s.protagonist.age ?? 0) : (npc?.age ?? 0);
-        const potential = isHero ? s.protagonist.developmentRate : (npc?.developmentRate ?? 0);
-        const teamShort = pick.teamId.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
-        const route = isHero ? DRAFT_ROUTE_LABELS.highschoolGraduate
-          : DRAFT_ROUTE_LABELS[routeOf.get(pick.npcId) ?? "highschoolGraduate"];
-        autoLog(`  ${pick.round}R-${pick.pick}: ${isHero ? s.protagonist.name : (npc?.name ?? pick.npcId)} (${route} OVR:${ovr} ${pos} ${age}세 잠재${potential}) → ${teamShort}`);
-        _draftEntries.push({
-          npcId: pick.npcId,
-          name: isHero ? s.protagonist.name : (npc?.name ?? pick.npcId),
-          toTeamId: pick.teamId,
-          toLeagueId: "LEAGUE_KBL",
-          detail: `${pick.round}라운드 ${pick.pick}순위 | ${route} OVR:${ovr} ${pos} ${age}세 잠재:${potential}`,
-        });
-      }
-      autoLog(`[드래프트] 지명 ${simResult.picks.length}건 (미지명 ${candidates.length - simResult.picks.length}명)`);
-
-      // ── 관전 보드용 후보 명단 ────────────────────────────────
-      //
-      // ⚠ 보드는 예전에 후보를 **지명 결과에서만** 만들어서 미지명이 항상
-      // 0명이었다. 지명 수의 배수만큼 상위 후보를 남겨 "뽑히지 못한 사람"이
-      // 화면에 보이게 한다. 정렬은 실제 지명 순서를 먼저 두고, 나머지는
-      // OVR 내림차순이다 — 지명자가 상위에 몰리는 게 자연스럽다.
-      {
-        const mult = (draftRules as { boardCandidateMultiplier?: number }).boardCandidateMultiplier ?? 2;
-        const want = Math.max(simResult.picks.length, Math.round(simResult.picks.length * mult));
-        const pickedIds = new Set(simResult.picks.map((p) => p.npcId));
-        // ⚠ **`??`가 아니라 `Math.max`다.** NPC는 투수·타자 블록을 둘 다 갖는다 —
-        // `??`로 읽으면 타자의 낮은 `pitching.ovr`이 먼저 잡혀 실제 실력보다
-        // 훨씬 낮게 나온다. 실측에서 지명 1순위가 OVR 53으로, 미지명 최하위(74)
-        // 보다 낮게 찍혔다. 보드(`DraftBoardModal`)는 처음부터 max를 쓴다
-        // ⚠ **live를 읽는다.** `npcs[].pitching`은 생성값이라 3년을 지나도 안 자란다 —
-        // 그걸로 정렬하면 지명 순서가 **1학년 때 실력** 기준이 된다
-        const _live = get(npcLiveStatsStore);
-        const ovrOf = (n: NpcSaveState) => liveOvrOf(n, _live);
-        const rest = candidateNpcs
-          .filter((n) => !pickedIds.has(n.npcId))
-          .sort((a, b) => ovrOf(b) - ovrOf(a));
-        // ⚠ **주인공 자리를 비우지 않는다.** `npcInfoMap`엔 주인공이 없어서
-        // `filter(!!n)`이 그 줄을 통째로 떨어뜨린다 — 보드 후보 명단에
-        // 지명자가 한 명 모자라고, 그 자리를 화면이 따로 메우려다 픽번호가
-        // 어긋난다. 주인공은 NPC 형태로 얹어 같은 표에 놓는다
-        const heroRow = {
-          npcId: s.protagonist.id,
-          name: s.protagonist.name,
-          playerType: "pitcher",
-          position: s.protagonist.position ?? "SP",
-          age: s.protagonist.age ?? 0,
-          developmentRate: s.protagonist.developmentRate,
-          currentTeam: s.protagonist.teamId ?? "",
-          pitching: s.protagonist.pitching,
-        } as unknown as NpcSaveState;
-        const ordered = [
-          ...simResult.picks.map((p) =>
-            p.npcId === s.protagonist.id ? heroRow : npcInfoMap.get(p.npcId),
-          ).filter((n): n is NpcSaveState => !!n),
-          ...rest,
-        ].slice(0, want);
-        this.setCareerDraftCandidates(ordered.map((n) => ({
-          playerId: n.npcId,
-          playerName: n.name,
-          // 주인공은 live 맵에 없다 — 생성값이 곧 현재값이라 그대로 쓴다
-          ovr: Math.round(n.npcId === s.protagonist.id
-            ? s.protagonist.pitching.ovr : ovrOf(n)),
-          age: n.age ?? 0,
-          potential: n.developmentRate ?? 0,
-          position: n.playerType === "pitcher" ? "P" : (n.position ?? "?"),
-          originTeamId: n.currentTeam ?? "",
-          route: DRAFT_ROUTE_LABELS[routeOf.get(n.npcId) ?? "highschoolGraduate"],
-        })));
-        autoLog(`[드래프트] 보드 후보 ${ordered.length}명 (지명 ${simResult.picks.length} · 미지명 ${ordered.length - simResult.picks.length})`);
-      }
-
-      // ⚠ **2군 목록을 안 넘기면 미지명자가 갈 곳이 없다.** 오프시즌 경로는
-      // 넘기는데 드래프트 경로만 빠져 있어서, `farmMax: 34`가 계산은 되고
-      // 쓰이진 않았다 — 그만큼이 그대로 "야구를 그만둔다"로 갔다
-      const draftDest = draftDestinationTeams(get(masterStore).teams);
-      const updatedNpcs = await applyDraftToNpcs(
-        combined, simResult, universityTeamIds, independentTeamIds,
-        {
-          contract: draftRules.contract,
-          firstTeamRounds: draftRules.firstTeamRounds ?? 0,
-          teamIndex,
-          placement: placementRulesFrom(
-            rulesFile.rosterRules,
-            rulesFile.developmentPlayerRules?.salary,
-            rulesFile.developmentPlayerRules?.intakeMax),
-          farmTeamIds: draftDest.farmIds,
-          // 독립리그로 가는 사람도 연봉을 받고 뛴다 — 안 넘기면 0으로 들어간다
-          salaryRules: rulesFile.salaryRules,
-        },
-      );
-      update(st => ({ ...st, npcs: updatedNpcs, pendingDraft: [], lastDraftYear: year }));
-
-      // 지명 로그 — **관전 보드가 이걸 재생한다.** 예전엔 보드가 자기 후보 풀로
-      // 따로 시뮬을 돌려서, 화면에서 본 지명과 실제 소속이 달랐다
-      const pickLog: CareerDraftPickLogEntry[] = simResult.picks.map(pick => ({
-        pickNo: pick.pick,
-        round: pick.round,
-        teamId: pick.teamId,
-        playerId: pick.npcId,
-        playerName: pick.npcId === s.protagonist.id
-          ? s.protagonist.name : (npcInfoMap.get(pick.npcId)?.name ?? pick.npcId),
-        // 화면이 이걸로 내 줄을 강조한다 — 예전엔 항상 false라 보드가
-        // 주인공을 따로 끼워 넣어야 했고 그게 픽번호 중복의 시작이었다
-        isUser: pick.npcId === s.protagonist.id,
-        // 나이로는 경로를 못 가른다 — 드래프트 전에 나이가 이미 올라간다
-        // (`CareerDraftPickLogEntry.route` 주석)
-        route: DRAFT_ROUTE_LABELS[routeOf.get(pick.npcId) ?? "highschoolGraduate"],
-      }));
-      update(st => ({
-        ...st,
-        schoolState: { ...st.schoolState, careerDraftPickLog: pickLog },
-      }));
-
-      // NPC 드래프트 픽 거래 기록
-      const slotId = s.currentSlotId;
-      let _draftDbOk = true;
-      if (slotId && simResult.picks.length > 0) {
-        const rows = simResult.picks.map((pick) => {
-          const before = npcInfoMap.get(pick.npcId);
-          // 소속을 유지한 채 신청한 선수는 **떠나온 팀이 있다.** 그 팀을 안 적으면
-          // 리그 기록에 "어디서 왔는지 없는 이적"으로 남는다
-          const from = before && before.currentLeague !== "LEAGUE_DRAFT_POOL" ? before : null;
-          return {
-            seasonYear: year,
-            category: "draft" as const,
-            playerId: pick.npcId,
-            playerName: before?.name ?? pick.npcId,
-            fromTeamId: from?.currentTeam ?? null,
-            fromLeagueId: from?.currentLeague ?? null,
-            toTeamId: pick.teamId,
-            toLeagueId: "LEAGUE_KBL",
-            detail: `${pick.round}라운드 ${pick.pick}순위`,
-            groupId: null,
-          };
-        });
-        const draftRes = JSON.parse(
-          await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows }))
-        );
-        if (draftRes.error) { autoLog(`[NPC드래프트오류] ${draftRes.error}`); _draftDbOk = false; }
-        else autoLog(`[NPC드래프트] DB 저장 ${rows.length}건 ✓`);
-
-      }
-
-      logEvent({
-        id: `draft-Y${year}`,
-        type: "draft",
-        seasonYear: year,
-        players: _draftEntries,
-        counts: { input: candidates.length, processed: simResult.picks.length, saved: simResult.picks.length },
-        dbOk: _draftDbOk,
-        durationMs: Date.now() - _t0Draft,
-        extra: `미지명 ${candidates.length - simResult.picks.length}명 · 얼리신청 ${counts[2] + counts[3]}명`,
-      });
-
-      logVerify(`Y${year} 드래프트 완료`, [
-        { name: `후보 ${candidates.length}명 → 지명 ${simResult.picks.length}건`, ok: simResult.picks.length > 0 },
-        { name: `DB 저장`, ok: _draftDbOk },
-        { name: `gameStore.npcs 반영`, ok: updatedNpcs.length >= s.npcs.length },
-      ]);
-
-      return { picks: simResult.picks };
+    // ── 시즌 경계 ──────────────────────────────────────────────
+    //
+    // 실제 처리는 `usecases/gameStore/seasonBoundary.ts` 다 — store 는 넘기기만
+    // 한다. 이름·인자·돌려주는 값은 그대로다(호출부 불변).
+    saveTop10Snapshot(snapshot: import("../types/save").Top10Snapshot) {
+      seasonBoundary.saveTop10Snapshot({ update }, snapshot);
+    },
+    saveSeasonStartSnapshot() {
+      seasonBoundary.saveSeasonStartSnapshot({ update });
+    },
+    advanceSeasonYear(_seasonYear?: number, playedLeagueId?: string) {
+      seasonBoundary.advanceSeasonYear({ update }, _seasonYear, playedLeagueId);
+    },
+    async applyAgingDecay() {
+      await seasonBoundary.applyAgingDecay({ subscribe, update });
+    },
+    async processSeasonEnd(seasonYear: number) {
+      await seasonBoundary.processSeasonEnd({ subscribe, update }, seasonYear);
+    },
+    addProtagonistAwards(seasonYear: number, awards: CareerAward[]) {
+      seasonBoundary.addProtagonistAwards({ update }, seasonYear, awards);
+    },
+    addSeasonHighlights(seasonYear: number, byPlayer: Map<string, string[]>) {
+      seasonBoundary.addSeasonHighlights({ update }, seasonYear, byPlayer);
+    },
+    applySeasonHistory(
+      seasonStats: Record<string, PlayerSeasonStats>,
+      leagueStats: Record<string, Record<string, PlayerSeasonStats>>,
+      seasonYear: number,
+    ) {
+      seasonBoundary.applySeasonHistory({ update }, seasonStats, leagueStats, seasonYear);
+    },
+    appendCareerRecord(record: CareerSeasonRecord, seasonStats?: PlayerSeasonStats) {
+      seasonBoundary.appendCareerRecord({ update }, record, seasonStats);
     },
 
     // 하위 호환: App.svelte의 hydrate 호출 유지

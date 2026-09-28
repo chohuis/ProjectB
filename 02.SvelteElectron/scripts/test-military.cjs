@@ -57,14 +57,17 @@ console.log("상무 규칙");
   // W52(`usecases/advanceWeek.ts`). 예전엔 이 검사가 `game.ts`만 스캔해서
   // **주인공 경로의 `maxTotal: 10`을 못 봤다** — 검사는 있는데 보는 파일이
   // 하나여서 다른 경로가 그대로 샜다. 둘 다 본다.
-  const SELECTION_FILES = [
-    "apps/ui/src/shared/stores/game.ts",
-    "apps/ui/src/shared/usecases/advanceWeek.ts",
+  //
+  // ⚠ 스토어 쪽은 **경로 전체**를 한 덩이로 읽는다(`game-path-src.cjs`) —
+  //   Ⅱ-2 로 덩이가 `usecases/gameStore/` 로 나가도 검사가 안 깨진다.
+  const { gamePathSrc } = require("./game-path-src.cjs");
+  const SELECTION_SOURCES = [
+    ["game.ts", gamePathSrc()],
+    ["advanceWeek.ts", read("apps/ui/src/shared/usecases/advanceWeek.ts")],
   ];
-  const game = stripComments(read("apps/ui/src/shared/stores/game.ts"));
-  for (const f of SELECTION_FILES) {
-    const src = stripComments(read(f));
-    const short = f.split("/").pop();
+  const game = stripComments(gamePathSrc());
+  for (const [short, raw] of SELECTION_SOURCES) {
+    const src = stripComments(raw);
     check(`${short}: 연간 입대 인원을 코드에 박지 않는다`,
       !/maxTotal:\s*(?:Math\.min\(\s*)?\d+/.test(src),
       (src.match(/maxTotal:\s*(?:Math\.min\(\s*)?\d+/) ?? [""])[0]);

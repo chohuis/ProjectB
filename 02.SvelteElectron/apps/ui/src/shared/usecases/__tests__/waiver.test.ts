@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -22,7 +23,7 @@ describe("웨이버 공시", () => {
   const rust = read("packages/engine-native/src/npc_sim.rs");
   const types = read("packages/engine-native/src/sim_types.rs");
   const engine = read("apps/ui/src/shared/utils/npcEngine.ts");
-  const store = read("apps/ui/src/shared/stores/game.ts");
+  const store = gamePathSrc();
 
   it("규칙 파일에 값이 있다", () => {
     expect(rules.waiverRules, "waiverRules").toBeTruthy();

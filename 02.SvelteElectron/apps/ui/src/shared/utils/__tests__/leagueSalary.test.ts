@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { gamePathSrc, gamePathFlat } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -44,12 +45,15 @@ describe("연봉 — 리그를 따라 움직인다", () => {
   const NS = read("packages/engine-native/src/npc_sim.rs");
   const DR = read("packages/engine-native/src/draft.rs");
   const MR = read("apps/ui/src/shared/utils/militaryRules.ts");
-  const GM = read("apps/ui/src/shared/stores/game.ts");
+  const GM = gamePathSrc();
 
   it("① 상무 입대는 군인 봉급이다", () => {
     expect(MR).toContain("salary: mil?.salary ?? 300,");
     expect(GM).toContain("const milSalary = milLimits.salary;");
-    expect(GM).toContain("currentSalary:         milSalary,");
+    // ⚠ **눌러서 본다**(`gamePathFlat`). Ⅱ-2 로 이 줄이 `usecases/gameStore/`
+    //   로 나가면서 prettier 가 칸 맞춤(`currentSalary:         milSalary`)을 폈다.
+    //   검사가 묻는 것은 「군인 봉급을 그 칸에 넣는가」다.
+    expect(gamePathFlat()).toContain("currentSalary: milSalary,");
   });
 
   it("② 독립 재도전은 새 계약이다", () => {
