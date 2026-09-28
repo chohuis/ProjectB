@@ -15,7 +15,6 @@ import type {
   CareerAward,
   CareerSeasonRecord,
   InjuryState,
-  NpcCareerEntry,
   NpcCareerEvent,
   NpcSaveState,
   PitchEntry,
@@ -27,13 +26,8 @@ import type {
   TrainingPreset,
 } from "../types/save";
 import { makeSaveGame, migrateSaveGame } from "../types/save";
-import {
-  advanceAllGrades,
-  advanceAllAges,
-  advanceProtagonistGrade,
-  initHighSchoolNpcs,
-  entityToProNpcState,
-} from "../utils/gradeAdvance";
+// 진급·나이 함수들은 **덩이 여섯과 함께 나갔다** — 여기 남는 건 새 게임 몫 둘이다
+import { initHighSchoolNpcs, entityToProNpcState } from "../utils/gradeAdvance";
 // 🔴 드래프트·오프시즌 함수들은 **덩이와 함께 나갔다**(Ⅱ-2) — 여기 남기면
 //   쓰는 곳 없는 이름이 store 를 다시 무겁게 만든다
 import type { DraftPick, SchoolScenario } from "../types/save";
@@ -51,6 +45,7 @@ import { processAllLeaguesSeasonEnd as processAllLeaguesSeasonEndChunk } from ".
 import * as contracts from "../usecases/gameStore/contracts";
 import * as military from "../usecases/gameStore/military";
 import { applyEffectToProtagonist } from "../usecases/gameStore/rewards";
+import * as seasonBoundary from "../usecases/gameStore/seasonBoundary";
 // 🔴 **이름으로 다시 내보낸다.** `applyEffectToProtagonist` 는 효과 계산의
 //   정본이고 부르는 자리가 열 곳이다 — `from "../game"` 로 부르던 길을 그대로 둔다
 export { applyEffectToProtagonist } from "../usecases/gameStore/rewards";
@@ -1211,7 +1206,8 @@ function updateAchievementProgress(
 
 
 // ── NPC 스탯라인 생성 헬퍼 ──────────────────────────────────────
-function buildNpcStatLine(stat: PlayerSeasonStats): string {
+// `export` 는 Ⅱ-2 덩이 여섯(시즌 경계)이 같은 줄을 만들기 때문이다 — 정본은 여기 하나다
+export function buildNpcStatLine(stat: PlayerSeasonStats): string {
   if (stat.type === "pitcher") {
     return `${stat.w}승 ${stat.l}패 ERA ${eraLabel(stat.era)} ${ipLabel(stat.ip)}이닝 ${stat.k}K`;
   }
@@ -1819,13 +1815,6 @@ function createGameStore() {
       }));
     },
 
-    saveTop10Snapshot(snapshot: import("../types/save").Top10Snapshot) {
-      update((s) => ({
-        ...s,
-        lastTop10Pitcher: snapshot.type === "pitcher" ? snapshot : s.lastTop10Pitcher,
-        lastTop10Batter:  snapshot.type === "batter"  ? snapshot : s.lastTop10Batter,
-      }));
-    },
 
     // ⚠ **`updateFame`을 지웠다** (2026-09-01). `applyFameChange`와 같은 일을
     //   하면서 상한만 100으로 달랐다 — `applyFameChange`·`applyEventEffects`
@@ -1940,16 +1929,6 @@ function createGameStore() {
     },
 
     // 시즌 시작 시 주인공 스탯 스냅샷 저장 (능력치 트렌드 화살표용)
-    saveSeasonStartSnapshot() {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          seasonStartPitching: { ...s.protagonist.pitching },
-          seasonStartBatting:  { ...s.protagonist.batting  },
-        },
-      }));
-    },
 
     /**
      * 훈련 계획을 바꾼다.
@@ -2654,41 +2633,6 @@ function createGameStore() {
      *
      * ⚠ 안 넘기면 예전대로 `careerStage`만 본다 — 구 호출부 호환.
      */
-    advanceSeasonYear(_seasonYear?: number, playedLeagueId?: string) {
-      update((s) => {
-        const p = s.protagonist;
-        const isPro = countsAsProSeason(p.careerStage, playedLeagueId);
-        const protagonist: ProtagonistSave = {
-          ...p,
-          age: p.age + 1,
-          proServiceYears: isPro ? p.proServiceYears + 1 : p.proServiceYears,
-          condition: Math.min(100, p.condition + 20),
-          fatigue: Math.max(0, p.fatigue - 30),
-          seasonHealth: { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 },
-          sportsUnitApplied: false,
-          // ── 같은 팀에서 보낸 해 (2026-09-08 · §12 `count`) ──────
-          //
-          // 🔴 **팀이 바뀌면 1 로 되돌린다** — 「3년 내내 같은 팀」이 물으려는
-          //   것은 누적 연차가 아니라 **끊기지 않은 기간**이다. 트레이드·이적·
-          //   진학이 그걸 끊는다.
-          // ⚠ 첫 시즌은 `lastSeasonTeamId` 가 없어 1 이다(그게 맞다 — 한 해를
-          //   보냈으니 1년이다). 구 세이브도 여기서 1부터 다시 센다.
-          counters: {
-            ...(p.counters ?? {}),
-            sameTeamYears: p.lastSeasonTeamId === p.teamId
-              ? (p.counters?.sameTeamYears ?? 0) + 1 : 1,
-          },
-          lastSeasonTeamId: p.teamId,
-        };
-
-        return {
-          ...s,
-          protagonist,
-          player: toPlayerCompat(protagonist),
-          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
-        };
-      });
-    },
 
     /**
      * 등판 하나가 남기는 누적 카운터 (2026-09-08 · §12 `count`).
@@ -2738,36 +2682,6 @@ function createGameStore() {
     },
 
     // 시즌 종료 후 주인공 에이징 감퇴 적용 (advanceSeasonYear 이전에 호출 — seasonHealth 기반)
-    async applyAgingDecay() {
-      const s = get({ subscribe });
-      const p = s.protagonist;
-      const sh = p.seasonHealth ?? { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 };
-      const raw = JSON.parse(
-        await window.projectB!.growthCalcProtagonistAging(JSON.stringify({
-          age:               p.age,
-          lowConditionWeeks: sh.lowConditionWeeks,
-          highFatigueWeeks:  sh.highFatigueWeeks,
-          injuryCount:       sh.injuryCount,
-          totalWeeks:        sh.totalWeeks,
-          pitching:          p.pitching,
-          batting:           p.batting,
-          playerType:        p.playerType,
-        }))
-      );
-      if (raw.error) {
-        autoLog(`[에이징오류] applyAgingDecay 실패: ${raw.error}`);
-        return;
-      }
-      update((st) => {
-        const updated: ProtagonistSave = { ...st.protagonist, pitching: raw.pitching, batting: raw.batting };
-        return {
-          ...st,
-          protagonist: updated,
-          player: toPlayerCompat(updated),
-          logs: [...raw.logs, ...st.logs].slice(0, 30),
-        };
-      });
-    },
 
     /**
      * 이벤트 등급의 **커리어 누계** (2026-09-08 · §9 · 업적 셋의 입력).
@@ -2877,59 +2791,6 @@ function createGameStore() {
     // 시즌 종료 처리: ① 학년 진급 → ② 나이 일괄 +1
     // 신입생은 다음 시즌 W1에 `generateFreshmenV3`(Rust)가 만든다
     // (예전엔 master.db `entry_year` 기반이었다 — 09-04에 접었다)
-    async processSeasonEnd(seasonYear: number) {
-      const s = get({ subscribe });
-
-      // ⚠ **한 해에 한 번만.** 세계 오프시즌(`runWorldSeasonEnd`)이 이걸 먼저
-      // 돌려야 졸업생이 드래프트 풀에 들어가는데, 정상 롤오버도 따로 부른다.
-      // 가드가 없으면 학년이 두 번 오르고 나이가 두 살 늘어난다.
-      if (s.lastSeasonEndYear === seasonYear) {
-        autoLog(`[시즌종료] Y${seasonYear}는 이미 진행됨 — 건너뛴다`);
-        return;
-      }
-
-      // ① HS + 대학 전체 NPC 학년 진급 (나이 증가 없음)
-      const { updated, hsGraduated, univGraduated } = await advanceAllGrades(s.npcs, seasonYear);
-      autoLog(`[시즌종료] NPC 진급: 재학 ${updated.length}명, HS졸업 ${hsGraduated.length}명, 대학졸업 ${univGraduated.length}명`);
-
-      // ② 전체 NPC 나이 +1 (단일 호출 — 졸업생 포함)
-      const allNpcs = [...updated, ...hsGraduated, ...univGraduated];
-      const agedNpcs = await advanceAllAges(allNpcs);
-      const hsGradIds   = new Set(hsGraduated.map(n => n.npcId));
-      const univGradIds = new Set(univGraduated.map(n => n.npcId));
-      const agedUpdated      = agedNpcs.filter(n => !hsGradIds.has(n.npcId) && !univGradIds.has(n.npcId));
-      const agedHsGraduated  = agedNpcs.filter(n => hsGradIds.has(n.npcId));
-      const agedUnivGraduated = agedNpcs.filter(n => univGradIds.has(n.npcId));
-
-      // ③ 주인공 학년 진급 (나이는 advanceSeasonYear에서)
-      //
-      // ⚠ **대학은 여기서 +1 하면 안 된다.** 대학 학년의 실제 계수기는
-      // `schoolState.universityWeek`이고 매주 오른다. 진학은 시즌 도중(W47)에
-      // 확정되므로, 그때 넣은 `grade: 1`을 시즌 종료에서 또 +1 하면
-      // **첫 대학 시즌을 2학년으로 뛴다** (실측 — 1학년이 통째로 사라진다).
-      // 고교는 계수기가 따로 없어 +1이 맞다.
-      //
-      // 🔴 **대학은 여기서 아무것도 안 적는다** (2026-09-27 · `BALANCE_BACKLOG`
-      //   「`protagonist.grade` 가 대학에서 한 해 뒤처진다」 · 제안 ㉯).
-      //   예전엔 이 자리에서 `grade = universityGradeOf(undefined, uw)` 를 적었다.
-      //   이 블록은 시즌 **끝**에 도는데 그때 `uw` 는 정확히 52 라(`universityAxis`
-      //   「1년째 W52 에 uw 52 · 아직 1학년」) **직전 시즌 학년**이 남았다.
-      //   지금은 계수기가 움직이는 자리(`incrementUniversityWeek`)에서 같이
-      //   비춘다 — 거울을 두 곳에서 닦으면 한쪽만 닦인 채 남는다.
-      const proto = s.protagonist;
-      let updatedProto: ProtagonistSave = proto;
-      if (proto.grade != null && proto.careerStage === "highschool") {
-        updatedProto = { ...proto, ...advanceProtagonistGrade(proto.grade, proto.careerStage).patch };
-      }
-
-      update((st) => ({
-        ...st,
-        npcs: agedUpdated,
-        protagonist: updatedProto,
-        pendingDraft: [...st.pendingDraft, ...agedHsGraduated, ...agedUnivGraduated],
-        lastSeasonEndYear: seasonYear,
-      }));
-    },
 
     /**
      * 그 해 `careerHistory` 항목에 수상 내역을 얹는다.
@@ -2954,86 +2815,10 @@ function createGameStore() {
      * ⚠ 그 해 항목이 **먼저 있어야 한다** — `appendCareerRecord`가 끝난 뒤에
      * 부른다(`seasonRollover` 참고). 없으면 붙일 곳이 없어 조용히 넘어간다.
      */
-    addProtagonistAwards(seasonYear: number, awards: CareerAward[]) {
-      if (awards.length === 0) return;
-      update((s) => {
-        const recs = s.protagonist.careerRecords ?? [];
-        const i = recs.findIndex((r) => r.year === seasonYear);
-        if (i < 0) return s;
-        const next = [...recs];
-        next[i] = { ...next[i], awards: [...(next[i].awards ?? []), ...awards] };
-        return { ...s, protagonist: { ...s.protagonist, careerRecords: next } };
-      });
-    },
 
-    addSeasonHighlights(seasonYear: number, byPlayer: Map<string, string[]>) {
-      update((s) => ({
-        ...s,
-        npcs: s.npcs.map((n) => {
-          const titles = byPlayer.get(n.npcId);
-          if (!titles?.length) return n;
-          const hist = n.careerHistory ?? [];
-          const i = hist.findIndex((h) => h.year === seasonYear);
-          if (i < 0) {
-            return { ...n, careerHistory: [...hist, {
-              year: seasonYear, leagueId: n.currentLeague, teamId: n.currentTeam,
-              statLine: "-", highlights: [...titles],
-            }] };
-          }
-          const next = [...hist];
-          next[i] = { ...next[i], highlights: [...(next[i].highlights ?? []), ...titles] };
-          return { ...n, careerHistory: next };
-        }),
-      }));
-    },
 
     // L4: 시즌 종료 시 NPC careerHistory 기록
-    applySeasonHistory(
-      seasonStats: Record<string, PlayerSeasonStats>,
-      leagueStats: Record<string, Record<string, PlayerSeasonStats>>,
-      seasonYear: number,
-    ) {
-      update((s) => {
-        const merged: Record<string, PlayerSeasonStats> = { ...seasonStats };
-        for (const stats of Object.values(leagueStats)) {
-          for (const [id, st] of Object.entries(stats)) {
-            if (!merged[id]) merged[id] = st;
-          }
-        }
-        const npcs = s.npcs.map((npc) => {
-          if (npc.careerStatus !== "active") return npc;
-          const stat = merged[npc.npcId];
-          if (!stat) return npc;
-          // 연도 기록은 Rust 학년 진급도 남긴다 — 방어가 없으면 고교생이
-          // 같은 해에 두 줄이 된다 (실측으로 확인)
-          if (npc.careerHistory.some(h => h.year === seasonYear)) return npc;
-          const statLine = buildNpcStatLine(stat);
-          const entry: NpcCareerEntry = {
-            year:      seasonYear,
-            leagueId:  npc.currentLeague,
-            teamId:    npc.currentTeam,
-            statLine,
-            highlights: [],
-            stats:     stat,
-          };
-          return { ...npc, careerHistory: [...npc.careerHistory, entry] };
-        });
-        return { ...s, npcs };
-      });
-    },
 
-    appendCareerRecord(record: CareerSeasonRecord, seasonStats?: PlayerSeasonStats) {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          careerRecords: [
-            ...(s.protagonist.careerRecords ?? []),
-            seasonStats ? { ...record, stats: seasonStats } : record,
-          ],
-        },
-      }));
-    },
 
     // 드래프트 시뮬레이션 실행 → NPC 반영 + 주인공 결과 반환
     // ── `processDraft` 제거됨 (2026-07-31) ────────────────────────
@@ -3069,6 +2854,42 @@ function createGameStore() {
         universityTeamIds,
         independentTeamIds,
       );
+    },
+
+    // ── 시즌 경계 ──────────────────────────────────────────────
+    //
+    // 실제 처리는 `usecases/gameStore/seasonBoundary.ts` 다 — store 는 넘기기만
+    // 한다. 이름·인자·돌려주는 값은 그대로다(호출부 불변).
+    saveTop10Snapshot(snapshot: import("../types/save").Top10Snapshot) {
+      seasonBoundary.saveTop10Snapshot({ update }, snapshot);
+    },
+    saveSeasonStartSnapshot() {
+      seasonBoundary.saveSeasonStartSnapshot({ update });
+    },
+    advanceSeasonYear(_seasonYear?: number, playedLeagueId?: string) {
+      seasonBoundary.advanceSeasonYear({ update }, _seasonYear, playedLeagueId);
+    },
+    async applyAgingDecay() {
+      await seasonBoundary.applyAgingDecay({ subscribe, update });
+    },
+    async processSeasonEnd(seasonYear: number) {
+      await seasonBoundary.processSeasonEnd({ subscribe, update }, seasonYear);
+    },
+    addProtagonistAwards(seasonYear: number, awards: CareerAward[]) {
+      seasonBoundary.addProtagonistAwards({ update }, seasonYear, awards);
+    },
+    addSeasonHighlights(seasonYear: number, byPlayer: Map<string, string[]>) {
+      seasonBoundary.addSeasonHighlights({ update }, seasonYear, byPlayer);
+    },
+    applySeasonHistory(
+      seasonStats: Record<string, PlayerSeasonStats>,
+      leagueStats: Record<string, Record<string, PlayerSeasonStats>>,
+      seasonYear: number,
+    ) {
+      seasonBoundary.applySeasonHistory({ update }, seasonStats, leagueStats, seasonYear);
+    },
+    appendCareerRecord(record: CareerSeasonRecord, seasonStats?: PlayerSeasonStats) {
+      seasonBoundary.appendCareerRecord({ update }, record, seasonStats);
     },
 
     // 하위 호환: App.svelte의 hydrate 호출 유지

@@ -270,3 +270,65 @@ describe("덩이 5 — 선택지 효과 적용", () => {
     expect(src).toContain("applyTags(p.tags, fx.addTag, fx.removeTag)");
   });
 });
+
+describe("덩이 6 — 시즌 경계", () => {
+  /**
+   * 🔴 **대조군.** 여덟은 호출부가 있어야 한다.
+   *
+   * ⚠ `saveTop10Snapshot` 은 **옮기기 전부터 호출부가 0** 이었다(2026-09-27
+   *   전수 실측). 옮기는 길에 흘린 것이 아니라 **원래 아무도 안 부른다** —
+   *   덩이로 나간 것과 죽은 칸은 다른 문제라 여기 적어 두고 넘어간다
+   *   (`BALANCE_BACKLOG` 가 아니라 구조 몫이다).
+   */
+  it("여덟 함수의 호출부가 다 살아 있다", () => {
+    const names = [
+      "saveSeasonStartSnapshot",
+      "advanceSeasonYear",
+      "applyAgingDecay",
+      "processSeasonEnd",
+      "addProtagonistAwards",
+      "addSeasonHighlights",
+      "applySeasonHistory",
+      "appendCareerRecord",
+    ];
+    const dead = names.filter((n) => callSites(n).length === 0);
+    expect(dead, "호출부가 0인 함수").toEqual([]);
+  });
+
+  /** 옮기기 전부터 죽어 있던 칸 — **늘어나지 않게** 못박아 둔다 */
+  it("🔴 옮기기 전부터 죽어 있던 칸은 saveTop10Snapshot 하나뿐이다", () => {
+    expect(callSites("saveTop10Snapshot")).toEqual([]);
+  });
+
+  it("store 는 넘기기만 한다 — 덩이 본문이 game.ts 에 안 남았다", () => {
+    const store = readFileSync(resolve(ROOT, "apps/ui/src/shared/stores/game.ts"), "utf8");
+    expect(store).toContain("seasonBoundary.processSeasonEnd(");
+    // 한 해에 한 번 가드와 진급 호출이 store 에 남으면 정본이 둘이다
+    expect(store.includes("await advanceAllGrades(")).toBe(false);
+    expect(store.includes("lastSeasonEndYear: seasonYear")).toBe(false);
+    expect(store.includes("growthCalcProtagonistAging")).toBe(false);
+  });
+
+  /**
+   * 🔴 시즌 경계는 **한 해에 한 번**이 전부다. 가드가 빠지면 학년이 두 번 오르고
+   *   나이가 두 살 늘어난다 — 이 저장소가 두 번 밟은 형태다.
+   */
+  it("갈림길이 다 살아 있다", () => {
+    const src = gamePathSrc();
+    const flat = gamePathFlat();
+    // 한 해에 한 번 가드
+    expect(src).toContain("s.lastSeasonEndYear === seasonYear");
+    // 대학은 시즌 끝에서 학년을 안 적는다 — 거울은 한 곳에서만 닦는다
+    expect(flat).toContain('proto.grade != null && proto.careerStage === "highschool"');
+    // 진급 → 나이 +1 순서 (졸업생 포함해 한 번에)
+    expect(src).toContain("advanceAllGrades(");
+    expect(src).toContain("advanceAllAges(");
+    // 프로 연차는 실제로 뛴 리그로 센다
+    expect(src).toContain("countsAsProSeason(");
+    // 같은 팀에서 보낸 해 — 팀이 바뀌면 1 로 되돌린다
+    expect(flat).toContain("sameTeamYears:");
+    expect(src).toContain("lastSeasonTeamId");
+    // 노화는 Rust 가 센다
+    expect(src).toContain("growthCalcProtagonistAging");
+  });
+});
