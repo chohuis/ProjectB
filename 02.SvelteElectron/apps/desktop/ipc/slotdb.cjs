@@ -773,6 +773,15 @@ function describeProblems(problems) {
  *   다른 일이고, 못 여는 세이브를 여는 쪽으로 떨어지면 안 된다.
  */
 function backupBrokenSlot(savesDir, slotId) {
+  // ⚠ **한 번만 뜬다.** 슬롯 목록은 새로 고칠 때마다 열어 보므로(`listSlots`),
+  //   시도마다 뜨면 사본이 수십 개로 불어난다 — 79MB 짜리다. 이미 이 슬롯의
+  //   사본이 있으면 그걸 그대로 알린다.
+  const prefix = `slot3_${slotId}.db.broken-`;
+  const existing = fs
+    .readdirSync(savesDir)
+    .filter((f) => f.startsWith(prefix) && !f.endsWith("-wal") && !f.endsWith("-shm"));
+  if (existing.length > 0) return existing;
+
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
   const made = [];
   for (const suffix of ["", "-wal", "-shm"]) {
@@ -1914,8 +1923,21 @@ function listSlots(manager) {
       const db = manager.get(m[1]);
       const meta = commands.getMeta(db);
       out.push({ slotId: m[1], ...meta });
-    } catch {
-      /* 손상 슬롯은 목록에서 제외 */
+    } catch (e) {
+      // 🔴 **무결성으로 막힌 슬롯은 목록에서 지우지 않는다** (2026-09-27 · §4).
+      //   예전엔 통째로 빼서, 사용자가 보기엔 **세이브가 그냥 사라졌다** —
+      //   79MB 파일이 디스크에 멀쩡히 있는데 「저장된 기록이 없습니다」가
+      //   떴던 2026-08-06 과 같은 꼴이다. 왜 못 여는지 말하려고 만든 검사가
+      //   여기서 입을 막으면 안 된다.
+      //   ⏸ 화면 몫은 C — `broken` 이 붙은 줄을 「열 수 없음」으로 그리고
+      //     `broken.problems` 를 줄마다 띄우면 된다.
+      if (e instanceof SaveIntegrityError) {
+        out.push({
+          slotId: m[1],
+          broken: { problems: e.problems, backups: e.backups, message: e.message },
+        });
+      }
+      /* 그 밖의 손상(파일 자체가 안 열림 등)은 예전처럼 제외 */
     }
   }
   return out;

@@ -188,6 +188,60 @@ fixture(
 fixture("⑦ standings 표가 없다", (db) => db.exec("DROP TABLE standings"), "표 standings");
 
 log("");
+log("[목록·사본] 막힌 슬롯이 사라지지 않는다 · 사본이 불어나지 않는다");
+
+// ⑧ 슬롯 목록에서 **사라지지 않는다** — 예전엔 손상 슬롯을 통째로 뺐다.
+//    사용자가 보기엔 「세이브가 그냥 없어졌다」가 된다(2026-08-06 과 같은 꼴).
+{
+  const id = "listbrk";
+  const dir = freshSlot(id);
+  seedSlot(dir, id);
+  {
+    const db = new Database(slotPath(dir, id));
+    db.prepare("UPDATE npc SET current_team = ? WHERE npc_id = ?").run("TEAM_NOPE", "NPC_1");
+    db.close();
+  }
+  const mgr = slotdb.createManager(dir);
+  const rows = slotdb.dispatch(mgr, "listSlots", {});
+  mgr.closeAll();
+  const row = Array.isArray(rows) ? rows.find((r) => r.slotId === id) : null;
+  if (!row) fail("⑧ 막힌 슬롯이 목록에 남는다", "목록에서 사라졌다 — 왜 못 여는지 말할 자리가 없다");
+  else if (!row.broken || !Array.isArray(row.broken.problems) || row.broken.problems.length === 0) {
+    fail("⑧ 막힌 슬롯이 목록에 남는다", "broken.problems 가 비었다 — 화면이 이유를 못 그린다");
+  } else {
+    ok("⑧ 막힌 슬롯이 목록에 남는다", `broken.problems ${row.broken.problems.length}건`);
+  }
+}
+
+// ⑨ 사본이 **한 번만** 뜬다 — 목록을 새로 고칠 때마다 79MB 를 복사하면 안 된다
+{
+  const id = "bkonce";
+  const dir = freshSlot(id);
+  seedSlot(dir, id);
+  {
+    const db = new Database(slotPath(dir, id));
+    db.prepare("UPDATE npc SET current_league = ? WHERE npc_id = ?").run("LEAGUE_NOPE", "NPC_1");
+    db.close();
+  }
+  const tryOpen = () => {
+    try {
+      slotdb.openSlot(dir, id).close();
+    } catch {
+      /* 거부가 정상이다 */
+    }
+  };
+  tryOpen();
+  tryOpen();
+  tryOpen();
+  const prefix = `slot3_${id}.db.broken-`;
+  const copies = fs
+    .readdirSync(dir)
+    .filter((f) => f.startsWith(prefix) && !f.endsWith("-wal") && !f.endsWith("-shm"));
+  if (copies.length === 1) ok("⑨ 세 번 열어도 사본은 하나다");
+  else fail("⑨ 사본이 불어난다", `세 번 열었더니 사본 ${copies.length}개`);
+}
+
+log("");
 log("[🔴 대조군] 멀쩡한 세이브는 그대로 열린다");
 
 // ⓐ 갓 만든 빈 슬롯 — 주인공이 없다. 「깨졌다」로 읽으면 새 게임이 막힌다
