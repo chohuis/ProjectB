@@ -327,8 +327,11 @@ declare global {
       // 선수·스태프는 slot.db가 정본이다.
       // ⚠ `masterSave`·`tuning*` 다섯은 2026-08-20에 지웠다 — Ctrl+Q의
       // 이벤트·업적 에디터와 매치 엔진 랩을 없애면서 부르는 곳이 0이 됐다.
-      // 콘텐츠는 `resource/data/master/` 파일을 직접 고치고, 튜닝 수치도
-      // 파일을 고친다(시작 시 `applyTuningFromFile`이 먹인다).
+      // 콘텐츠는 `resource/data/master/` 파일을 직접 고친다.
+      // 🔴 **튜닝 수치는 파일로 못 고친다** (2026-09-30 정정). 「파일을 고치면
+      // `applyTuningFromFile` 이 먹인다」고 적혀 있었지만 **먹인 값을 읽는
+      // 코드가 0** 이었다 — 엔진은 Rust `tuning.rs` 상수만 본다. 수치를 고치면
+      // 그 파일을 고치고 `npm run build:native` 를 돈다.
       // 배치 시뮬은 `npm run smoke`
       onContentChanged?: (cb: (data: unknown) => void) => void;
       logWrite?: (payload: string) => Promise<string>;
@@ -443,45 +446,9 @@ export type MatchAnimationCue =
   | { type: "runner_advance"; runnerId: "first" | "second" | "third" | "batter"; toBase: "1B" | "2B" | "3B" | "home"; duration: number }
   | { type: "show_result";  text: string; tone: "good" | "bad" | "neutral"; x: number; y: number };
 
-export interface MatchEngineTuningPayload {
-  version?: number;
-  updatedAt?: string;
-  updatedBy?: string;
-  pitchBase: { fastball: number; slider: number; curve: number; changeup: number };
-  strategyBonus: { aggressive: number; balanced: number; safe: number };
-  powerBonus: { low: number; normal: number; high: number };
-  locationBonus: Record<string, number>;
-  staminaBase: number;
-  staminaAggressiveBonus: number;
-  staminaFastballBonus: number;
-  staminaPowerCost: { low: number; normal: number; high: number };
-  mentalRecoveryOnInningEnd: number;
-  hitUpgradeSingleToDoubleBase: number;
-  hitUpgradeDoubleToHomeRunBase: number;
-  weatherPowerModifier: { sunny: number; cloudy: number; rainy: number; windy_in: number; windy_out: number };
-  weatherQualityModifier: { rainyFastball: number; rainyBreaking: number; windyOut: number; windyIn: number; cloudy: number };
-  parkQualityModifier: { neutral: number; pitcher_park: number; hitter_park: number; dome: number };
-  doublePlayBaseProb: number;
-}
-
-export interface MatchEngineSimMetrics {
-  games: number;
-  avgAway: number;
-  avgHome: number;
-  avgTotalScore: number;
-  avgPitches: number;
-  bbRate: number;
-  kRate: number;
-  hrRate: number;
-  p50Pitches: number;
-  p90Pitches: number;
-  resultRates: Record<string, number>;
-}
-
-export interface MatchEngineSmokeThresholds {
-  avgTotalScore: { min: number; max: number };
-  bbRate: { min: number; max: number };
-  kRate: { min: number; max: number };
-  hrRate: { min: number; max: number };
-  avgPitches: { min: number; max: number };
-}
+// 🔴 **`MatchEngineTuningPayload` · `MatchEngineSimMetrics` ·
+// `MatchEngineSmokeThresholds` 셋을 2026-09-30에 지웠다.** 쓰는 곳이 0 이었다 —
+// 랩 IPC 다섯(2026-08-20)과 `ipc/tuning.cjs`(2026-09-30)가 사라지면서 받을
+// 쪽이 없어졌다. `Payload` 쪽은 **`pitchBase` 를 4구종으로 못박고** 있어서
+// 남겨 두면 「구종 넷이 정본」이라는 옛 그림이 타입에 계속 살아 있었다
+// (Rust 는 10구종이다). 배치 시뮬 수치는 `scripts/smoke-test.mjs` 안에 있다.

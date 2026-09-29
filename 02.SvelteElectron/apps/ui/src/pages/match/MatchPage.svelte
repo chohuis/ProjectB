@@ -675,7 +675,7 @@
   $: onMound = isProtagonistPitching && currentPhase === "protagonist_pitch";
   $: modeLabel = onMound ? "등판 중" : "관전";
 
-  /** 지금 고른 조합의 스태미나 소모. 정본은 `balance/match_engine_tuning.json` */
+  /** 지금 고른 조합의 스태미나 소모. 정본은 Rust `tuning.rs` (`utils/pitchCost.ts` 머리말) */
   $: currentCost = staminaCostOf(
     selectedPitchType === "fastball",
     selectedStrategy as CostStrategy,

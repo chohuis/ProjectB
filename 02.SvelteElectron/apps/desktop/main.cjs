@@ -10,7 +10,6 @@ const {
   openDatabase, applySchemaPatches,
 } = require("./ipc/db.cjs");
 const matchIpc   = require("./ipc/match.cjs");
-const tuningIpc  = require("./ipc/tuning.cjs");
 const windowIpc  = require("./ipc/window.cjs");
 
 // ── asarUnpack 경로 헬퍼 ─────────────────────────────────────────
@@ -22,7 +21,6 @@ function unpackedPath(...segments) {
 }
 
 let coreModulePromise = null;
-const tuningSchemaRelPath = "balance/match_engine_tuning.schema.json";
 
 function loadCoreModule() {
   if (!coreModulePromise) {
@@ -51,11 +49,13 @@ function isPathInside(target, base) {
 // `resource/data/master/**` 쪽 문제이고, 지금은 `_manifest.json` 양방향 검사
 // (`eventManifest.test.ts`)가 그 자리를 본다.
 
-function loadTuningSchema(resourceBase) {
-  const fullPath = path.resolve(resourceBase, tuningSchemaRelPath);
-  const raw = fs.readFileSync(fullPath, "utf8");
-  return JSON.parse(raw);
-}
+// 🔴 **매치 엔진 튜닝 파일을 2026-09-30에 접었다** — `ipc/tuning.cjs` ·
+// `balance/match_engine_tuning.json` · 그 스키마 · `loadTuningSchema` 전부.
+// 부팅 때 그 파일을 읽어 `core.setMatchEngineTuning` 에 심었는데 **심은 값을
+// 읽는 코드가 0** 이었다(엔진은 Rust `tuning.rs` 상수만 본다 · napi 에 받는
+// 자리가 없다). 값은 넉 달 전 것이었고(4구종 `pitchBase`), 같은 파일의
+// 스태미나 칸만 화면이 읽어 **엔진의 두 배**를 보여 주고 있었다.
+// 지금 정본은 Rust 하나 · 화면이 읽는 거울은 `packages/core` 하나다.
 
 function createWindow() {
   const isDev = !!process.env.VITE_DEV_SERVER_URL;
@@ -140,7 +140,6 @@ app.whenReady().then(() => {
   const isDev        = !!process.env.VITE_DEV_SERVER_URL;
   const resourceBase = unpackedPath("resource", "data", "master");
   const rootDir      = path.resolve(__dirname, "../../");
-  const tuningSchema = loadTuningSchema(resourceBase);
   const userDataDir  = app.getPath("userData");
   const savesDir     = path.join(userDataDir, "saves");
   const dbPath       = path.join(savesDir, "projectb_v2.db");
@@ -179,19 +178,12 @@ app.whenReady().then(() => {
   });
   app.on("before-quit", () => slotManager.closeAll());
 
-  tuningIpc.applyTuningFromFile(resourceBase, tuningSchema, loadCoreModule).then((res) => {
-    if (!res.ok) console.warn("[tuning] invalid tuning file. fallback to defaults.", res.errors);
-  }).catch((e) => {
-    console.warn("[tuning] failed to load tuning file. fallback to defaults.", e);
-  });
-
   // ── domain IPC 등록 ──────────────────────────────────────────────────────────
   // R3a-4d: save.cjs(v2 game/season 블롭 세이브) 폐기 — repo:call(slot.db)이 유일 경로
   matchIpc.register(ipcMain, { loadCoreModule, engineNative });
-  // ⚠ `tuningIpc.register`는 2026-08-20에 지웠다 — 매치 엔진 랩(Ctrl+Q)을
-  // 없애면서 `tuning:load/validate/apply/save/smoke` 다섯이 쓰는 곳 0이 됐다.
-  // **시작 시 튜닝 파일을 먹이는 `applyTuningFromFile`은 그대로 산다**(위쪽).
-  // 수치는 파일을 직접 고치고, 배치 시뮬은 `npm run smoke`가 한다
+  // ⚠ `tuningIpc` 는 통째로 없다 — 랩 채널 다섯은 2026-08-20, 부팅 때 파일을
+  // 먹이던 `applyTuningFromFile` 은 2026-09-30에 지웠다(위 주석). 수치는
+  // Rust `tuning.rs` 를 고치고 `build:native` 를 돈다. 배치 시뮬은 `npm run smoke`
   // 창은 만들어진 뒤에 잡아야 한다 — 등록 시점엔 아직 없다
   windowIpc.register(ipcMain, { getWindow: () => _mainWindow });
 

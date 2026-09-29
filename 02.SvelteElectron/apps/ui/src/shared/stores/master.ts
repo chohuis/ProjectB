@@ -22,6 +22,9 @@ import { primePitcherRoleRules } from "../utils/pitcherRoleRules";
 import { primeManagerStyleRules } from "../utils/managerStyle";
 import { primeTraitDisplay } from "../utils/playerTraits";
 import { primePitchCost } from "../utils/pitchCost";
+// 🔴 매치 엔진 수치의 **거울**이다 — 정본은 `packages/engine-native/src/tuning.rs`.
+//   화면이 읽는 몫만 여기서 가져온다(`utils/pitchCost.ts` 머리말)
+import { DEFAULT_MATCH_ENGINE_TUNING } from "@core/domain/matchEngineTuning";
 import { NUM_PATHS, EQ_PATHS } from "../utils/eventPaths";
 import { COUNTERS } from "../utils/eventCounters";
 import { parseTierRules, type TierRules } from "../utils/tierRules";
@@ -1347,11 +1350,13 @@ function createMasterStore() {
           primeContractRules(genRules as Parameters<typeof primeContractRules>[0]);
         }
         // 경기 화면이 투구 선택의 스태미나 소모를 표시한다.
-        // **엔진과 같은 파일**을 읽는다 — 숫자를 두 벌로 두지 않는다.
-        const tuning = await fetchMaster<Record<string, unknown>>(
-          "balance/match_engine_tuning.json",
-        );
-        if (tuning) primePitchCost(tuning as Parameters<typeof primePitchCost>[0]);
+        // 🔴 **정본은 Rust `tuning.rs` 다** (2026-09-30). 예전엔
+        //   `balance/match_engine_tuning.json` 을 읽으면서 주석이 「엔진과 같은
+        //   파일」이라 적고 있었는데 **엔진은 그 파일을 안 읽었다** — 그 JSON 은
+        //   넉 달 전 값이었고, 화면은 `staminaBase 0.85` 로 **엔진(0.45)의 두
+        //   배**를 보여 주고 있었다. 지금은 Rust 의 거울(`@core`)을 읽는다 —
+        //   거울이 Rust 와 같은지는 `matchTuningMirror.test.ts` 가 본다.
+        primePitchCost(DEFAULT_MATCH_ENGINE_TUNING);
       }
 
       // 부팅 무결성 검증 — 코드 팀 상수 ⊆ refs.json + _1→_2 팜 규칙 (DESIGN.md §8.2 원칙 6)

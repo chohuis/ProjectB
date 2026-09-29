@@ -1,3 +1,25 @@
+/**
+ * 매치 엔진 튜닝 — **이 파일은 Rust 정본의 거울이다.**
+ *
+ * 정본은 `packages/engine-native/src/tuning.rs` 하나다. 엔진은 그 상수만 읽고,
+ * **JS 에서 값을 넣는 길은 없다**(napi 에 튜닝 setter 가 없다 · 실측
+ * 2026-09-30). 여기 있는 값은 **화면이 읽는 몫**이다 — 지금은 경기 화면의
+ * 투구 스태미나 소모 표시(`utils/pitchCost.ts`)가 쓴다.
+ *
+ * 🔴 **정본이 셋이었다** (2026-09-30 전수). Rust · 이 거울 ·
+ *   `resource/data/master/balance/match_engine_tuning.json` 셋이 같은 표를
+ *   들고 있었고, JSON 은 **넉 달 전 값**이었다(`pitchBase 63/60/58/57` ·
+ *   4구종 · Rust 는 10구종 52.5~57.5). 그 JSON 을 `setMatchEngineTuning` 이
+ *   먹였지만 **읽는 코드가 0** 이라 엔진에는 한 방울도 안 갔고, 화면은
+ *   그 JSON 의 스태미나 값을 읽어 **엔진의 두 배**를 보여 주고 있었다
+ *   (`staminaBase 0.85` 대 Rust `0.45`).
+ *   그래서 JSON 과 `set/getMatchEngineTuning` 을 지웠다 — 남은 것은
+ *   **정본 하나 + 거울 하나**다.
+ *
+ * ⚠ **거울이 Rust 와 같은지는 기계가 본다** —
+ *   `apps/ui/src/shared/utils/__tests__/matchTuningMirror.test.ts` 가
+ *   `tuning.rs` 를 읽어 대조한다. 손으로 한쪽만 고치면 그 검사가 빨강이다.
+ */
 export interface MatchEngineTuning {
   pitchBase: Record<
     | "fastball"
@@ -141,24 +163,11 @@ export const DEFAULT_MATCH_ENGINE_TUNING: MatchEngineTuning = {
   shadowUmpireStrikeProb: 0.45,
 };
 
-let activeMatchEngineTuning: MatchEngineTuning = JSON.parse(
-  JSON.stringify(DEFAULT_MATCH_ENGINE_TUNING),
-);
-
-export function getMatchEngineTuning(): MatchEngineTuning {
-  return activeMatchEngineTuning;
-}
-
-export function setMatchEngineTuning(next: Partial<MatchEngineTuning>): void {
-  const base = JSON.parse(JSON.stringify(DEFAULT_MATCH_ENGINE_TUNING)) as MatchEngineTuning;
-  const incoming = JSON.parse(JSON.stringify(next)) as Partial<MatchEngineTuning>;
-  const merged = { ...base, ...incoming } as MatchEngineTuning;
-  for (const key of Object.keys(base) as (keyof MatchEngineTuning)[]) {
-    const bVal = base[key];
-    const iVal = incoming[key];
-    if (iVal !== undefined && typeof bVal === "object" && !Array.isArray(bVal)) {
-      (merged as any)[key] = { ...(bVal as object), ...(iVal as object) };
-    }
-  }
-  activeMatchEngineTuning = merged;
-}
+// ⚠ **`get`/`setMatchEngineTuning` 과 `activeMatchEngineTuning` 을 2026-09-30에
+//   지웠다.** 넣은 값을 읽는 코드가 **0** 이었다 — 엔진은 Rust 상수만 보고
+//   (`napi` 에 튜닝 setter 가 없다), `getMatchEngineTuning` 호출부도 0 이었다.
+//   부팅 때 `apps/desktop/ipc/tuning.cjs applyTuningFromFile` 이 마스터 JSON 을
+//   읽어 여기 심는 것이 유일한 손이었고, 심은 값은 아무도 안 읽었다.
+//   「값을 파일로 바꿀 수 있다」는 주석이 **네 곳**에 적혀 있었지만 사실이
+//   아니었다. 되살리려면 Rust 쪽에 받는 자리를 먼저 만든다 — 그게 없으면
+//   또 「층마다 맞는데 잇는 선이 없는」 꼴이다.

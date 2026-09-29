@@ -11,8 +11,20 @@
  * 화면이 만든 값이었고 엔진의 부상 판정과 아무 관계가 없었다(§U3).
  *
  * 대신 **실제로 있는 것**을 보여준다: 선택마다 스태미나 소모가 다르다.
- * 그 값은 `balance/match_engine_tuning.json`이 정본이고 엔진과 같은 파일을
- * 읽으므로 숫자가 두 벌이 되지 않는다.
+ *
+ * 🔴 **정본은 `packages/engine-native/src/tuning.rs` 다** (2026-09-30 전수).
+ *   예전 주석은 「`balance/match_engine_tuning.json` 이 정본이고 엔진과 같은
+ *   파일을 읽으므로 숫자가 두 벌이 되지 않는다」였는데 **둘 다 틀렸다** —
+ *   엔진은 그 JSON 을 한 번도 안 읽었고(napi 에 튜닝을 받는 자리가 없다),
+ *   그래서 숫자는 이미 두 벌이었다. 그 JSON 은 넉 달 전 값이라
+ *   `staminaBase 0.85` 대 Rust `0.45` 로 **화면이 엔진의 두 배**를 보여
+ *   주고 있었다(같은 조합에서 남은 투구수가 절반으로 보였다).
+ *   지금은 Rust 의 거울(`packages/core` `DEFAULT_MATCH_ENGINE_TUNING`)을
+ *   `stores/master.ts` 가 실어 준다 — 거울이 Rust 와 같은지는
+ *   `__tests__/matchTuningMirror.test.ts` 가 본다.
+ *
+ * ⚠ 「화면이 엔진에 없는 규칙을 지어내지 않는다」는 위 문단이 이 파일의
+ *   존재 이유고, 그건 **같은 숫자를 봐야** 지켜진다.
  */
 
 export interface PitchCostRules {
