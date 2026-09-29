@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { draftInjuryCounts, DRAFT_INJURY_WINDOW_SEASONS } from "../draftSystem";
+import { weekPathFlat } from "../../usecases/__tests__/weekPathSrc";
 
 // 드래프트 부상 감점은 최근 세 시즌만 본다 — 평생 누적이면 독립 재지원이
 // 해마다 나빠지기만 한다 (씨앗 20260803: 감점 30→42 · 합 34→25).
@@ -53,8 +54,13 @@ describe("draftInjuryCounts", () => {
   });
 
   it("advanceWeek 의 드래프트 호출이 이 함수를 거친다 — 전체 이력을 직접 세는 갈래가 없다", () => {
-    const src = readFileSync(resolve(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
-    const at = src.indexOf("determineProtagonistDraft(p.scoutScore");
+    // ⚠ **눌러서 · 경로 전체를 읽는다** (2026-09-30 · Ⅱ-1). 두 가지가 바뀌었다:
+    //   · 이 호출이 `weekPhases/careerHub.ts` 로 갔다 → `weekPathFlat` 이 그
+    //     경로를 한 덩이로 읽는다 (`weekPathSrc.ts` 머리말)
+    //   · 새 파일은 `.prettierignore` 밖이라 prettier 가 인자를 줄마다 접었다
+    //     → 앵커에서 `p.scoutScore` 를 뺀다. 인자 근접(±)은 아래가 그대로 본다
+    const src = weekPathFlat();
+    const at = src.indexOf("determineProtagonistDraft(");
     expect(at).toBeGreaterThan(0);
     const around = src.slice(at - 600, at + 400);
     expect(around).toContain("draftInjuryCounts(p.injuryHistory");

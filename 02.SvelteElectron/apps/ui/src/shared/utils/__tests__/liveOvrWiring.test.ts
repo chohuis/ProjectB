@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
+// ⚠ **눌러서 · 경로 전체를 읽는다** (2026-09-30 · Ⅱ-1). 두 가지가 바뀌었다:
+//   · 진로 블록이 `weekPhases/careerHub.ts` 로 갔다 → 경로 전체를 한 덩이로
+//   · 새 파일은 `.prettierignore` 밖이라 prettier 가 `const teamAceRank =` 뒤를
+//     줄바꿈했다 — 줄바꿈에 기대는 잣대는 서식만 바뀌어도 깨진다
+//   둘 다 `weekPathSrc.ts` 머리말에 적힌 이유 그대로다
+import { weekPathFlat } from "../../usecases/__tests__/weekPathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { liveOvrOf, livePitchingOvrOf } from "../../stores/npcLiveStats";
@@ -63,8 +69,9 @@ describe("liveOvrOf — 성장값을 먼저 본다", () => {
     // 호출부(`peerOvrs`)는 `.filter((o) => o > 0)`으로 이걸 걸러낸다
     const bat = { npcId: "B_GROWN", pitching: { ovr: 20 } };
     expect(livePitchingOvrOf(bat, LIVE)).toBe(0);
-    const s = read("apps/ui/src/shared/usecases/advanceWeek.ts");
-    expect(s).toMatch(/livePitchingOvrOf\(n, liveStats\)\)\s*\n\s*\.filter\(\(o\) => o > 0\)/);
+    const s = weekPathFlat();
+    // 눌러서 본 글자를 그대로 적는다 — 정규식을 안 쓴다(CLAUDE.md)
+    expect(s).toContain("livePitchingOvrOf(n, liveStats)) .filter((o) => o > 0)");
   });
 });
 
@@ -73,7 +80,7 @@ describe("배선 — 드래프트가 생성값을 읽지 않는다", () => {
   // 되돌리면 이 검사가 실패해야 한다** — 그래야 검사가 배선을 보는 것이다.
 
   it("주인공 또래 백분위가 live를 쓴다", () => {
-    const s = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+    const s = weekPathFlat();
     expect(s).toMatch(/const peerOvrs = [\s\S]{0,300}livePitchingOvrOf\(n, liveStats\)/);
     // 옛 형태가 남아 있으면 안 된다
     expect(s).not.toMatch(
@@ -82,7 +89,7 @@ describe("배선 — 드래프트가 생성값을 읽지 않는다", () => {
   });
 
   it("팀 에이스 순위가 live를 쓴다", () => {
-    const s = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+    const s = weekPathFlat();
     expect(s).toMatch(
       /teamAceRank = [\s\S]{0,300}livePitchingOvrOf\(n, liveStats\) > p\.pitching\.ovr/,
     );

@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { weekPathSrc } from "../../../shared/usecases/__tests__/weekPathSrc";
 
 /**
  * **해외 진출 배선이 끝까지 이어지는가.**
@@ -21,7 +22,10 @@ const HUB = read("apps/ui/src/features/career/ui/CareerChoiceHubModal.svelte");
 const MODAL = read("apps/ui/src/features/career/ui/OverseasApplyModal.svelte");
 const RESULT = read("apps/ui/src/features/career/ui/CareerResultModal.svelte");
 const SUBMIT = read("apps/ui/src/shared/usecases/careerDecision.ts");
-const WEEK = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+// ⚠ 주간 진행 경로 **전체**를 읽는다(`weekPathSrc`) — Ⅱ-1 로 진로 블록이
+//   `weekPhases/careerHub.ts` 에 갔다. 이 검사가 묻는 것은 「주간 진행 어딘가에
+//   그 줄이 있는가」이지 「어느 파일에 있는가」가 아니다 (`weekPathSrc.ts` 머리말)
+const WEEK = weekPathSrc();
 
 describe("해외 2군 직행 배선", () => {
   /**

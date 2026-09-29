@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { gamePathSrc, gamePathFlat } from "../../stores/__tests__/gamePathSrc";
+import { weekPathSrc } from "../../usecases/__tests__/weekPathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -42,7 +43,9 @@ describe("주인공 드래프트 좌석", () => {
     // 기본값(`KBL_TEAM_IDS`)을 받았다. 순번은 맞는데 주인이 달랐다
     expect(ds).toMatch(/export function draftOrderOf\(/);
     expect(store).toMatch(/const draftOrder = draftOrderOf\(/);
-    const aw = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+    // ⚠ 주간 진행 경로 **전체**를 읽는다 — Ⅱ-1 로 이 호출이
+    //   `weekPhases/careerHub.ts` 에 갔다 (`weekPathSrc.ts` 머리말)
+    const aw = weekPathSrc();
     expect(aw).toMatch(/draftOrderOf\(get\(seasonStore\)\.prevSeasonKblStandings \?\? \[\]\)/);
   });
 
