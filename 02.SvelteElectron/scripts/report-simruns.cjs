@@ -672,6 +672,73 @@ if (gr.length) {
   log("");
 }
 
+// ── ⑦ 고졸 직행 판의 점수 분포 · 문턱과의 거리 ──────────────────
+// 🔴 `SIM_103_PITCH_DRAFT_2026-09-27.md §3-3` 꼬리 — "판 보고서에
+//   draft_score 가 없어 이미 돈 판으로 문턱 후보를 되계산할 수 없다"를
+//   `probe-a-simrun-worker.cjs`(실은 `perfEntry.ts simYearRow`)가 이제
+//   드래프트 해의 줄에 남긴다(D · 2026-09-30). 이 절이 그 칸을 읽는다 —
+//   **옛 판(이 고침 전에 돈 판)은 칸이 비어 있다**, 숨기지 않고 "못 쟀다"로 적는다.
+{
+  const 드래프트줄 = runs.map((r, i) => {
+    const y = (r.해마다 ?? []).find((yy) => yy.드래프트점수 !== undefined);
+    return y ? { n: i + 1, 성향: r.머리.성향, 프리셋: r.머리.프리셋, 씨앗: r.머리.씨앗, y } : null;
+  }).filter(Boolean);
+
+  log("## 고졸 직행 판의 점수 분포 · 문턱과의 거리");
+  log("");
+  if (!드래프트줄.length) {
+    log("**못 쟀다** — 이 배치의 판이 전부 이 칸을 만들기 전에 돌았거나, "
+      + "어느 판도 드래프트 해에 안 닿았다. `npm run check:native` 뒤 다시 돌리면 찬다.");
+    log("");
+  } else {
+    log(`드래프트 판정이 실린 줄 ${드래프트줄.length}/${runs.length}판. `
+      + "문턱(`UNDRAFTED_SCORE`)은 `npc_sim.rs:3921` 이 정본 — 아래 값은 그 판정 순간의 거울이다.");
+    log("");
+    log("| # | 성향/프리셋/씨앗 | 지명 | 라운드/픽 | 점수 | 문턱 | 거리(점수−문턱) | 내역(percentile/ovrNorm/aceBonus/tourAdj/awardAdj/scoutAdj/injuryPen) |");
+    log("|---|---|---|---|---|---|---|---|");
+    for (const x of 드래프트줄) {
+      const y = x.y;
+      const bd = y.드래프트내역 ?? {};
+      const 거리 = y.드래프트점수 != null && y.드래프트문턱 != null
+        ? Math.round((y.드래프트점수 - y.드래프트문턱) * 100) / 100 : null;
+      const 내역줄 = ["percentile", "ovrNorm", "aceBonus", "tourAdj", "awardAdj", "scoutAdj", "injuryPen"]
+        .map((k) => `${k}:${bd[k] ?? "-"}`).join(" ");
+      log(`| ${x.n} | ${x.성향}/${x.프리셋}/${x.씨앗} | ${y.드래프트여부 ? "지명" : "미지명"} `
+        + `| ${y.드래프트여부 ? `${y.드래프트라운드 ?? "-"}R ${y.드래프트픽 ?? "-"}P` : "—"} `
+        + `| ${y.드래프트점수 ?? "-"} | ${y.드래프트문턱 ?? "-"} `
+        + `| ${거리 == null ? "-" : (거리 >= 0 ? `+${거리}` : 거리)} | ${내역줄} |`);
+    }
+    log("");
+    const 미지명줄 = 드래프트줄.filter((x) => x.y.드래프트여부 === false);
+    if (미지명줄.length) {
+      log("**미지명 사유 — 내역에서 가장 크게 깎은 항.** `injuryPen`이 크면 부상, "
+        + "`percentile`/`ovrNorm`(=`base`)이 낮으면 재능·기록 부족이 사유다:");
+      log("");
+      for (const x of 미지명줄) {
+        const bd = x.y.드래프트내역 ?? {};
+        const 부상항 = bd.injuryPen ?? 0;
+        const 재능항 = bd.base ?? ((bd.percentile ?? 0) * 0.6 + (bd.ovrNorm ?? 0) * 0.4);
+        const 사유 = 부상항 >= 10 ? `부상(injuryPen ${부상항})` : `재능·기록(base ${Math.round(재능항 * 100) / 100})`;
+        log(`- **#${x.n}** ${x.성향}/${x.프리셋}/${x.씨앗} — 점수 ${x.y.드래프트점수} `
+          + `(문턱 ${x.y.드래프트문턱}) · ${사유}`);
+      }
+      log("");
+    }
+    // 문턱 후보 되계산 — §3-3 이 원하던 것: 값만 바꿔 몇 판이 갈리는지 재시뮬 없이 본다
+    const 후보들 = [68.0, 70.0, 72.0];
+    log("### 문턱 후보별 갈림 — **재시뮬 없이 이 판들로 되계산**");
+    log("");
+    log("| 후보 문턱 | 지명 유지 | 미지명으로 바뀜 |");
+    log("|---|---|---|");
+    for (const cand of 후보들) {
+      const 유지 = 드래프트줄.filter((x) => (x.y.드래프트점수 ?? -Infinity) >= cand).length;
+      const 바뀜 = 드래프트줄.length - 유지;
+      log(`| ${cand} | ${유지}/${드래프트줄.length} | ${바뀜}/${드래프트줄.length} |`);
+    }
+    log("");
+  }
+}
+
 const md = L.join("\n") + "\n";
 fs.writeFileSync(path.join(DIR, "report.md"), md);
 console.log(md);
