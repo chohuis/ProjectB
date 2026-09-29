@@ -19,6 +19,7 @@ import type { UnifiedGameOutcome, PlayerGameLine, PendingAction } from "../types
 import { buildBatterLineup, buildStarterStats, buildFielders, rotIdxOf } from "../utils/matchLineupBuilder";
 import { leagueMatchOptions } from "../utils/matchLeagueOptions";
 import { protagonistMatchSeed } from "../utils/protagonistMatchSeed";
+import { toEngineProtagonistPitcher } from "../utils/protagonistPitcher";
 import {
   SIM_PERSONAS, primaryStatsFor, bodyCost, growthValue, seededIndex,
   militaryEnlistPick, type SimPersona,
@@ -217,21 +218,12 @@ async function handleGame(scheduleId: string): Promise<void> {
       // 1.1 A② §6-1 — 리그가 정하는 투구수 상한·선발 아웃 계수·마무리 문·의무 휴식 (규칙 파일)
       ...leagueMatchOptions(lid, conds?.[p.id], entry.gameDate, p.roleFit, p.startGuaranteeGames),
       pitcher: {
-        // ⚠ **여덟 개를 다 넘긴다.** 예전엔 command·velocity·staminaCap·
-        // mentalResil 넷뿐이라 **control(가중 2.0)·movement(1.5)·clutch·
-        // holdRunners가 통째로 빠졌다** — OVR의 33%다. 전부 `Option<f64>`라
-        // 오류 없이 조용히 기본값으로 떨어졌고, 실측(2026-08-10)에서 주인공
-        // ERA가 자기 OVR 구간 중앙값의 2배였다(7.45 vs 3.35).
-        // NPC 투수(`buildStarterStats`)는 처음부터 여덟 개를 다 넘겼다.
-        name:       p.name,
-        command:    p.pitching.command,
-        velocity:   p.pitching.velocity,
-        staminaCap: p.pitching.stamina,
-        mentalResil: p.pitching.mentality,
-        control:     p.pitching.control,
-        movement:    p.pitching.movement,
-        clutch:      p.pitching.clutch,
-        holdRunners: p.pitching.holdRunners,
+        // 🔴 **표를 손으로 두 번 적지 않는다** (2026-09-30). 여덟 개 + 던지는
+        // 손은 `utils/protagonistPitcher.ts` 가 정본이고 **수동 경기 경로와
+        // 같은 함수**다. 예전엔 여기·`MainPage`·`MatchPage` 셋이 각자 적고
+        // 있었고, 결정 ⑫ 의 `handedness` 가 **셋 다 안 들어갔다** — 주인공만
+        // 늘 우투로 판정됐다(`SIM_103_CLUTCH_PLATOON §4-1`).
+        ...toEngineProtagonistPitcher(p),
         // ⚠ 이걸 안 넘기면 주인공이 배운 구종이 자동 경기에 안 나온다
         arsenal:    toEngineArsenal(p.pitches),
         // ⚠ 폼 무너짐 — 안 넘기면 화면엔 "폼 교정 중"인데 경기는 멀쩡해진다

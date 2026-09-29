@@ -54,6 +54,7 @@
   import { buildBatterLineup, buildStarterStats, buildFielders, derivePreGameWeather, derivePreGamePark, rotIdxOf } from "../../shared/utils/matchLineupBuilder";
   import { leagueMatchOptions } from "../../shared/utils/matchLeagueOptions";
   import { protagonistMatchSeed } from "../../shared/utils/protagonistMatchSeed";
+  import { toEngineProtagonistPitcher } from "../../shared/utils/protagonistPitcher";
 
   export let onSeasonEnd: () => void = () => {};
 
@@ -293,13 +294,12 @@
         pendingGameEntry.week, pendingGameEntry.id);
       const raw = await window.projectB!.matchSimulateToEntry({
         ...(matchSeed === undefined ? {} : { seed: matchSeed }),
-        // ⚠ **여덟 개를 다 넘긴다.** 넷만 넘기면 control·movement·clutch·
-        // holdRunners가 빠져 OVR의 33%가 엔진에 안 간다 — 오류 없이 조용히
-        // 기본값이 되고, 주인공 ERA가 같은 OVR NPC의 2배가 된다
-        pitcher: { name: p.name, command: p.pitching.command, velocity: p.pitching.velocity,
-                   staminaCap: p.pitching.stamina, mentalResil: p.pitching.mentality,
-                   control: p.pitching.control, movement: p.pitching.movement,
-                   clutch: p.pitching.clutch, holdRunners: p.pitching.holdRunners },
+        // 🔴 **표를 손으로 두 번 적지 않는다** (2026-09-30). 여덟 개 + 던지는
+        // 손은 `utils/protagonistPitcher.ts` 가 정본이고 **자동 진행 경로와
+        // 같은 함수**다. 넷만 넘기던 시절엔 control·movement·clutch·
+        // holdRunners 가 빠져 OVR 의 33%가 안 갔고, 결정 ⑫ 의 `handedness` 는
+        // 셋 다 안 받았다 — 주인공만 늘 우투였다(`SIM_103_CLUTCH_PLATOON §4-1`)
+        pitcher: toEngineProtagonistPitcher(p),
         role: (p.position as "SP" | "RP" | "CP") ?? "SP",
         // ⚠ 리그를 안 넘기면 Rust `MatchStartOptions.league_id` 가 비어 투구수 상한이
         //   기본 120구로 떨어진다 — 고교 105구가 **주인공 경기에만** 안 걸렸다

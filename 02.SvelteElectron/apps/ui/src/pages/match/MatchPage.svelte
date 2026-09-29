@@ -24,6 +24,7 @@
   import { seasonStore } from "../../shared/stores/season";
   import { leagueMatchOptions } from "../../shared/utils/matchLeagueOptions";
   import { protagonistMatchSeed } from "../../shared/utils/protagonistMatchSeed";
+  import { toEngineProtagonistPitcher } from "../../shared/utils/protagonistPitcher";
   import { settingsStore } from "../../shared/stores/settings";
   import {
     scaleMs, showsOverlay, overlayMs, reducesMotion, systemReducedMotion,
@@ -908,7 +909,12 @@
           $seasonStore.currentDate, $gameStore.protagonist.roleFit),
         initialStamina: player.condition,
         initialMental: 74,
-        pitcher: { ...player.pitcherStats, name: player.name },
+        // 🔴 **던지는 손이 빠져 있었다** (2026-09-30). `player.pitcherStats`
+        //   (=`toPlayerCompat`)에는 `handedness` 칸이 없어 **한 구씩 던지는
+        //   경기에서 주인공이 늘 우투로 판정됐다** — 좌완 주인공에게 결정 ⑫
+        //   의 좌우 상성이 아예 안 걸린다. 자동 진행 갈래와 **같은 함수**로
+        //   만든다(`utils/protagonistPitcher.ts` · `SIM_103_CLUTCH_PLATOON §4-1`)
+        pitcher: toEngineProtagonistPitcher($gameStore.protagonist),
         weather: matchWeather,
         park: matchPark,
         role: (ctx?.role ?? "SP") as "SP" | "RP" | "CP",
@@ -1265,7 +1271,9 @@
             get(seasonStore).currentDate, get(gameStore).protagonist.roleFit),
           initialStamina: player.condition,
           initialMental: 74,
-          pitcher: player.pitcherStats
+          // 🔴 위 `startEngineMatch` 와 **같은 함수**다 — 갈리면 늦게 엔진이
+          //   서는 이 갈래에서만 주인공의 손이 달라진다(2026-09-30)
+          pitcher: toEngineProtagonistPitcher(get(gameStore).protagonist)
         });
         engineStarted = true;
       }

@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import { gamePathSrc } from "../../stores/__tests__/gamePathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { toEngineProtagonistPitcher } from "../protagonistPitcher";
+import type { ProtagonistSave } from "../../types/save";
 
 // ── 주인공도 여덟 개를 다 넘긴다 ─────────────────────────────────
 //
@@ -37,35 +39,37 @@ const STATS = [
   "holdRunners",
 ] as const;
 
-/** `pitcher: { … }` 블록을 통째로 뽑는다 (중첩 없는 한 겹) */
-function pitcherBlocks(src: string): string[] {
-  const out: string[] = [];
-  for (const m of src.matchAll(/pitcher:\s*\{/g)) {
-    let depth = 0,
-      i = m.index! + m[0].length - 1;
-    for (; i < src.length; i++) {
-      if (src[i] === "{") depth++;
-      else if (src[i] === "}") {
-        depth--;
-        if (depth === 0) break;
-      }
-    }
-    out.push(src.slice(m.index!, i + 1));
-  }
-  return out;
-}
-
 describe("주인공 투수 페이로드", () => {
-  it("자동 진행 경로가 여덟 개를 다 넘긴다", () => {
-    const blocks = pitcherBlocks(read("apps/ui/src/shared/usecases/runAutoAdvance.ts"));
-    expect(blocks.length).toBeGreaterThan(0);
-    for (const s of STATS) expect(blocks.some((b) => b.includes(`${s}:`))).toBe(true);
-  });
-
-  it("실제 플레이 경로(MainPage)도 여덟 개를 다 넘긴다", () => {
-    const blocks = pitcherBlocks(read("apps/ui/src/pages/main/MainPage.svelte"));
-    expect(blocks.length).toBeGreaterThan(0);
-    for (const s of STATS) expect(blocks.some((b) => b.includes(`${s}:`))).toBe(true);
+  /**
+   * 🔴 **자리가 바뀌었다** (2026-09-30). 예전엔 이 검사가 호출부의
+   *   `pitcher: { … }` 블록을 글자로 뜯어 여덟 개를 셌다 — 그 시절엔 같은
+   *   표가 `runAutoAdvance` · `MainPage` · `MatchPage` 셋에 손으로 적혀
+   *   있었다. 지금은 `utils/protagonistPitcher.ts` 하나가 정본이라
+   *   **함수를 불러** 센다(글자보다 강하다 · 정규식도 사라진다).
+   *
+   * ⚠ 호출부가 그 정본을 쓰는지는 `protagonistPitcher.test.ts` 가 본다 —
+   *   같은 사실을 두 검사에 적지 않는다.
+   */
+  it("정본이 여덟 개를 다 담는다 — 넷만 담기면 OVR 의 33%가 안 간다", () => {
+    const keys = Object.keys(
+      toEngineProtagonistPitcher({
+        name: "x",
+        handedness: "R",
+        pitching: {
+          ovr: 60,
+          stamina: 60,
+          velocity: 60,
+          command: 60,
+          control: 60,
+          movement: 60,
+          mentality: 60,
+          recovery: 60,
+          clutch: 60,
+          holdRunners: 60,
+        },
+      } as unknown as ProtagonistSave),
+    );
+    for (const s of STATS) expect(keys, `${s} 가 빠졌다`).toContain(s);
   });
 
   it("뷰모델 타입이 여덟 개를 선언한다", () => {
