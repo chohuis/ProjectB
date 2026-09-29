@@ -8,14 +8,9 @@ import { seasonStore, npcLiveStatsStore } from "../stores/season";
 import { gameStore } from "../stores/game";
 import { masterStore } from "../stores/master";
 import { autoLog } from "../stores/autoAdvance";
-import { relationEffects, trainingAreaOf } from "./relationships";
-import { slotRepo } from "../repo/slotRepo";
 import { simulateGame } from "../utils/gameSimulator";
 import { rotationSizeForStage } from "../utils/rosterEngine";
-import {
-  applyWeeklyStudy, NEUTRAL_STUDY, calcExamResult,
-  loadAcademicsRules, majorEffects, warningEffect, settleSemester,
-} from "../utils/academicsEngine";
+import { calcExamResult, settleSemester } from "../utils/academicsEngine";
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
 import { buildOpponentBrief, rotIdxOf } from "../utils/matchLineupBuilder";
@@ -23,25 +18,19 @@ import { runNationalTeamWeek } from "./nationalTeam";
 import { runCampusEventsWeek } from "./campusEvents";
 import { dischargeProtagonist } from "./militaryDecision";
 import { isRetired } from "./retirement";
-import { staffModsOf, staffStatsOf } from "../utils/staffEffects";
 import type { MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
 import type { MessageItem } from "../types/main";
 import type { ProtagonistSave } from "../types/save";
 import { toGameDate } from "../utils/scheduleGen";
-import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch, starterWouldStart } from "../utils/pitcherRoleEngine";
+import { isReliefsRole, relieverWouldPitch, starterWouldStart } from "../utils/pitcherRoleEngine";
 import { roleDepthOf } from "../utils/pitcherRoleRules";
-import { isV3SlotActive } from "../repo/v3Mode";
-import { askRoleChoice, hasRoleChoiceThisSeason } from "./pitcherRole";
 import { loadRosterRules } from "../repo/newGameV3";
 import { campConditionBonus } from "../utils/clubEffects";
-import { generateFreshmenV3, ensureLeagueActivatedV3, generateOverseasIntakeV3, generateFarmDevelopmentV3 } from "../repo/slotLifecycleV3";
-import { applyForeignTurnover } from "./foreignPlayers";
+import { ensureLeagueActivatedV3 } from "../repo/slotLifecycleV3";
 
 // ── weekPhases 도메인 모듈 (R4: training·academics·events·games·injuries·growth·market·digest) ──
-import { findTeamCoach } from "./weekPhases/training";
 import { EXAM_EVENT_IDS, isMidtermEvent, makeExamMessage } from "./weekPhases/academics";
 import { runMilitaryServiceWeek, runMilitaryTriggers } from "./weekPhases/military";
-import { applyTraitMods } from "../utils/protagonistTraits";
 import { applySideEffects } from "./decisions";
 import { simulateNpcGame, logGameLines } from "./weekPhases/games";
 import { runRelationsWeek } from "./weekPhases/relations";
@@ -50,6 +39,8 @@ import { runCareerHubWeek } from "./weekPhases/careerHub";
 import { runOffseasonMarketWeek } from "./weekPhases/offseasonMarket";
 import { runEventLaneWeek } from "./weekPhases/eventLane";
 import { runWeeklyNews } from "./weekPhases/weeklyNews";
+import { runSeasonOpenWeek } from "./weekPhases/seasonOpen";
+import { runWeeklyPrep } from "./weekPhases/weeklyPrep";
 // 시즌 경계 — 포스트시즌·대회·독립리그 (2026-09-27 · Ⅱ-1 쪼개기 · 로직 불변)
 import {
   progressIndependentLeague, isKnockoutGame, progressTournaments,
@@ -72,11 +63,10 @@ import { processWeeklyNpcGrowth } from "./weekPhases/growth";
 import { processProTeamCallupCalldown, getTeamProfile } from "./weekPhases/market";
 import { LEAGUE_NAMES } from "./weekPhases/digest";
 // 소식에 실을 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
-import { examBarsMeta, semesterBarsMeta, cardsMeta } from "../utils/dashboardMeta";
+import { examBarsMeta, semesterBarsMeta } from "../utils/dashboardMeta";
 import { bundleRoundProgressMessages } from "./weekPhases/tournamentNews";
 import { runBackgroundPostseasons } from "./backgroundPostseason";
 import { snapshotDueAt } from "../utils/standingsSnapshot";
-import { isLeagueInScope } from "../config/releaseScope";
 
 function calcCareerStageYear(p: ProtagonistSave, seasonWeek: number, universityWeek: number): number {
   if (p.careerStage === "highschool") return Math.max(0, (p.grade ?? 1) - 1);
@@ -100,238 +90,39 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const m = get(masterStore);
   const logs: string[] = [];
 
-  // ── 보직 선택 — **각 리그의 개막 전 주** (PLAN_ROLE_RECOMMEND §4 · 확정 8) ──
+  // ── 시즌 개막 준비 — `weekPhases/seasonOpen.ts` (2026-09-30 · Ⅱ-1) ─
   //
-  // 🔴 새 pending 타입을 안 만든다. 소식을 넣기만 하면 아래 「미결정 메시지 확인」
-  //   갈래가 `{type:"message"}` pending 으로 그 주에서 멈춘다 (§4).
-  //
-  // ⚠ **W1 자동 배정보다 먼저 부른다.** 프로 1군은 묻는 주가 W1 이라(시범경기가
-  //   W1~4 에 12경기 있다) 순서가 뒤집히면 브리핑과 물음이 같은 주에 겹친다.
-  {
-    const askedId = await askRoleChoice(s.seasonYear, weekInYearOf(weekNum));
-    if (askedId) logs.push("[보직] 감독 추천 도착 — 선택 대기");
-  }
-
-  // W1: 투수 포지션/역할 배정 + 시즌 시작 브리핑
-  //
-  // ⚠ **선택이 이미 있으면 덮어쓰지 않는다** (§7). 구 세이브·헤드리스 안전망으로
-  //   남긴 갈래다 — 물어본 시즌에는 주인공이 고른 보직이 정본이다.
-  //
-  // 🔴 **`g` 를 다시 읽는다.** 위 `askRoleChoice` 가 방금 가드를 세웠는데 함수
-  //   머리의 스냅샷에는 그게 없다 — 프로 1군은 묻는 주가 W1 이라 그대로 두면
-  //   같은 주에 물음과 브리핑이 **둘 다** 뜬다.
-  if (weekNum === 1 && g.protagonist.playerType === "pitcher"
-      && !hasRoleChoiceThisSeason(get(gameStore).protagonist, s.seasonYear)) {
-    if (g.protagonist.careerStage === "highschool") {
-      // 고교: SP / RP 두 범주만 사용
-      const pos = await assignHighschoolPosition(g.protagonist, m.entities);
-      const posLabel = pos === "SP" ? "선발 투수" : "중계 투수";
-      gameStore.setPosition(pos);
-      gameStore.setCurrentRole(pos === "SP" ? "1선발" : "중간계투");
-      gameStore.addMessage({
-        id: `msg-season-brief-${s.seasonYear}`,
-        category: "system",
-        sender: "코칭스태프",
-        subject: `${s.seasonYear}시즌 시작 브리핑`,
-        preview: `이번 시즌 보직: ${posLabel}`,
-        body: `이번 시즌 당신의 보직은 [${posLabel}]로 배정되었습니다.\n\n팀과 함께 최고의 시즌을 만들어 가세요.`,
-        createdAt: `W1`,
-        readAt: null,
-        // 보직은 **눈금 키**(SP·RP·CP)로 싣는다 — 카드 아래 한 줄을 문안의
-        // 굴절표(`roleAs`)가 만든다. 낱말을 실으면 「중계으로」가 된다.
-        // ⚠ 상세 역할(`1선발`)과 그 설명은 본문이 든다 — 굴절표에 없다
-        metadata: cardsMeta("cards.seasonBrief", [{ key: "role", value: pos }]),
-      });
-      logs.push(`[보직 배정] ${posLabel}`);
-    } else {
-      // 프로(대학·독립 포함): 상세 역할 배정.
-      // 감독 관계가 OVR 평가를 보정한다 (Phase 6C-5) — 관계 행이 아직 없으면
-      // 0이라 구 동작과 같다(새 팀 첫 시즌 W1이 그렇다).
-      const roleBias = (isV3SlotActive() && g.currentSlotId)
-        ? (await relationEffects({ slotId: g.currentSlotId, teamId: g.protagonist.teamId })).roleOvrBias
-        : 0;
-      const role = await assignProtagonistRole(g.protagonist, m.entities, roleBias);
-      const pos: "SP" | "RP" | "CP" =
-        role === "마무리" ? "CP" : isReliefsRole(role) ? "RP" : "SP";
-      gameStore.setPosition(pos);
-      gameStore.setCurrentRole(role);
-      gameStore.addMessage({
-        id: `msg-season-brief-${s.seasonYear}`,
-        category: "system",
-        sender: "코칭스태프",
-        subject: `${s.seasonYear}시즌 시작 브리핑`,
-        preview: `이번 시즌 역할: ${role}`,
-        body: `이번 시즌 당신의 역할은 [${role}]로 배정되었습니다.\n\n${ROLE_DESCRIPTION[role]}\n\n팀과 함께 최고의 시즌을 만들어 가세요.`,
-        createdAt: `W1`,
-        readAt: null,
-        // 보직은 **눈금 키**(SP·RP·CP)로 싣는다 — 카드 아래 한 줄을 문안의
-        // 굴절표(`roleAs`)가 만든다. 낱말을 실으면 「중계으로」가 된다.
-        // ⚠ 상세 역할(`1선발`)과 그 설명은 본문이 든다 — 굴절표에 없다
-        metadata: cardsMeta("cards.seasonBrief", [{ key: "role", value: pos }]),
-      });
-      logs.push(`[역할 배정] ${role}`);
-    }
-  }
-
-  // W1: 주인공 스냅샷 저장 + NPC 라이브 스탯 초기화 + 신규 입장 NPC 활성화
-  if (weekNum === 1) {
-    gameStore.saveSeasonStartSnapshot();
-
-    const currentSeasonYear = s.seasonYear;
-
-    if (isV3SlotActive()) {
-      // ── v3: 신입생은 Rust 생성 — 진급 후 grade 1이 빈 팀에 채움 ──
-      const created = await generateFreshmenV3(currentSeasonYear);
-      if (created > 0) logs.push(`[신입생] ${created}명 입학 (Rust 생성)`);
-
-      // ── 육성선수: 2군 보직 하한 미달분만 ────────────────────────
-      //
-      // ⚠ 유출은 다 막았는데(콜다운·트레이드·공백 충원 하한) 그러자 반대편이
-      // 막혔다 — 2군 투수가 하한이면 1군 포수 공백을 메울 수가 없다.
-      // 하한을 더 걸어봐야 교착이라 **없는 사람을 만들어야 한다.**
-      const dev = await generateFarmDevelopmentV3(currentSeasonYear);
-      if (dev > 0) logs.push(`[육성선수] ${dev}명 (2군 보직 하한 충원)`);
-
-      // ── 해외 리그 로스터 보장 (확장팩) ──────────────────────────
-      //
-      // ⚠ 예전엔 해외가 **Lazy 활성화 전용**이었고 `ensureLeagueActivatedV3`를
-      // 대학·독립·주인공 리그만 불렀다. 그래서 확장팩 게이트를 열어도
-      // **선수 0명인 리그에 일정만 1,740경기 깔렸다**(실측 ABL 1,080 · JBL 660,
-      // 2시즌 굴려도 인원 0·결과 0). 게이트를 연다고 도는 게 아니다.
-      //
-      // 범위 밖이면 `ensureLeagueActivatedV3`가 호출돼도 할 일이 없어야 하므로
-      // 여기서 먼저 거른다.
-      for (const lid of ["LEAGUE_ABL", "LEAGUE_ABL_FARM", "LEAGUE_JBL", "LEAGUE_JBL_FARM"]) {
-        if (!isLeagueInScope(lid)) continue;
-        const n = await ensureLeagueActivatedV3(lid, currentSeasonYear);
-        if (n > 0) logs.push(`[해외활성화] ${lid.replace("LEAGUE_", "")} ${n}명`);
-      }
-      // 해외는 하부 파이프라인(고교→대학→드래프트)이 없다 — 매년 리그에
-      // 직접 신인을 배정한다. 안 하면 `fill_first_teams`가 1군을 채우려고
-      // 팜에서 빼오기만 해서 **팜이 말라붙는다**(실측 544 → 184).
-      const intake = await generateOverseasIntakeV3(currentSeasonYear);
-      if (intake > 0) logs.push(`[해외신인] ${intake}명 배정`);
-
-      // ── 외국인 순환 (F-4·F-5) ─────────────────────────────────
-      //
-      // 은퇴·로스터 정리가 끝난 **뒤**여야 빈 자리를 정확히 센다.
-      // 안 돌면 보유 3명이 은퇴·부진 퇴출로 매년 줄어들기만 한다
-      const fgn = await applyForeignTurnover(currentSeasonYear);
-      for (const l of fgn.logs) logs.push(l);
-    }
-    // ⚠ 여기 `else` 갈래가 하나 있었다 — `master.db` `npc_master` 에서
-    //   `entry_year == 올해` 인 사전 생성 NPC 를 꺼내 고교 신입생·해외
-    //   즉전감으로 심는 **레거시 경로**다. 2026-09-04 에 지웠다: 그 표는
-    //   Phase 6A 이후 0행이라 **어느 갈래로 와도 아무 일도 안 일어났고**,
-    //   `master.db` 자체를 접으면서 재료가 사라졌다. 신입생은 위쪽
-    //   `generateFreshmenV3`(Rust 생성)가 만든다.
-
-    // 기존 선수 전체 → npcLiveStats 초기화 (미등록 항목만)
-    const currentEntities = get(masterStore).entities;
-    seasonStore.initNpcLiveStats(currentEntities, currentSeasonYear);
-    // 프로 NPC 초기화: KBL/ABL/JBL 선수가 npcs에 없으면 `entities`에서 변환·추가
-    gameStore.initProNpcsIfMissing(currentEntities, currentSeasonYear);
-    seasonStore.snapNpcSeasonStart();
-  }
+  // ⚠ **맨 앞이어야 한다.** 보직을 **묻는 것**이 W1 자동 배정보다 먼저다 —
+  //   프로 1군은 묻는 주가 W1 이라 순서가 뒤집히면 브리핑과 물음이 같은 주에
+  //   겹친다. 세 절을 한 덩이로 옮긴 이유가 그 순서다(그 파일 머리말).
+  await runSeasonOpenWeek({ weekNum, s, g, m, logs });
 
   const isUniversity = g.protagonist.careerStage === "university";
   const weekInYear   = weekInYearOf(weekNum);
 
   if (isUniversity) gameStore.incrementUniversityWeek();
 
-  // ⚠ **학생일 때만 학업이 돈다.** 예전엔 단계 게이트가 없어서 프로 선수도
-  // 매주 출석·과제·백분위가 갱신됐다 (실측: pro_kbl 주간 로그에 "[학업] 주간
-  // 효율 85%"). 학사 경고가 걸리면 `eligibilityBlocked`로 경기가 자동 시뮬되는데,
-  // 프로 선수에게 그게 걸리는 건 말이 안 된다.
-  const isStudent = g.protagonist.careerStage === "highschool" || isUniversity;
-  // ⚠ 배수 인자를 지웠다 — 대학은 결과를 저장하지 않아 **죽은 갈래였다**
-  const studyResult = isStudent
-    ? await applyWeeklyStudy(g.schoolState)
-    : NEUTRAL_STUDY;
-  // ⚠ **대학은 고교식 주간 학업 결과를 저장하지 않는다.** 석차백분율·출석·
-  // 과제·경고누적은 고교 축이고, 대학은 학점 축이다(설계 §1-1).
-  // 훈련 효율(`studyResult.efficiencyMod`)만 아래에서 그대로 쓴다
-  if (isStudent && !isUniversity) gameStore.applyWeeklyStudyResult(studyResult);
-
-  // ── 대학 학업 (Phase 9-C) ────────────────────────────────────
+  // ── 학업·계수 준비 — `weekPhases/weeklyPrep.ts` (2026-09-30 · Ⅱ-1) ─
   //
-  // 고교와 축이 다르다 — 고교는 석차 9등급으로 대학 입학 티어를 정하고,
-  // 대학은 **학점 → 졸업 자격**이다. 수치는 전부 `academicsRules`에서 온다.
-  const acaRules = isUniversity ? await loadAcademicsRules() : null;
-  let univEffMod = 1.0;
-  if (acaRules) {
-    const mj = majorEffects(acaRules, g.schoolState.universityMajor);
-    // 주간 학점 누적 — 학업 모드와 전공이 함께 정한다
-    const perWeek = acaRules.university.studyModeGpa[g.schoolState.weeklyStudyMode] ?? 0;
-    if (perWeek > 0) gameStore.addWeeklyGpa(perWeek * mj.gpaGainMult);
-    // 경고 단계는 훈련 효율을 깎는다. **한 번에 출전 정지로 가지 않는다** —
-    // 1차는 효율만 깎고 경기는 뛴다(회복할 틈)
-    univEffMod = warningEffect(acaRules, g.schoolState.academicWarningLevel ?? 0)?.trainingEffMod ?? 1.0;
-  }
-
-  // ⚠ 전공 계수의 정본은 `generation_rules.json`이다. 예전엔
-  // `academicsEngine.UNIVERSITY_MAJORS` 상수에도 같은 숫자가 있었는데,
-  // 규칙 파일에 `majors`를 넣으면서 **표가 둘이 됐다** — 규칙 파일만 읽는다.
-  const majorEffBonus = acaRules
-    ? majorEffects(acaRules, g.schoolState.universityMajor).trainingEffBonus
-    : 0;
-
-  const pitchCoach = findTeamCoach(g.protagonist.teamId, "투수", m.entities);
-  // 스태프 능력치는 `staffEffects`만 읽는다 — 여기서 직접 파면 그게 다음 드리프트다
-  const coachTeaching  = staffStatsOf(g.protagonist.teamId ?? "", m.entities, { specialty: "투수" }).teaching;
-
-  // 관계 보정 (Phase 6C-5) — 이번 주 훈련 영역의 담당 코치와 감독 관계를 한 번에 읽는다.
-  // 이 조회가 여기 있는 이유: coachEffBonus와 보직 배정이 둘 다 아래에서 쓰인다.
-  const trainingFocus = m.trainingPrograms.find(
-    pr => pr.id === g.trainingPlan?.primaryProgramId,
-  )?.focus;
-  const relEffects = (isV3SlotActive() && g.currentSlotId)
-    ? await relationEffects({
-        slotId: g.currentSlotId,
-        teamId: g.protagonist.teamId,
-        coachSpecialty: await trainingAreaOf(trainingFocus),
-      })
-    : { roleOvrBias: 0, trainingBonus: 0, contractBonus: 0, managerLabel: "중립", coachLabel: "중립", ownerLabel: "중립" };
-
-  // 🔴 **관계도 조건(`relation_gte`/`relation_lte`)이 값을 못 받아 항상 false였다.**
-  //    조건은 트랙 B가 만들었고 평가기도 있는데(`conditionEvaluator.ts:206`)
-  //    `EventContext.relations`를 채우는 코드가 없었다.
-  //
-  //    ⚠ 이 프로젝트가 반복해 밟는 형태다 — **조건만 만들고 배선을 안 하면**
-  //      **조용히 false다.** 이벤트가 안 떠도 로그 한 줄 안 남는다.
-  //
-  //    평가기가 동기라 여기서 미리 실어야 한다(`types/event.ts:79` 주석).
-  //    조회는 위 `relationEffects`와 같은 슬롯이라 왕복이 하나 더 늘 뿐이다.
-  const relRows = (isV3SlotActive() && g.currentSlotId)
-    ? await slotRepo.getRelationships(g.currentSlotId)
-    : [];
-
-  // 능력치 보정과 관계 보정을 더한 뒤 clamp한다 — 각각 clamp하면 상한이 두 배가 된다
-  //
-  // ⚠ **멘토도 같은 통에 넣는다** (2026-09-08 · §5 `mentor`). 코치 지도력과
-  //   같은 축이라 따로 곱하면 상한(0.25)을 두 번 쓰게 된다 — 멘토가 붙었다고
-  //   효율이 두 배로 튀면 그건 산식이 둘이라는 뜻이다.
-  const mentorBonus = (g.protagonist.mentor?.pct ?? 0) / 100;
-  const coachEffBonus  = Math.max(-0.15, Math.min(0.25,
-    (coachTeaching - 50) * 0.004 + relEffects.trainingBonus + mentorBonus));
-  const teamRef        = m.teams.find((t) => t.id === g.protagonist.teamId);
-  // 🔴 **특성은 계수에 곱한다** (2026-09-08 · §5 `trait`). 새 산식을 만들지
-  //    않고 코치·구단 시설과 **같은 자리**로 들어간다 — 그래야 「특성이 얼마나
-  //    세나」를 이미 있는 계측으로 잰다(`utils/protagonistTraits.ts` 머리말).
-  const myMods             = applyTraitMods(
-    staffModsOf(g.protagonist.teamId ?? "", m.entities, { specialty: "투수" }),
-    g.protagonist.traits);
-  // 통솔력 있는 코치진이면 슬럼프에 늦게 빠지고 덜 깎인다 (§7-5 F-1).
-  // 1.07배면 임계 3주 → 4주 · 페널티 0.70 → 0.72
-  const slumpResist        = myMods.slump;
-  const prevLowMoraleWeeks = g.protagonist.consecutiveLowMoraleWeeks ?? 0;
-  const isLowMorale        = g.protagonist.morale < 35;
-  const newLowMoraleWeeks  = isLowMorale ? prevLowMoraleWeeks + 1 : 0;
-  const slumpThreshold     = Math.max(2, Math.round(3 * slumpResist));
-  const slumpPenalty       = newLowMoraleWeeks >= slumpThreshold
-    ? Math.min(0.95, 1 - (1 - 0.70) / slumpResist)
-    : 1.0;
-  const alreadyInjured     = !!g.protagonist.injury;
+  // ⚠ **훈련 계산의 입력을 만드는 자리다.** 그래서 내는 값 열하나가 바로 아래
+  //   `runWeeklyTraining` 의 인자 이름과 하나씩 맞는다 — 이름을 바꾸면 그게
+  //   「뜻 불변」의 증명을 깎는다(그 파일 머리말).
+  // ⚠ `acaRules` 도 같이 받는다 — 아래 「대학: 학점 확정」이 **같은 객체**를
+  //   읽는다. 거기서 다시 열면 규칙 파일이 정본 둘이 된다.
+  const prep = await runWeeklyPrep({ g, m, isUniversity });
+  const {
+    studyResult,
+    univEffMod,
+    majorEffBonus,
+    coachEffBonus,
+    myMods,
+    teamRef,
+    slumpPenalty,
+    newLowMoraleWeeks,
+    alreadyInjured,
+    relRows,
+    acaRules,
+  } = prep;
 
   // ── 훈련·컨디션 — `weekPhases/weeklyTraining.ts` (2026-09-30 · Ⅱ-1) ─
   //

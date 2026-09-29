@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
+import { weekPathFlat } from "./weekPathSrc";
 import { resolve } from "node:path";
 import { ROLE_ASK_WEEK, ROLE_ASK_WEEK_DEFAULT, roleAskWeekOf } from "../../utils/seasonWeeks";
 import {
@@ -233,7 +234,11 @@ describe("shouldAskRoleChoice 는 같은 판정을 쓴다", () => {
  * 정규식을 쓰지 않고 문자열로 본다.
  */
 describe("W1 자동 배정 배선", () => {
-  const SRC = readFileSync(resolve(__dirname, "../advanceWeek.ts"), "utf8");
+  // ⚠ **눌러서 · 경로 전체를 읽는다** (2026-09-30 · Ⅱ-1). 이 절이
+  //   `weekPhases/seasonOpen.ts` 로 갔고, 그 파일은 `.prettierignore` 밖이라
+  //   훅이 `if (` 뒤 조건 셋을 줄마다 접었다 — 줄바꿈에 기대는 잣대는 서식만
+  //   바뀌어도 깨진다 (`weekPathSrc.ts` 머리말)
+  const SRC = weekPathFlat();
 
   it("processWeekBoundary 가 askRoleChoice 를 부른다", () => {
     expect(SRC.includes("await askRoleChoice(s.seasonYear, weekInYearOf(weekNum))")).toBe(true);
@@ -249,9 +254,10 @@ describe("W1 자동 배정 배선", () => {
   });
 
   it("둘 다 import 되어 있다", () => {
-    expect(
-      SRC.includes('import { askRoleChoice, hasRoleChoiceThisSeason } from "./pitcherRole"'),
-    ).toBe(true);
+    // ⚠ **상대 경로를 적지 않는다** — 쓰는 곳이 `weekPhases/` 로 가면서
+    //   같은 import 가 `"../pitcherRole"` 이 됐다. 묻고 싶은 것은 「경로
+    //   어딘가에서 그 두 이름을 들여온다」다
+    expect(SRC.includes("import { askRoleChoice, hasRoleChoiceThisSeason } from ")).toBe(true);
   });
 });
 
