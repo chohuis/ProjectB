@@ -190,6 +190,12 @@ describe("문자열형 표기도 같은 열쇠로 온다", () => {
     expect(parseEffectsArray(["pitchGrant:PITCH_SLIDER"]).pitchGrant).toEqual({
       id: "PITCH_SLIDER",
     });
+    // 🔴 뒷칸이 **부여 등급**이다 (2026-09-30 · §7.3). 한쪽 파서만 열면
+    //   배열형으로 적은 히든의 2등급이 조용히 1 이 된다
+    expect(parseEffectsArray(["pitchGrant:PITCH_SLIDER/2"]).pitchGrant).toEqual({
+      id: "PITCH_SLIDER",
+      grade: 2,
+    });
     expect(parseEffectsArray(["pitchGradeUp:PITCH_SLIDER"]).pitchGradeUp).toEqual({
       id: "PITCH_SLIDER",
     });

@@ -1,3 +1,61 @@
+# A → B 인계 13차 (2026-09-30) — 히든 `pitchGrant` 는 **2등급**이다 · 칸 하나가 네 몫
+
+> 아래 12차 이하는 그대로 둔다.
+> 12차 §0.31 의 「**정해지기 전에 `EVT_HID_HS_CHANCE_LESSON` 을 건드리지
+> 마라**」는 **이제 뒤집혔다.** 사용자가 정했다(2026-09-30) — 건드려라.
+
+## 0.33 🔴 **네 몫 — 데이터 한 칸.** 지금 `check:rewards` 가 이거 하나로 빨강이다
+
+사용자 확정: `pitchGrant` 에 **부여 등급 칸**을 연다(정본
+`PLAN_REWARDS_2026-09-09.md §7` · A 권장 ㉠ 의 좁은 꼴). 배선은 A 가 다 섰다.
+**히든은 구종을 2등급으로 준다.**
+
+고칠 자리는 `resource/data/master/messages/decision_templates.json` 의
+`DEC_HID_HS_CHANCE_LESSON` → 갈래 `grip` 하나다.
+
+```jsonc
+// 지금
+"effects": { "pitchGrant": { "id": "PITCH_CHANGEUP" } }
+
+// 이렇게 — 한 줄이다
+"effects": { "pitchGrant": { "id": "PITCH_CHANGEUP", "grade": 2 } }
+```
+
+배열형으로 적을 자리면 `"pitchGrant:PITCH_CHANGEUP/2"` 다(뒷칸이 등급 ·
+`pitchGradeUp` 의 `/2` 와 같은 규약). 파서는 **두 꼴 다** 읽는다.
+
+`_rewardNote` 에 왜인지 한 줄 더해 준다 — 「히든은 2등급으로 부여한다
+(보상안 §7)」 정도면 된다.
+
+🔴 **지금 이 칸 때문에 CI 가 빨강이다.** 검사가 먼저 서고 데이터가 따라오는
+순서라 그렇다(A 가 값을 못 적는다 — 밸런스 데이터는 네 몫이다). 이거 하나를
+넣으면 `npm run check:rewards` 가 전부 초록이 된다:
+
+```
+🔴 구종 부여 등급이 등급과 어긋난다 (히든 2 · 나머지 기본) 1건
+      EVT_HID_HS_CHANCE_LESSON#grip           hidden · grade 1 — 히든은 2
+    (⑦ 가 본 칸 — 히든 1 · 유니크 6(대조군))
+```
+
+## 0.34 규칙 둘 — 어디에 `grade` 를 적고 어디에 안 적나
+
+| | 적나 |
+|---|---|
+| **히든**의 `pitchGrant` | **적는다.** `grade: 2` 다. 없으면 빨강 |
+| **유니크**의 `pitchGrant` 여섯 | **안 적는다.** 적으면 빨강 — 그게 ⑦ 의 대조군이다 |
+| **이미 가진 구종**을 두 단계 올리기 | `pitchGrant` 로는 **안 된다.** `pitchGradeUp steps 2` 하나가 정본이다 |
+| 노말·레어 | 구종 자체를 안 준다(②가 이미 막는다) |
+
+⚠ **`grade` 는 「없는 구종」 갈래만 본다.** 이미 가진 구종에 `grade: 2` 를
+적으면 **조용히 +1** 이다(2 로 맞추지도, +2 하지도 않는다). 있는 구종에 두
+단계를 주려면 `pitchGradeUp steps 2` 를 쓴다 — 검사 ⑥ 이 그 자리를 본다.
+검사가 못박아 뒀다(`__tests__/pitchGradeSteps.test.ts` 의 대조군 둘).
+
+⚠ **3 이상은 타입이 막는다**(`grade?: 1 | 2`). 더 크게 주고 싶으면
+`BALANCE_BACKLOG` 의 `pitchGrant` 절에 적고 넘어간다 — 밸런스는 동결이다.
+
+---
+
 # A → B 인계 12차 (2026-09-27) — 군 관계 예약어 둘·대상 둘이 열렸다 · B 인계 6차 답
 
 > 아래 11차 이하는 그대로 둔다.

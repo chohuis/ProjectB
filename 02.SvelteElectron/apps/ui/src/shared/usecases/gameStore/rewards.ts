@@ -173,7 +173,13 @@ export function applyEffectToProtagonist(
           : e,
       );
     } else if (pitches.length < 5) {
-      pitches = [...pitches, { id: fx.pitchGrant.id, grade: 1 }];
+      // 🔴 **부여 등급을 받는다** (2026-09-30 · 사용자 확정 · `PLAN_REWARDS §7.3`).
+      //   히든은 `grade: 2` 로 준다 — 없으면 히든의 `pitchGrant` 가 유니크와
+      //   한 글자도 안 달랐다(부여가 늘 1 이었다). **없으면 1** 이라 옛
+      //   데이터는 그대로 돈다. 위 「이미 있는 구종」 갈래는 `grade` 를
+      //   **안 본다** — 두 단계는 `pitchGradeUp steps 2` 가 정본이다.
+      const g = Math.min(5, Math.max(1, Math.round(fx.pitchGrant.grade ?? 1)));
+      pitches = [...pitches, { id: fx.pitchGrant.id, grade: g as PitchEntry["grade"] }];
     } else {
       console.warn(`[보상] 구종 5종이 차서 ${fx.pitchGrant.id} 습득을 못 했다`);
     }

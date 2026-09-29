@@ -13,6 +13,7 @@
  *   ④ XP 범위          노말 XP 4 이상 · 레어 XP 11 이상
  *   ⑤ (자리 비움) 구종 보상 조건 — 아래 참고
  *   ⑥ 히든 구종 등급업  히든의 `pitchGradeUp` 은 `steps ≥ 2` (정본 §1)
+ *   ⑦ 히든 구종 부여    히든의 `pitchGrant` 는 `grade 2` · 히든 아니면 `grade` 를 안 적는다 (정본 §7.3)
  *
  * 🔴 **효과에 두 꼴이 있다 — 객체형과 배열형(`"xp.command:+2"`).** 배열형을
  *   「효과 없음」으로 세면 **없는 결함 141건이 잡힌다**(2026-09-09 실측: 182 로
@@ -69,11 +70,38 @@ const xpSum = (fx) => {
   return Object.values(fx.xp ?? {}).reduce((a, b) => a + Math.abs(+b || 0), 0);
 };
 
+/**
+ * `pitchGrant` 의 **부여 등급** — 두 꼴 다 읽는다. 안 적혔으면 `null`(기본 1).
+ *
+ * 🔴 배열형(`"pitchGrant:PITCH_X/2"`)을 못 읽으면 히든이 2등급으로 적어도
+ *   **여기서 1 로 보여 늘 빨강**이 된다. ⑥ 이 배열형을 `null` 로 흘리는 것과
+ *   달리 여기는 둘 다 읽는다 — 잣대가 먼저 틀리는 것이 이 트랙의 상습이다.
+ */
+function pitchGrantGrade(fx) {
+  if (!fx) return null;
+  if (Array.isArray(fx)) {
+    for (const s of fx) {
+      const t = String(s);
+      if (!t.startsWith("pitchGrant:")) continue;
+      const slash = t.indexOf("/", "pitchGrant:".length);
+      if (slash < 0) return null;
+      const n = parseInt(t.slice(slash + 1), 10);
+      return Number.isFinite(n) ? n : null;
+    }
+    return null;
+  }
+  const g = fx.pitchGrant;
+  if (!g || typeof g !== "object") return null;
+  return typeof g.grade === "number" ? g.grade : null;
+}
+
 const PITCH_KEYS = ["pitchGrant", "pitchGradeUp", "pitchProgressJump"];
 const BIG_KEYS = ["statDelta", "stat", "potentialDelta"];
 const GRADES = ["normal", "rare", "unique", "hidden"];
 
-const bigInNormal = [], statInRare = [], pitchLow = [], noCost = [], xpOver = [], allEmpty = [], sameKind = [], pitchPair = [], hiddenSteps = [];
+const bigInNormal = [], statInRare = [], pitchLow = [], noCost = [], xpOver = [], allEmpty = [], sameKind = [], pitchPair = [], hiddenSteps = [], grantGrade = [];
+/** 대조군 세기 — ⑦ 이 실제로 무엇을 보고 있나. 0 이면 검사가 헛돈다 */
+const grantSeen = { hidden: 0, unique: 0 };
 /**
  * 구종 보상의 **짝 조건** (정본 §2 · 사용자 확정).
  *
@@ -116,6 +144,22 @@ for (const r of RULES) {
       const steps = Math.round(g?.steps ?? 1);
       if (steps < 2) hiddenSteps.push([`${r.id}#${o.id}`, steps]);
     }
+    // ⑦ 히든의 구종 **부여**는 2등급이다 (정본 §7.3 · 사용자 확정 2026-09-30)
+    //   부여는 예전엔 늘 `grade: 1` 이라 히든과 유니크가 **한 글자도 안 달랐다** —
+    //   ⑥ 은 `pitchGradeUp` 만 봐서 이 자리에 걸 잣대가 없었다.
+    //   ⚠ **대조군은 유니크의 `pitchGrant`** 다 — 거기 `grade` 가 적히면
+    //     「크기가 아니라 종류」가 무너지므로 그쪽도 빨강이다.
+    if (ks.has("pitchGrant")) {
+      const grade = pitchGrantGrade(o.effects);
+      if (r.tier === "hidden") {
+        grantSeen.hidden++;
+        if (grade !== 2) grantGrade.push([`${r.id}#${o.id}`, "hidden", `grade ${grade ?? 1} — 히든은 2`]);
+      } else {
+        if (r.tier === "unique") grantSeen.unique++;
+        if (grade !== null && grade !== 1)
+          grantGrade.push([`${r.id}#${o.id}`, r.tier, `grade ${grade} — 히든만 2 를 쓴다`]);
+      }
+    }
     // 짝 조건 — 숨은 조건에 있어도 된다(히든은 그쪽에 적는다)
     const pl = [...(r.conditions ?? []), ...(r.hiddenCondition ?? [])].find((c) => c.type === "pitch_learning");
     for (const k of PITCH_KEYS) {
@@ -146,5 +190,7 @@ rule(allEmpty, "갈래 둘 이상인데 전부 효과가 없다", ([id, t, n]) =
 rule(sameKind, "갈래들의 효과가 서로 같다 — 고를 뜻이 없다", ([id, t, s]) => `${id.padEnd(40)}${t} · ${s}`);
 rule(pitchPair, "구종 보상인데 짝 조건(`pitch_learning`)이 없거나 어긋난다", ([w, k, got]) => `${w.padEnd(40)}${k} · ${got}`);
 rule(hiddenSteps, "히든인데 구종 등급업이 두 단계가 아니다", ([w, n]) => `${w.padEnd(40)}steps ${n}`);
+rule(grantGrade, "구종 부여 등급이 등급과 어긋난다 (히든 2 · 나머지 기본)", ([w, t, why]) => `${w.padEnd(40)}${t} · ${why}`);
+log(`      (⑦ 가 본 칸 — 히든 ${grantSeen.hidden} · 유니크 ${grantSeen.unique}(대조군))`);
 log("");
 if (bad) { log(`  🔴 어긴 규칙 ${bad}개`); log(""); process.exitCode = 1; }

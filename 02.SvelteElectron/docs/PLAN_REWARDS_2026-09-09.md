@@ -104,7 +104,26 @@
 
 ---
 
-## 7. 히든의 `pitchGrant` 를 유니크와 어떻게 가르나 — A 제안 (2026-09-27 · 결정 대기)
+## 7. 히든의 `pitchGrant` 를 유니크와 어떻게 가르나 — ✅ **㉠ 의 좁은 꼴로 확정** (사용자 확정 2026-09-30)
+
+> **결정**: §7.3 의 A 권장 그대로다 — `pitchGrant` 에 **부여 등급 칸**을 열고
+> **「없는 구종」 갈래만** 그 칸을 본다. 기본 1 · **히든만 2**.
+>
+> **선 코드**(A · 2026-09-30):
+> `types/main.ts pitchGrant?: { id; grade?: 1 | 2 }` ·
+> `usecases/gameStore/rewards.ts`(부여 갈래 한 줄 · 「이미 있는 구종」 갈래는
+> 한 글자도 안 고쳤다) · `stores/master.ts`(배열형 `pitchGrant:PITCH_X/2`) ·
+> `check:rewards ⑦`(히든은 `grade 2` · **대조군**으로 유니크 여섯은 `grade`
+> 없이 초록 · 히든 아닌 곳에 `grade` 를 적으면 빨강) ·
+> `__tests__/pitchGradeSteps.test.ts`(부여 2등급 · **대조군 둘** — 있는 구종은
+> `grade: 2` 여도 +1 이고, 두 단계는 `pitchGradeUp steps 2` 하나다).
+>
+> **남은 한 칸은 데이터다**(대행 몫 · `HANDOFF_A_TO_B.md` 13차):
+> `DEC_HID_HS_CHANCE_LESSON#grip` 의 `pitchGrant` 에 `"grade": 2` 한 줄.
+> 🔴 **그게 들어오기 전까지 `check:rewards` 는 빨강**이다(1건) — 검사가 먼저
+> 서고 데이터가 따라오는 순서라 그렇다.
+>
+> 아래는 결정 전의 제안 원문이다. 그대로 둔다.
 
 `check:rewards ⑥`(히든의 `pitchGradeUp` 은 `steps ≥ 2`)을 넣으면서 **`pitchGrant`
 쪽에는 걸 잣대가 없다**는 것이 드러났다(`HANDOFF_B_TO_A 6차 §0.1`). 여기는

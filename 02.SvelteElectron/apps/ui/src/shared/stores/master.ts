@@ -633,7 +633,15 @@ export function parseEffectsArray(effects: string[]): DecisionEffect {
         if (key === "trainEff") result.trainEffBoost = v; else result.injuryRiskMod = v;
       }
     }
-    else if (key === "pitchGrant")    { result.pitchGrant   = { id: rawVal }; }
+    // "pitchGrant:PITCH_X" · "pitchGrant:PITCH_X/2" — 뒤가 **부여 등급**(2026-09-30).
+    // 🔴 `pitchGradeUp` 쪽만 뒷칸을 읽던 시절엔 배열형으로 적은 부여 등급이
+    //   **조용히 버려지고 늘 1** 이 됐다 — 이 저장소가 반복해 밟은 「한쪽만
+    //   열린 파서」다. 없으면 1 이라 옛 표기는 그대로 돈다
+    else if (key === "pitchGrant") {
+      const [gid, gr] = rawVal.split("/");
+      const n1 = parseInt(gr ?? "", 10);
+      result.pitchGrant = { id: gid, ...(n1 === 2 ? { grade: 2 as const } : {}) };
+    }
     // "pitchGradeUp:PITCH_X" · "pitchGradeUp:PITCH_X/2" — 뒤가 단계 수(2026-09-09)
     else if (key === "pitchGradeUp") {
       const [pid, st] = rawVal.split("/");

@@ -105,3 +105,65 @@ describe("`pitchGradeUp.steps`", () => {
     expect((p.pitches ?? []).length).toBe(1);
   });
 });
+
+/**
+ * **`pitchGrant.grade`** — 히든의 구종 **부여**가 유니크와 갈리는 자리
+ * (2026-09-30 · 사용자 확정 · 정본 `PLAN_REWARDS_2026-09-09.md §7.3`).
+ *
+ * 🔴 예전엔 부여가 **늘 `grade: 1`** 이라 히든의 `pitchGrant` 가 유니크의
+ *   그것과 **한 글자도 안 달랐다.** 검사 ⑥ 은 `pitchGradeUp` 만 봐서 이
+ *   자리에 걸 잣대가 없었다(`HANDOFF_B_TO_A 6차 §0.1`).
+ *
+ * ⚠ **「이미 있는 구종」 갈래는 `grade` 를 안 본다.** 있는 구종에 두 단계를
+ *   주는 길은 `pitchGradeUp steps 2` 하나다 — 여기서도 +2 가 되면 정본이
+ *   둘이 되고, 「2 로 맞춘다」와 「+2」가 자리마다 갈린다(§7.2 ㉠ 의 겹침).
+ *   아래 대조군 둘이 그 경계를 못박는다.
+ */
+const curveOf = (p: ProtagonistSave) =>
+  (p.pitches ?? []).find((x) => x.id === "PITCH_CURVE")?.grade;
+
+describe("`pitchGrant.grade`", () => {
+  it("없으면 등급 1 로 붙는다 — 옛 데이터가 그대로 돈다", () => {
+    const p = applyEffectToProtagonist(withPitch(2), { pitchGrant: { id: "PITCH_CURVE" } });
+    expect(curveOf(p)).toBe(1);
+  });
+
+  it("🔴 `grade: 2` 면 **2등급으로** 붙는다 — 히든이 유니크와 갈리는 자리다", () => {
+    const p = applyEffectToProtagonist(withPitch(2), {
+      pitchGrant: { id: "PITCH_CURVE", grade: 2 },
+    });
+    expect(curveOf(p)).toBe(2);
+  });
+
+  it("🔴 대조군 — **이미 있는 구종**이면 `grade: 2` 여도 한 단계만 오른다", () => {
+    expect(
+      gradeOf(
+        applyEffectToProtagonist(withPitch(2), { pitchGrant: { id: "PITCH_SLIDER", grade: 2 } }),
+      ),
+    ).toBe(3);
+  });
+
+  it("🔴 대조군 — 있는 구종을 두 단계 올리는 길은 `pitchGradeUp steps 2` 하나다", () => {
+    expect(
+      gradeOf(
+        applyEffectToProtagonist(withPitch(2), { pitchGradeUp: { id: "PITCH_SLIDER", steps: 2 } }),
+      ),
+    ).toBe(4);
+  });
+
+  it("5종이 차면 아무 일도 안 한다 — 등급을 적었어도 자리가 없다", () => {
+    const full = {
+      ...withPitch(2),
+      pitches: [
+        { id: "PITCH_SLIDER", grade: 2 },
+        { id: "PITCH_FASTBALL", grade: 2 },
+        { id: "PITCH_CHANGEUP", grade: 2 },
+        { id: "PITCH_SPLITTER", grade: 2 },
+        { id: "PITCH_FORKBALL", grade: 2 },
+      ],
+    } as unknown as ProtagonistSave;
+    const p = applyEffectToProtagonist(full, { pitchGrant: { id: "PITCH_CURVE", grade: 2 } });
+    expect(curveOf(p)).toBeUndefined();
+    expect((p.pitches ?? []).length).toBe(5);
+  });
+});
