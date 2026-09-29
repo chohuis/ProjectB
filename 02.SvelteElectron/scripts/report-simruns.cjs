@@ -23,6 +23,24 @@ const TIER_RULES = JSON.parse(fs.readFileSync(
 const freqOf = (grade, stage) =>
   (stage && TIER_RULES.seasonFreqByStage?.[stage]?.[grade]) ?? TIER_RULES.seasonFreq[grade];
 
+// 🔴 **이벤트 총수도 정본이 하나다.** 예전엔 "749종(동결)"을 이 파일에
+//   그대로 박아 뒀다 — `_manifest.json`(gitignore 된 생성물 · `npm run
+//   gen:manifest`)이 정본인데 숫자를 코드에 두 번 적은 것이다(CLAUDE.md
+//   「정본을 둘 만들기」). 이벤트는 안 얼어 있다 — 09-27~28 사이에도
+//   535 → 759 로 늘었다(`SIM_103` 계측 도중 새 이벤트가 실렸다). "동결"이라는
+//   낱말 자체가 틀린 전제였다. `gen:manifest`가 먼저 안 돌았으면 못 잰다고
+//   적는다(숨기지 않는다).
+const MANIFEST_PATH = path.resolve(process.cwd(), "resource/data/master/_manifest.json");
+const eventTotalOf = () => {
+  if (!fs.existsSync(MANIFEST_PATH)) return null;
+  const m = JSON.parse(fs.readFileSync(MANIFEST_PATH, "utf8"));
+  const ev = m.events ?? {};
+  const mandatory = (ev.mandatory ?? []).length;
+  const conditional = (ev.conditional ?? []).length;
+  const random = Object.values(ev.random ?? {}).reduce((a, xs) => a + (xs?.length ?? 0), 0);
+  return mandatory + conditional + random;
+};
+
 /** 지금 아는 목표 — 서식 정본 「목표를 벗어난 칸은 빨강으로」 */
 const GOAL = {
   // 사용자 확정(09-26) — 25~40. 정원 압축(γ=0.20)뒤 성장형 경계선 판이
@@ -70,7 +88,9 @@ log("");
 const 연도폭Of = (ys) => (ys.length ? ys[ys.length - 1].연도 - ys[0].연도 + 1 : 0);
 const SEASONS_ASKED =
   Number(process.env.PB_SEASONS) || Math.max(...runs.map((r) => 연도폭Of(r.해마다)), 1);
-log(`판 ${runs.length} · 각 ${SEASONS_ASKED}시즌 요청 · 이벤트 749종(동결)`);
+const 이벤트총수 = eventTotalOf();
+log(`판 ${runs.length} · 각 ${SEASONS_ASKED}시즌 요청 · 이벤트 `
+  + (이벤트총수 == null ? "못 쟀다(`_manifest.json` 없음 — `npm run gen:manifest` 먼저)" : `${이벤트총수}종`));
 log("");
 
 // ── ① 판별 한 줄 ────────────────────────────────────────────
