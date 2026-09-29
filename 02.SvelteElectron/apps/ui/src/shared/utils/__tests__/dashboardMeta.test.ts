@@ -7,7 +7,7 @@ import { primeContractRules } from "../contractTerms";
 //   `weekPhases/offseasonMarket.ts` 로 갔고, 새 파일은 `.prettierignore` 밖이라
 //   훅이 인자를 줄마다 접는다 — 줄바꿈에 기대는 잣대는 서식만 바뀌어도 깨진다
 //   (`weekPathSrc.ts` 머리말)
-import { weekPathFlat } from "../../usecases/__tests__/weekPathSrc";
+import { weekPathFlat, weekPathSrc } from "../../usecases/__tests__/weekPathSrc";
 import { parseDashboardLabels, tableCopy } from "../dashboardCopy";
 import { buildTableView } from "../dashboardView";
 import {
@@ -283,7 +283,9 @@ describe("배선", () => {
   });
 
   it("소식을 **보낸 뒤에** 지난 순위를 덮는다", () => {
-    const src = read(SRC_WEEK);
+    // ⚠ 주간 진행 경로 **전체**를 읽는다 — Ⅱ-1 로 다이제스트 절이
+    //   `weekPhases/weeklyNews.ts` 에 갔다 (`weekPathSrc.ts` 머리말)
+    const src = weekPathSrc();
     const iAdd = src.indexOf("gameStore.addMessage(digest)");
     const iCap = src.indexOf('captureStandingsSnapshot("last_digest"');
     expect(iAdd).toBeGreaterThan(0);
@@ -359,7 +361,7 @@ describe("묶음 2 — 경기·트레이드·말소·웨이버", () => {
   });
 
   it("다섯 자리가 배선돼 있고 본문은 그대로다", () => {
-    expect(read(SRC_WEEK).includes("gameResultsTableMeta(")).toBe(true);
+    expect(weekPathSrc().includes("gameResultsTableMeta(")).toBe(true);
     expect(read(SRC_FRIENDLY).includes('myGameTableMeta("officialResult"')).toBe(true);
     expect(read(SRC_FRIENDLY).includes('myGameTableMeta("friendlyResult"')).toBe(true);
     expect(read(SRC_MARKET).includes("tradeTableMeta(")).toBe(true);

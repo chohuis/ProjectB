@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
+import { weekPathSrc } from "../../__tests__/weekPathSrc";
 import { resolve } from "node:path";
 import { buildMyBodyReport } from "../myBodyReport";
 import type { MyBodyEvent, MyBodyMetadata } from "../../../types/main";
@@ -100,7 +101,9 @@ describe("몸 상태 월간 리포트", () => {
 });
 
 describe("호출부 배선", () => {
-  const src = () => readFileSync(resolve(__dirname, "../../advanceWeek.ts"), "utf8");
+  // ⚠ 주간 진행 경로 **전체**를 읽는다 — Ⅱ-1 로 호출부가
+  //   `weekPhases/weeklyNews.ts` 에 갔다 (`weekPathSrc.ts` 머리말)
+  const src = () => weekPathSrc();
 
   it("경고·결장을 낱개로 안 보내고 버퍼에 쌓는다", () => {
     // ⚠ 낱개 발송이 남아 있으면 월간 리포트와 **둘 다** 온다

@@ -66,7 +66,10 @@ const SRC_MARKET = resolve(__dirname, "../../usecases/weekPhases/market.ts");
 const SRC_WEEK_WIRING = weekPathSrc();
 const SRC_WEEK_FLAT = weekPathFlat();
 /** 「없다」를 묻는 검사가 쓰는 좁은 자리 — 리그 경기 결과 소식을 만드는 파일 */
-const SRC_WEEK_LEAGUE_RESULTS = resolve(__dirname, "../../usecases/advanceWeek.ts");
+// ⚠ **파일 하나를 가리킨다** (2026-09-30 · Ⅱ-1). 이 소식이
+//   `weekPhases/weeklyNews.ts` 로 갔다. 아래 검사가 「없다」를 묻기 때문에
+//   경로 전체로 넓히면 남의 소식에 걸린다 — 좁게 본다
+const SRC_WEEK_LEAGUE_RESULTS = resolve(__dirname, "../../usecases/weekPhases/weeklyNews.ts");
 
 const bracketRow = (round: string, home: string, away: string, week: number, mine = false) => ({
   round,
