@@ -138,7 +138,12 @@ export const DEFAULT_MATCH_ENGINE_TUNING: MatchEngineTuning = {
     npcStarterPitchCountHard: 110,
     protagonistPitchCountSoft: 90,
     protagonistPitchCountHard: 120,
-    protagonistStaminaEmergency: 5,
+    // 🔴 **거울이 어긋나 있었다** (2026-09-30 실측 · 새 검사가 잡았다). Rust
+    //   `PROTAGONIST_STAMINA_EMERGENCY` 는 **15** 다 — 2026-08-13 에 35 에서
+    //   내려온 값이고(「NPC와 같은 기준」이라던 35 가 NPC 의 어떤 값과도
+    //   대응하지 않았다) 여기만 5 로 남아 있었다. 엔진 동작은 안 바뀐다 —
+    //   이 거울을 읽는 자리는 화면의 투구 소모 표시뿐이고 이 칸은 안 쓴다.
+    protagonistStaminaEmergency: 15,
   },
 
   moundVisitMentalRecovery: 8,
