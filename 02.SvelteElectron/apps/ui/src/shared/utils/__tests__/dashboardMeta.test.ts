@@ -3,6 +3,11 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { PitcherSeasonStats } from "../../types/save";
 import { primeContractRules } from "../contractTerms";
+// ⚠ **눌러서 · 경로 전체를 읽는다** (2026-09-30 · Ⅱ-1). 오프시즌 총평 두 통이
+//   `weekPhases/offseasonMarket.ts` 로 갔고, 새 파일은 `.prettierignore` 밖이라
+//   훅이 인자를 줄마다 접는다 — 줄바꿈에 기대는 잣대는 서식만 바뀌어도 깨진다
+//   (`weekPathSrc.ts` 머리말)
+import { weekPathFlat } from "../../usecases/__tests__/weekPathSrc";
 import { parseDashboardLabels, tableCopy } from "../dashboardCopy";
 import { buildTableView } from "../dashboardView";
 import {
@@ -256,16 +261,15 @@ describe("계약 조건 (msg-contract-signed- · msg-fa-signed-)", () => {
 describe("배선", () => {
   it("본문 문자열을 안 건드렸다 — 표는 얹기만 한다", () => {
     expect(read(SRC_DIGEST).includes("→ 세부 순위는 [기록] 탭")).toBe(true);
-    expect(read(SRC_WEEK).includes("시즌 성적: ${statSummary}")).toBe(true);
+    expect(weekPathFlat().includes("시즌 성적: ${statSummary}")).toBe(true);
     expect(read(SRC_CONTRACT).includes("W52 새 시즌 시작 시 정식 적용됩니다.")).toBe(true);
   });
 
   it("네 자리가 생산부 함수를 부른다", () => {
     expect(read(SRC_DIGEST).includes("standingsTableMeta(")).toBe(true);
-    expect(read(SRC_WEEK).includes('pitcherSeasonTableMeta("seasonEndPro"')).toBe(true);
-    expect(read(SRC_WEEK).includes('pitcherSeasonTableMeta(\n          "seasonEndIndie"')).toBe(
-      true,
-    );
+    expect(weekPathFlat().includes('pitcherSeasonTableMeta("seasonEndPro"')).toBe(true);
+    // 눌러서 보므로 줄바꿈이 한 칸이 된다 — 서식이 바뀌어도 안 깨진다
+    expect(weekPathFlat().includes('pitcherSeasonTableMeta( "seasonEndIndie"')).toBe(true);
     expect(read(SRC_CONTRACT).includes('contractTableMeta("contractSigned"')).toBe(true);
     expect(read(SRC_CONTRACT).includes('contractTableMeta("faSigned"')).toBe(true);
   });
