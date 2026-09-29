@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { evaluateCondition } from "../conditionEvaluator";
+import { weekPathSrc } from "../../usecases/__tests__/weekPathSrc";
 import type { EventContext } from "../../types/event";
 
 /**
@@ -14,7 +15,10 @@ import type { EventContext } from "../../types/event";
  * ⚠ 이 프로젝트가 반복해 밟는 형태다 — *한쪽은 넘기는데 한쪽이 안 받는다.*
  *   결정성 여덟 자리 중 넷이 그랬고, 상무 Phase 1도 `&[]`가 박혀 있었다.
  */
-const ADVANCE = readFileSync(join(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
+// ⚠ 주간 진행 경로 **전체**를 읽는다 — Ⅱ-1 로 이벤트 컨텍스트를 만드는 절이
+//   `weekPhases/eventLane.ts` 에 갔다. 이 검사가 묻는 것은 「주간 진행 어딘가에
+//   그 줄이 있는가」이지 「어느 파일에 있는가」가 아니다 (`weekPathSrc.ts` 머리말)
+const ADVANCE = weekPathSrc();
 
 const ctx = (relations: unknown[]): EventContext => ({ relations }) as unknown as EventContext;
 
