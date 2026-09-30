@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { weekPathSrc } from "./weekPathSrc";
+import { weekPathSrc, weekPathFlat } from "./weekPathSrc";
 
 // ── 주 경계의 "전주" 조회 ──────────────────────────────────────
 //
@@ -47,9 +47,13 @@ describe("주 경계에서 지난 주 경기를 본다", () => {
   });
 
   it("리그 경기 결과 소식도 지난 주를 조회한다", () => {
-    const body = boundaryBody(src());
-    expect(body).toMatch(/e\.week === weekNum - 1 && !e\.isProtagonistGame/);
-    expect(body).not.toMatch(/e\.week === weekNum && !e\.isProtagonistGame/);
+    // ⚠ **눌러서 · 경로 전체를 읽는다** (2026-09-30 · Ⅱ-1). 이 소식이
+    //   `weekPhases/weeklyNews.ts` 로 갔고, 그 파일은 `.prettierignore` 밖이라
+    //   훅이 `filter(` 뒤를 줄바꿈했다 — `processWeekBoundary` 본문만 자르는
+    //   방식은 이제 이 식을 못 본다 (`weekPathSrc.ts` 머리말)
+    const body = weekPathFlat();
+    expect(body).toContain("e.week === weekNum - 1 && !e.isProtagonistGame");
+    expect(body).not.toContain("e.week === weekNum && !e.isProtagonistGame");
   });
 
   it("호출부가 advanceWeek 뒤에 nextWeekNum으로 부른다 — 이 전제가 깨지면 위 두 검사가 뒤집힌다", () => {

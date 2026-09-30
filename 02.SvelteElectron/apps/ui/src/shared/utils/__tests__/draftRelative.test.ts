@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { flattenSrc } from "./flattenSrc";
+import { weekPathSrc } from "../../usecases/__tests__/weekPathSrc";
 
 // ── 드래프트는 상대평가다 ────────────────────────────────────────
 //
@@ -78,7 +79,9 @@ describe("주인공 드래프트 산식", () => {
   });
 
   it("호출부가 또래 분포를 실제로 넘긴다 — 안 넘기면 폴백이 옛 동작이다", () => {
-    const s = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+    // ⚠ 주간 진행 경로 **전체**를 읽는다 — Ⅱ-1 로 진로 블록이
+    //   `weekPhases/careerHub.ts` 에 갔다 (`weekPathSrc.ts` 머리말)
+    const s = weekPathSrc();
     expect(s).toMatch(/determineProtagonistDraft\([\s\S]{0,200}peerOvrs/);
     // 부상은 `draftInjuryCounts`(최근 세 시즌)를 거친다 — 전체 이력을 직접 세면
     // 독립 재지원이 해마다 나빠진다 (draftInjuryWindow.test.ts)
@@ -136,7 +139,7 @@ describe("주인공 드래프트 산식", () => {
   });
 
   it("또래에서 주인공을 뺀다 — 분모에 자기를 넣으면 백분위가 낮게 나온다", () => {
-    const s = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+    const s = weekPathSrc();
     expect(s).toMatch(/n\.npcId !== p\.id/);
   });
 });

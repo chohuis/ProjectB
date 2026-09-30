@@ -8,6 +8,7 @@
 // 실행: ELECTRON_RUN_AS_NODE=1 ./node_modules/electron/dist/electron.exe scripts/test-staff.cjs
 
 const path = require("node:path");
+const { weekPathSrc } = require("./week-path.cjs");
 const fs = require("node:fs");
 const ROOT = path.resolve(__dirname, "..");
 const native = require(path.join(ROOT, "packages/engine-native/index.js"));
@@ -132,7 +133,9 @@ const CONSUMERS = {
   analysis:       ["apps/ui/src/shared/utils/growthEngine.ts"],
   communication:  ["packages/engine-native/src/relationship.rs"],
   discipline:     ["apps/ui/src/shared/usecases/weekPhases/injuries.ts"],
-  leadership:     ["apps/ui/src/shared/usecases/advanceWeek.ts"],
+  // 2026-09-30 · Ⅱ-1 — `myMods.slump` 를 읽는 자리가 `weekPhases/weeklyPrep.ts` 로
+  //   갔다(계수 준비 절). 파일 하나를 적는 목록이라 여기서 따라간다
+  leadership:     ["apps/ui/src/shared/usecases/weekPhases/weeklyPrep.ts"],
   budgetSupport:  ["packages/engine-native/src/player_engine.rs"],
   patience:       ["packages/engine-native/src/staff_lifecycle.rs"],
   prInfluence:    ["packages/engine-native/src/growth_engine.rs"],
@@ -321,7 +324,9 @@ for (const f of ["apps/ui/src/shared/usecases/weekPhases/growth.ts", "apps/ui/sr
 // ══ 6. 치료비 단위 ═══════════════════════════════════════════════
 console.log("\n[6] 치료비가 만원 단위다 (money와 같은 단위)");
 
-const aw = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+// ⚠ 주간 진행 경로 **전체**를 읽는다 (2026-09-30 · Ⅱ-1) — 치료비 표가
+//   `weekPhases/weeklyTraining.ts` 로 갔다. 정본은 `scripts/week-path.cjs`
+const aw = weekPathSrc();
 const costBlock = aw.slice(aw.indexOf("weeklyTreatmentCost"), aw.indexOf("weeklyTreatmentCost") + 400);
 const nums = [...costBlock.matchAll(/:\s*(\d[\d_]*)/g)].map((m) => Number(m[1].replace(/_/g, "")));
 ok(nums.length > 0 && nums.every((n) => n < 1000),

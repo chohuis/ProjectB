@@ -17,6 +17,7 @@
 //   ④ 등급 표가 하나다 (화면이 다시 안 적는다)
 
 const path = require("node:path");
+const { weekPathSrc } = require("./week-path.cjs");
 const fs = require("node:fs");
 
 const ROOT = process.cwd();
@@ -51,7 +52,10 @@ const read = (p) =>
   const news = read("apps/ui/src/shared/usecases/weekPhases/injuryNews.ts");
   check("주기가 4주다", /INJURY_NEWS_PERIOD = 4/.test(news));
 
-  const wk = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+  // ⚠ 주간 진행 경로 **전체**를 읽는다 (2026-09-30 · Ⅱ-1) — 이 절이
+  //   `weekPhases/weeklyNews.ts` 로 갔다. 아래 들여쓰기 잣대는 그 파일에서도
+  //   함수 최상위가 2칸이라 그대로 산다. 정본은 `scripts/week-path.cjs`
+  const wk = weekPathSrc();
   check("주 진행이 그 주기에 버퍼를 비운다",
         /isInjuryNewsWeek\(weekInYear\)/.test(wk) && /drainInjuryNews\(\)/.test(wk));
 
@@ -96,8 +100,13 @@ const read = (p) =>
         `라벨 없음: ${kinds.filter((k) => !labelled.includes(k)).join(",")}`);
 
   const panel = read("apps/ui/src/features/messages/ui/InjuryPanel.svelte");
+  // ⚠ **잣대가 먼저 틀려 있었다** (2026-09-30 실측). `/CLASS_ORDER, CLASS_LABEL/`
+  //   는 **한 줄에 나란히** 있어야 맞는데 prettier 가 import 를 줄마다 접은 뒤로
+  //   늘 빨강이었다 — 화면은 그동안 정본을 잘 쓰고 있었다. 묻고 싶은 것은
+  //   「둘을 가져다 쓴다」이지 「한 줄에 있다」가 아니다. 정규식을 안 쓴다
   check("화면이 등급 표를 다시 적지 않고 가져다 쓴다",
-        /CLASS_ORDER, CLASS_LABEL/.test(panel) && !/retired:\s*"/.test(panel));
+        panel.includes("CLASS_ORDER") && panel.includes("CLASS_LABEL")
+        && !/retired:\s*"/.test(panel));
 }
 
 log(failed === 0 ? "\n  ok  전부 통과" : `\nFAIL  ${failed}건`);

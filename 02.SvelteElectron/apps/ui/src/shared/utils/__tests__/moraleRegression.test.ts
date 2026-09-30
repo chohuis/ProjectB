@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { moraleAfterWeek } from "../../usecases/advanceWeek";
+import { weekPathSrc } from "../../usecases/__tests__/weekPathSrc";
 
 /**
  * 🔴 **사기가 100 에 고정돼 있었다.**
@@ -28,16 +29,26 @@ import { moraleAfterWeek } from "../../usecases/advanceWeek";
  * 재고 그 값은 `BALANCE_BASELINE` 에 남긴다.
  */
 
-const SRC = readFileSync(resolve(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
+// ⚠ 주간 진행 경로 **전체**를 읽는다 (2026-09-30 · Ⅱ-1). 상수와 회귀를 적용하는
+//   자리가 `weekPhases/weeklyTraining.ts` 로 갔다 — `advanceWeek.ts` 는
+//   `moraleAfterWeek` 를 다시 내보내기만 한다(그 파일 머리말 · 순환을 피한다).
+//   이 검사가 묻는 것은 「주간 진행 어딘가에 그 줄이 있는가」다.
+const SRC = weekPathSrc();
 
-/** 소스에서 상수를 읽는다 — 검사에 값을 적으면 코드와 어긋나도 초록이다 */
+/**
+ * 소스에서 상수를 읽는다 — 검사에 값을 적으면 코드와 어긋나도 초록이다.
+ *
+ * ⚠ **쉼표에서도 끊는다** (2026-09-30 · Ⅱ-1). 상수가 `.prettierignore` 밖
+ *   파일로 가면서 훅이 `|| 0.05,` 뒤 닫는 괄호를 다음 줄로 내렸다 —
+ *   `)` 만 찾으면 `0.05,`를 읽어 NaN 이 된다.
+ */
 function constOf(name: string): number {
   const i = SRC.indexOf(`const ${name} = Number(`);
   if (i < 0) throw new Error(`${name} 을 못 읽었다 — 소스와 어긋났다`);
   const tail = SRC.slice(i, i + 400);
   const m = tail.indexOf("||");
-  const end = tail.indexOf(")", m);
-  const v = Number(tail.slice(m + 2, end).trim());
+  const ends = [tail.indexOf(")", m), tail.indexOf(",", m)].filter((x) => x > 0);
+  const v = Number(tail.slice(m + 2, Math.min(...ends)).trim());
   if (!Number.isFinite(v)) throw new Error(`${name} 기본값을 못 읽었다`);
   return v;
 }

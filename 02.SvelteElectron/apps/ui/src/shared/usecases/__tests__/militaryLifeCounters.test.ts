@@ -82,10 +82,14 @@ describe("군 전용 계수기 — 체육부대 갈래", () => {
   });
 
   it("같은 객체를 쓴다 — 사본을 만들지 않는다", () => {
-    expect(WEEK_SRC).toContain(
-      'import { runMilitaryLifeWeek, militaryLifeCounters } from "./militaryLife";',
-    );
-    expect(WEEK_SRC).toContain('import { isMeasureMode } from "../utils/measureMode";');
+    // ⚠ **상대 경로를 적지 않는다** (2026-09-30 · Ⅱ-1). 예전엔
+    //   `from "./militaryLife"` 를 글자로 봤는데, 쓰는 자리가
+    //   `weekPhases/military.ts` 로 간 뒤 그 파일에서는 `"../militaryLife"` 다.
+    //   `advanceWeek.ts` 쪽 import 는 **쓰는 곳이 없어 죽은 줄**이었고,
+    //   Ⅱ-1 정리에서 지웠다 — 그래서 이 잣대가 깨졌다.
+    //   묻고 싶은 것은 「경로 어딘가에서 그 두 이름을 **들여온다**」다.
+    expect(WEEK_SRC).toContain("import { runMilitaryLifeWeek, militaryLifeCounters } from ");
+    expect(WEEK_SRC).toContain("import { isMeasureMode } from ");
   });
 
   it("대조군 — 주간 진행 경로에도 가드 없이 늘어나는 자리가 없다", () => {

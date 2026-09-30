@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { gamePathSrc } from "./gamePathSrc";
+import { weekPathFlat } from "../../usecases/__tests__/weekPathSrc";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { applyEffectToProtagonist } from "../game";
@@ -103,11 +104,16 @@ describe("지속 보정 — 겹치면 긴 쪽", () => {
   });
 
   it("🔴 남은 주를 줄이는 자리가 `advanceWeek` 에 있다 — 없으면 영구가 된다", () => {
-    const src = readFileSync(resolve("apps/ui/src/shared/usecases/advanceWeek.ts"), "utf8");
+    // ⚠ **눌러서 · 경로 전체를 읽는다** (2026-09-30 · Ⅱ-1). 남은 주를 줄이는
+    //   절은 `weekPhases/eventLane.ts` 로, 효율 산식은
+    //   `weekPhases/weeklyTraining.ts` 로 갔다. 새 파일은 `.prettierignore` 밖이라
+    //   훅이 곱셈 연산자를 줄 끝으로 옮겼다(`* trainEffFactor` → `trainEffFactor *`)
+    //   — 줄바꿈·연산자 위치에 기대는 잣대는 서식만 바뀌어도 깨진다
+    const src = weekPathFlat();
     expect(src).toContain("growth.protagonistPatch.trainEffBoost");
     expect(src).toContain("growth.protagonistPatch.injuryRiskMod");
     // 효율 산식에 실제로 곱해지는가 — 안 곱하면 데이터에만 있고 아무 일도 안 한다
-    expect(src).toContain("* trainEffFactor");
+    expect(src).toContain("trainEffFactor *");
     expect(src).toContain("myMods.injuryPrevention / injuryRiskFactor");
   });
 });

@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
+import { weekPathFlat } from "../../usecases/__tests__/weekPathSrc";
 
 /**
  * 🔴 **성실은 사실상 내려가지 않는다.**
@@ -56,10 +57,20 @@ describe("성실 범위", () => {
    *   이 검사가 검사를 안 하게 된다.
    */
   const DECAY = (() => {
-    const src = readFileSync(resolve(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
-    const m = src.match(/PB_DIL_DECAY\) \|\| ([\d.]+)\)/);
-    if (!m) throw new Error("DILIGENCE_WEEKLY_DECAY를 못 읽었다 — 정규식이 소스와 어긋났다");
-    return Number(m[1]);
+    // ⚠ **눌러서 · 경로 전체를 읽는다** (2026-09-30 · Ⅱ-1). 상수가
+    //   `weekPhases/weeklyTraining.ts` 로 갔고, 그 파일은 `.prettierignore` 밖이라
+    //   훅이 `|| 0.4,` 뒤 괄호를 다음 줄로 내렸다 — 줄바꿈에 기대는 잣대는
+    //   서식만 바뀌어도 깨진다 (`weekPathSrc.ts` 머리말)
+    // ⚠ 정규식을 안 쓴다(CLAUDE.md) — 앞뒤 글자를 그대로 찾아 사이를 읽는다
+    const src = weekPathFlat();
+    const HEAD = "PB_DIL_DECAY) || ";
+    const at = src.indexOf(HEAD);
+    if (at < 0) throw new Error("DILIGENCE_WEEKLY_DECAY를 못 읽었다 — 소스와 어긋났다");
+    const tail = src.slice(at + HEAD.length);
+    const end = tail.indexOf(",");
+    const v = Number(tail.slice(0, end < 0 ? tail.indexOf(")") : end).trim());
+    if (!Number.isFinite(v)) throw new Error("DILIGENCE_WEEKLY_DECAY 기본값을 못 읽었다");
+    return v;
   })();
 
   it("주간 자연 감쇠가 실제로 걸려 있다", () => {

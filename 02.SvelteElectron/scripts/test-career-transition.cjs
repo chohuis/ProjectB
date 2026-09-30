@@ -134,8 +134,17 @@ function walk(dir, out = []) {
 //   `usecases/gameStore/contracts.ts` 로 나갔는데, 그 안의 주석 한 줄
 //   (「`applyDraftDecision`은 이미 이렇게 지우는데」)에 이름이 적혀 있어
 //   **가드 없는 학적 변경**으로 잡혔다. 설명을 적었다고 결함이 되면 안 된다.
+//
+// 🔴 **줄 주석을 먼저 걷는다** (2026-09-30 실측). 블록 주석을 먼저 걷으면
+//   `// ... \`usecases/gameStore/*\` ...` 처럼 **줄 주석 안의 `/*`** 가 블록의
+//   시작으로 읽혀, 거기서부터 다음 `*/` 까지가 통째로 사라진다. 실제로 그
+//   구간에 있던 `import * as careerDecision from "…"` 이 지워져 이 검사가
+//   「가드 없는 학적 변경」을 잡았다 — 코드는 멀쩡했고 잣대가 틀렸다.
 const stripComments = (src) =>
-  src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "").replace(/^\s*\*.*$/gm, "");
+  src
+    .replace(/^\s*\/\/.*$/gm, "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\*.*$/gm, "");
 
 const UI_SRC = path.join(__dirname, "../apps/ui/src");
 const sources = walk(UI_SRC);
@@ -145,7 +154,14 @@ for (const file of sources) {
   if (!MUTATES_RE.test(src)) continue;
   if (GUARD_RE.test(src)) continue;
   // 위임만 하는 파일은 통과 — 부르는 usecase에 가드가 있으면 된다
-  const delegates = /from ["'].*usecases\/(careerDecision|militaryDecision)["']/.test(src);
+  //
+  // ⚠ **`gameStore/` 도 센다** (2026-09-30 · Ⅱ-2). `applyDraftDecision` 본문이
+  //   `usecases/gameStore/careerDecision.ts` 로 나가면서 `game.ts` 는 위임자만
+  //   남았고, 가드 이름을 들여오던 import 도 같이 빠졌다 — 그러자 이 검사가
+  //   「가드 없는 학적 변경」으로 잡았다. 묻고 싶은 것은 「가드를 거치는가」이지
+  //   「어느 디렉터리에서 들여오는가」가 아니다.
+  const delegates =
+    /from ["'].*usecases\/(gameStore\/)?(careerDecision|militaryDecision)["']/.test(src);
   if (delegates) continue;
   offenders.push(path.relative(UI_SRC, file));
 }

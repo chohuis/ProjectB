@@ -50,16 +50,16 @@ export interface SeasonBoundaryReadCtx extends SeasonBoundaryCtx {
   subscribe: (run: (value: GameStoreState) => void) => () => void;
 }
 
-export function saveTop10Snapshot(
-  { update }: SeasonBoundaryCtx,
-  snapshot: import("../../types/save").Top10Snapshot,
-) {
-  update((s) => ({
-    ...s,
-    lastTop10Pitcher: snapshot.type === "pitcher" ? snapshot : s.lastTop10Pitcher,
-    lastTop10Batter: snapshot.type === "batter" ? snapshot : s.lastTop10Batter,
-  }));
-}
+// ⚠ **`saveTop10Snapshot` 을 지웠다** (2026-09-30 · 항목 3 전수).
+//
+//   09-27 에 여기로 옮길 때부터 **호출부가 0** 이었고(그 커밋의 대조군이
+//   그렇게 못박아 뒀다), 같은 일을 하는 자리가 **이미 둘**이었다 —
+//   `applyWeekEndBatch` 가 `batch.top10Snapshot` 을 받아
+//   `lastTop10Pitcher`/`lastTop10Batter` 를 적는다(`gameStore/weekEnd.ts`).
+//   「같은 함수를 두 곳에 두지 않는다」(`CLAUDE.md`)에 걸린다.
+//
+// ⚠ 되살릴 일이 있으면 **그 자리(주차 마감)에 넣는다** — 스냅샷을 적는 문이
+//   둘이면 어느 쪽이 정본인지가 다시 흐려진다.
 
 export function saveSeasonStartSnapshot({ update }: SeasonBoundaryCtx) {
   update((s) => ({
