@@ -1134,4 +1134,13 @@ A 가 1묶음(6/24) 뒤 한도로 끊겼지만 판은 끝까지 돌았다(09-13 
 | **A2 Ⅱ-2 game.ts** | **4,811 → 2,910**(덩이 여섯 `gameStore/*` · 본문 한 글자도 안 바뀜 · 배선 검사 25자리를 옮기기 전에 덩이 읽기로 · 대조군 18) | 남은 덩이 여섯(진로 105 · 부상 45 · 학사 106 · 새 게임 122 · 주간 마감 105 · 세이브 I/O ~350) · `seasonEndLeagues.ts` 1,031 은 별건 · 🔴 **호출부 0 인 store 메서드 열둘**(죽은 칸 후보 · 안 건드림) |
 | **A2 Ⅲ 세이브 무결성** | `slotdb.verifySlot()` 한 함수(버전 → 스키마 → 필수 칸 → 참조) · `check:saveintegrity` 픽스처 아홉 · 🔴 refs 리그 6 vs 세이브 12(`DERIVED_LEAGUE_IDS`) · 첫 구현 구멍 둘(막힌 슬롯 사라짐 · 사본 79MB 씩) 고침 · 테스터 세이브 사본 열림 | 화면 표(`integrity.problems`)는 C |
 | **D** | 워커 `이벤트id` 칸 · 3판 12시즌: 레어 일곱 중 다섯 뽑힘 · 둘 0(`JUNIOR_TEACH`·`FIRST_ROAD`) · 히든 `SAME_SEAT` 0(후보 경쟁 · 결함 아님) · `Y3_SLUMP_NO_K` 0(상태 조건 `season_k_lte 12`) · 프로초반/rare 0.94% → **0%**(3판) | e2e 러너 첫 실행 **못 돌림 — 이 PC 에 `gh` 없음** · `report-simruns` 「749종」 하드코딩 |
-**지금**: ❓ 사용자 넷(+0.5 유지 · `UNDRAFTED_SCORE` 그대로 · ⑫ 상쇄 안 함 · 히든 `pitchGrant`) + `gh` 설치 여부. 그 뒤 주 3: 잔여(정본 셋 · `runAutoAdvance` 한 줄 · `draft_score` 칸 · B 데이터 다섯 칸 · Ⅱ-1/Ⅱ-2 남은 덩이 · Ⅱ-3 MatchPage) → **36판 여섯 번째** → Rust 둘 → 포장.
+~~**지금**: ❓ 넷~~ → **사용자 확정 09-30**: +0.5 유지 · `UNDRAFTED_SCORE` 그대로(36판에서) · ⑫ 상쇄 안 함(36판 리그 층) · 히든 `pitchGrant` 2등급.
+
+## 1.0.3 · 주 3 — 네 갈래 동시 ✅ (A `59faac0bc`…`35666394f` · A2 13커밋 · D `155caa751`…`87fec6f67` · B대행 `005faa05b`·`ca70100a3` · OP 데이터 한 칸 → 트렁크 · tsc 0 · vitest **3,148** · clippy 0 · svelte-check 0 · 데이터·무결성 검사 초록)
+| 갈래 | 한 것 | 남은 것 · 결정 |
+|---|---|---|
+| **A** | 히든 `pitchGrant grade 2`(「없는 구종」 갈래만 · `check:rewards ⑦` · 데이터 칸은 OP 가 넣음) · 주인공 손 배선 **셋**(한 줄이 아니었다 · `toEngineProtagonistPitcher` 정본 하나) · 🔴 **정본 셋 → 하나**: `match_engine_tuning.json` 은 엔진에 한 방울도 안 갔고 화면 스태미나 표시만 읽어 **엔진의 두 배**를 보여 주고 있었다 → JSON·IPC·타입 삭제 · 거울 검사 63건(`protagonistStaminaEmergency` 5 vs 15 어긋남 잡아 맞춤) | 🔴 별건 발견: `MainPage` 진입 전 시뮬 뒤 「자동으로 마치기」로 가면 주인공이 **구종 없이** 던진다(`arsenal` 안 넘김 · 값 움직여 손 안 댐) |
+| **A2** | `advanceWeek.ts` 2,703 → **1,177**(여덟 절 · `weekPhases/` 25 파일 · diff 0 셋) · `game.ts` 2,910 → **2,300**(다섯 덩이) · 호출부 0 메서드 **열 지움**(짝이 살아 있는 사본 · 죽은 갈래) · 잣대 다섯 고침(`scripts/week-path.cjs` 정본 등) | 🛑 `game.ts` 1,500 미달 — 남은 2,300 중 1,069 가 **뼈대**(타입·기본값 표·compat·migrate·writeSlot) · 세이브 I/O 를 store 밖으로 뺄지 결정 필요 · ❓ **`markDraftTriggered` 부르는 자리 0 → 히든 `EVT_HID_UNIV_EARLY_CALL` 이 영원히 false**(부르면 히든이 새로 열림 · 동작 변경) |
+| **D** | 워커 `draft_score` 칸(점수·문턱·내역 · 후보 문턱 68/70/72 재계산 절) · 「749종(동결)」→ manifest · 36판 준비(`PB_PAIR_SEEDS=3` 이미 됨 · 약 8시간 17분 · 서식 절) | `gh` 없음 → e2e 러너 미실측 |
+| **B대행** | `relationTarget` 다섯 칸(축제 out/stay 는 13명 → 동기 4 / 간부 6 · 관계 총량 39→12 · 26→12 — 문안대로) · B-7 재확인 | ⚠ 총량 준 것을 보상할지(동결 범위 · 값 안 만짐) · `senior` 예약어 없음(부르는 힌트도 없음) |
+**지금**: D **36판 여섯 번째** 도는 중 → 1.0.3 계측 정본 → Rust 둘(Ⅱ-4·5) · MatchPage(Ⅱ-3) → 포장. ❓ 사용자: `game.ts` 뼈대(세이브 I/O 를 store 밖으로) · `markDraftTriggered` 히든 열기 · `MainPage` 구종 없이 결함 · 축제 관계 총량 · `gh` 설치.
