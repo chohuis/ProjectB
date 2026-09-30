@@ -9,7 +9,6 @@ import type {
   AchievementRuntime,
   CareerApplications,
   CareerChoiceMode,
-  CareerDraftPickLogEntry,
   CareerFinalChoice,
   CareerResults,
   CareerAward,
@@ -26,15 +25,16 @@ import type {
   TrainingPreset,
 } from "../types/save";
 import { makeSaveGame, migrateSaveGame } from "../types/save";
-// 진급·나이 함수들은 **덩이 여섯과 함께 나갔다** — 여기 남는 건 새 게임 몫 둘이다
-import { initHighSchoolNpcs, entityToProNpcState } from "../utils/gradeAdvance";
+// 진급·나이 함수들은 **덩이 여섯과 함께 나갔다** (Ⅱ-2 · 09-27).
+// ⚠ `initHighSchoolNpcs` 도 2026-09-30 에 빠졌다 — 그걸 부르던
+//   `initNpcsForNewGame` 이 **죽은 칸**이라 같이 지웠다(항목 3 전수).
+import { entityToProNpcState } from "../utils/gradeAdvance";
 // 🔴 드래프트·오프시즌 함수들은 **덩이와 함께 나갔다**(Ⅱ-2) — 여기 남기면
 //   쓰는 곳 없는 이름이 store 를 다시 무겁게 만든다
-import type { DraftPick, SchoolScenario } from "../types/save";
+import type { DraftPick } from "../types/save";
 import type { ProContract } from "../types/save";
 // 계약 도장은 위임자의 인자 타입으로만 쓴다 — 찍는 곳은 덩이 셋이다
 import { type ContractStamp } from "../utils/contractHistory";
-import { transitionReason, universityGradeOf, universityWeekOnEnroll } from "../utils/careerTransition";
 import { careerSummaryOf } from "../utils/careerSummary";
 import { pitchingOvrOf, battingOvrOf } from "../utils/ovr";
 import { masterStore } from "./master";
@@ -1245,19 +1245,6 @@ function createGameStore() {
       });
     },
 
-    recordTrainingWeek() {
-      update((s) => {
-        const nextMetrics: AchievementMetrics = {
-          ...s.achievementMetrics,
-          trainingWeeksTotal: s.achievementMetrics.trainingWeeksTotal + 1,
-        };
-        return {
-          ...s,
-          achievementMetrics: nextMetrics,
-          achievements: updateAchievementProgress(s.achievements, nextMetrics),
-        };
-      });
-    },
 
     claimAchievement(id: string) {
       update((s) => ({
@@ -1524,15 +1511,6 @@ function createGameStore() {
       }));
     },
 
-    updatePopularity(delta: number) {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          popularity: Math.max(0, Math.min(100, s.protagonist.popularity + delta)),
-        },
-      }));
-    },
 
 
     // ⚠ **`updateFame`을 지웠다** (2026-09-01). `applyFameChange`와 같은 일을
@@ -1545,15 +1523,6 @@ function createGameStore() {
     //
     //   호출부(`applyGameOutcome.ts`)는 `applyFameChange`를 쓴다.
 
-    updateScoutScore(delta: number) {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          scoutScore: Math.max(0, Math.min(100, s.protagonist.scoutScore + delta)),
-        },
-      }));
-    },
 
     addMessage(msg: MessageItem) {
       update((s) => ({ ...s, mailbox: pushMailbox([msg], s.mailbox) }));
@@ -1711,6 +1680,18 @@ function createGameStore() {
       }));
     },
 
+    // 🔴 **아직 안 부른 것이다 — 죽은 칸이 아니다** (2026-09-30 · 항목 3 전수).
+    //
+    //   호출부는 0 이지만 **읽는 쪽이 살아 있다**: 히든 이벤트
+    //   `EVT_HID_UNIV_EARLY_CALL` 이 `school.draftTriggered` 를 조건으로 걸고
+    //   있고(`utils/eventPaths.ts` 의 `BOOL_PATHS`), 그 칸을 true 로 만드는
+    //   자리가 **세상에 이것뿐**이다. 아무도 안 부르니 그 이벤트는 **영원히
+    //   false** 다 — 이 저장소가 반복해 밟은 「조건만 만들고 배선을 안 했다」
+    //   꼴이다. 지우면 되살릴 자리가 없어진다.
+    //
+    // ⚠ **어디서 부를지는 동작 결정이라 여기서 안 고친다.** 진로 허브가 뜨는
+    //   자리(`weekPhases/careerHub.ts`)가 후보다 — 넣으면 히든 하나가 새로
+    //   열리므로 사용자에게 묻는다.
     markDraftTriggered(flag: boolean) {
       update((s) => ({
         ...s,
@@ -1762,15 +1743,6 @@ function createGameStore() {
       }));
     },
 
-    appendCareerDraftPickLog(entry: CareerDraftPickLogEntry) {
-      update((s) => ({
-        ...s,
-        schoolState: {
-          ...s.schoolState,
-          careerDraftPickLog: [...s.schoolState.careerDraftPickLog, entry].slice(-200),
-        },
-      }));
-    },
 
     /**
      * 그해 드래프트 **후보 명단**을 남긴다 (Phase 9-E).
@@ -1786,15 +1758,6 @@ function createGameStore() {
       }));
     },
 
-    clearCareerDraftPickLog() {
-      update((s) => ({
-        ...s,
-        schoolState: {
-          ...s.schoolState,
-          careerDraftPickLog: [],
-        },
-      }));
-    },
 
     setCareerFinalChoice(choice: CareerFinalChoice) {
       update((s) => ({
@@ -2076,41 +2039,7 @@ function createGameStore() {
       });
     },
 
-    // 구종 습득 완료 (progress >= 100)
-    completePitchLearning(pitchId: string) {
-      update((s) => {
-        const pitches = s.protagonist.pitches ?? [{ id: "PITCH_FASTBALL", grade: 3 as const }];
-        const existing = pitches.find((e) => e.id === pitchId);
-        if (existing) {
-          // 이미 보유 중이면 grade +1 (최대 5)
-          const updated = pitches.map((e) =>
-            e.id === pitchId ? { ...e, grade: Math.min(5, e.grade + 1) as PitchEntry["grade"] } : e
-          );
-          const p: ProtagonistSave = { ...s.protagonist, pitches: updated, trainingPitchState: undefined };
-          return { ...s, protagonist: p };
-        }
-        const p: ProtagonistSave = {
-          ...s.protagonist,
-          pitches: [...pitches, { id: pitchId, grade: 1 }],
-          trainingPitchState: undefined,
-        };
-        return { ...s, protagonist: p };
-      });
-    },
 
-    // 구종 훈련 진행률 갱신
-    advancePitchProgress(delta: number) {
-      update((s) => {
-        const ts = s.protagonist.trainingPitchState;
-        if (!ts) return s;
-        const progress = Math.min(100, ts.progress + delta);
-        const p: ProtagonistSave = {
-          ...s.protagonist,
-          trainingPitchState: { ...ts, progress },
-        };
-        return { ...s, protagonist: p };
-      });
-    },
 
     // 시즌 종료 후 주인공 상태 갱신 (나이+1, 프로연차+1, 오프시즌 회복)
     // 학년 진급은 processSeasonEnd에서 먼저 처리되므로 여기서는 age만 증가
@@ -2254,32 +2183,6 @@ function createGameStore() {
       });
     },
 
-    // 새 게임 시작 시 고교 NPC 초기화 (마스터 entities + 시나리오 파일 기반)
-    initNpcsForNewGame(
-      entities: import("../stores/master").EntityRow[],
-      scenario: SchoolScenario,
-      seasonYear: number,
-    ) {
-      const r = scenario.protagonistRoles;
-      // 시나리오가 지목한 인물은 Named — 주간 개별 시뮬 대상이 된다.
-      // 구 코드는 여기서 "teammate"/"rival" 역할까지 붙였는데, 그 값을 읽는 곳은
-      // 감정 시스템뿐이었고 6C에서 폐기했다. 지금은 동료/라이벌을 실측으로 가른다
-      // (동료 = 같은 팀 · 라이벌 = 실제로 맞붙어 던진 투수).
-      const namedIds = new Set<string>([
-        ...r.seniorMentors,
-        r.seniorCaptain,
-        ...r.classmateRivals,
-        r.batteryPartner,
-        r.promisingJunior,
-        ...scenario.rivalAces,
-        ...scenario.initialZone0Npcs,
-      ].filter(Boolean));
-
-      update((s) => ({
-        ...s,
-        npcs: initHighSchoolNpcs(entities, seasonYear, namedIds),
-      }));
-    },
 
     // 시즌 종료 처리: ① 학년 진급 → ② 나이 일괄 +1
     // 신입생은 다음 시즌 W1에 `generateFreshmenV3`(Rust)가 만든다
@@ -2353,9 +2256,6 @@ function createGameStore() {
     //
     // 실제 처리는 `usecases/gameStore/seasonBoundary.ts` 다 — store 는 넘기기만
     // 한다. 이름·인자·돌려주는 값은 그대로다(호출부 불변).
-    saveTop10Snapshot(snapshot: import("../types/save").Top10Snapshot) {
-      seasonBoundary.saveTop10Snapshot({ update }, snapshot);
-    },
     saveSeasonStartSnapshot() {
       seasonBoundary.saveSeasonStartSnapshot({ update });
     },
@@ -2386,9 +2286,6 @@ function createGameStore() {
     },
 
     // 하위 호환: App.svelte의 hydrate 호출 유지
-    hydrate(saved: Partial<GameStoreState>) {
-      update((s) => ({ ...s, ...saved }));
-    },
   };
 }
 
