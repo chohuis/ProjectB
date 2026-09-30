@@ -227,14 +227,16 @@
           "effectHint": "사기 +6, 감각 +2, 동기 관계 +3",
           "moraleDelta": 6,
           "ballDelta": 2,
-          "relationDelta": 3
+          "relationDelta": 3,
+          "relationTarget": "peer"
         },
         {
           "id": "stay",
           "label": "부대에 남는다",
           "effectHint": "피로 -6, 간부 관계 +2",
           "fatigueDelta": -6,
-          "relationDelta": 2
+          "relationDelta": 2,
+          "relationTarget": "officer"
         }
       ]
     },
@@ -546,7 +548,10 @@
           "id": "stand",
           "label": "맞선다",
           "effectHint": "관계 -8, 동기 관계 +3",
-          "relationDelta": -8
+          "relationDelta": [
+            { "target": "MEM_GUNNER", "delta": -8 },
+            { "target": "peer", "delta": 3 }
+          ]
         }
       ]
     },
@@ -665,13 +670,19 @@
           "id": "cover",
           "label": "감싼다",
           "effectHint": "후임 관계 +8, 간부 관계 -2",
-          "relationDelta": 8
+          "relationDelta": [
+            { "target": "MEM_JR_1", "delta": 8 },
+            { "target": "officer", "delta": -2 }
+          ]
         },
         {
           "id": "report",
           "label": "보고한다",
           "effectHint": "간부 관계 +3, 후임 관계 -6",
-          "relationDelta": -6
+          "relationDelta": [
+            { "target": "officer", "delta": 3 },
+            { "target": "MEM_JR_1", "delta": -6 }
+          ]
         }
       ]
     },
@@ -1637,6 +1648,6 @@
   ],
   "_memberNote": "🔴 **성격은 말투가 아니라 「어떤 일이 일어나느냐」로 드러난다**(사용자 확정 2026-09-09). 문안이 성격을 읽는 게 아니라, `member` 로 **그 사람이 나오는 장면을 성격에 맞춰** 배정한다. 위 넷은 그렇게 새로 쓴 것이고 기존 120종은 손대지 않았다",
   "_traitCopyNote": "B-7(2026-09-27) — `{member.trait}` 를 쓰는 문안 **여섯**. 고른 잣대는 「성격이 갈래의 뜻을 바꾸는 장면」이다 — 말을 안 섞는 선임에게 사과하는 값(`MIL_COND_CONFLICT_SENIOR`) · 깐깐한 간부에게 항변하는 값(`MIL_COND_CONFLICT_OFFICER`) · 가르치기 좋아하는 선임이라 조언이 온다(`MIL_COND_MENTOR`) · 말수 적은 후임이라 사정을 안 말한다(`MIL_COND_JUNIOR_TROUBLE`) · 말을 안 섞던 사람이 말을 꺼낸다(`MIL_DAY_NIGHT_DUTY`) · 야구를 아는 동기라 이야기가 길어진다(`MIL_COND_BOND_PEER`). `member` 가 붙은 이벤트는 35종인데 나머지 29 에는 **안 넣었다** — 성격이 장면에 이미 들어 있거나(취사병·운전병·보급병) 성격이 갈래를 안 바꾼다. 🔴 **어미는 `-고` 만 쓴다.** 계약이 말하는 `-는`(「{member.trait}는 사람입니다」)은 `check:josa` 가 「는」을 받침 의존 조사로 보고 **빨강을 낸다**(실측) — 자세한 것은 `docs/HANDOFF_B_TO_A.md §0.4`",
-  "_relationTargetNote": "B-4(2026-09-27) — `relationTarget` 을 **힌트가 이미 대상을 말하고 있던 자리에만** 심었다(열한 칸 · 전수 표는 `docs/PLAN_103_2026-09-27.md §5`). `subunit` 아홉(`MIL_CAL_WORKS_SPRING#ok` · `MIL_CAL_WORKS_FALL#ok` · `MIL_CAL_PROMOTE_3#squad` · `MIL_COND_SENSE_HIGH#throw` · `MIL_COND_SNOW#work` · `#dodge` · `MIL_DAY_WORK#ok` · `MIL_DAY_PATROL#ok` · `MIL_DAY_SQUAD_MEAL#join`) · `junior` 하나(`MIL_CAL_PROMOTE_3#junior`) · `all` 하나(`MIL_CAL_FIRST_DAY#greet` · 뜻을 못박는 것이라 동작은 안 바뀐다). ⚠ **못 심은 것 넷** — 힌트가 「동기 관계」·「간부 관계」를 말하는데 예약어가 `all|subunit|junior` 뿐이라 적을 값이 없다(`MIL_CAL_FESTIVAL#out`·`#stay`) · 힌트가 **대상 둘**을 말하는데 선택지에 `relationDelta` 가 하나뿐이다(`MIL_COND_CONFLICT_SENIOR#stand` 「동기 관계 +3」 · `MIL_COND_JUNIOR_TROUBLE#cover` 「간부 관계 -2」 · `#report` 「간부 관계 +3」 — 셋은 지금도 **아무 일도 안 일어난다**). 둘 다 A 몫으로 넘긴다 — 예약어를 늘리는 것도, 대상 둘을 받는 것도 `types/militaryLife.ts`·평가기·검사가 같이 움직인다",
+  "_relationTargetNote": "B-4(2026-09-27) — `relationTarget` 을 **힌트가 이미 대상을 말하고 있던 자리에만** 심었다(열한 칸 · 전수 표는 `docs/PLAN_103_2026-09-27.md §5`). `subunit` 아홉(`MIL_CAL_WORKS_SPRING#ok` · `MIL_CAL_WORKS_FALL#ok` · `MIL_CAL_PROMOTE_3#squad` · `MIL_COND_SENSE_HIGH#throw` · `MIL_COND_SNOW#work` · `#dodge` · `MIL_DAY_WORK#ok` · `MIL_DAY_PATROL#ok` · `MIL_DAY_SQUAD_MEAL#join`) · `junior` 하나(`MIL_CAL_PROMOTE_3#junior`) · `all` 하나(`MIL_CAL_FIRST_DAY#greet` · 뜻을 못박는 것이라 동작은 안 바뀐다). ✅ **남았던 다섯 칸을 2026-09-30 에 채웠다**(A 인계 12차 §0.30 이 배선을 열었다 — 예약어 `peer`·`officer` 와 배열 꼴). `MIL_CAL_FESTIVAL#out` → `relationTarget: peer` · `#stay` → `officer`(둘은 대상이 없어 재적 **전원 13명**에게 가고 있었다 · 이제 동기 4 · 간부 6). 배열 셋은 `MIL_COND_CONFLICT_SENIOR#stand`(`MEM_GUNNER` -8 · `peer` +3) · `MIL_COND_JUNIOR_TROUBLE#cover`(`MEM_JR_1` +8 · `officer` -2) · `#report`(`officer` +3 · `MEM_JR_1` -6). 🔴 **배열은 「이벤트 `member` 로 떨어지는」 기본값을 지운다** — 그래서 원래 가던 몫을 `junior` 가 아니라 `MEM_GUNNER`·`MEM_JR_1` 로 **손으로 적었다**. 「후임 관계」는 그 후임 한 명이었지 후임 둘 전부가 아니다(`junior` 로 적으면 값이 움직인다 · 밸런스 동결 위반). 전수 표는 `docs/PLAN_103_2026-09-27.md §5`",
   "_memberCoverageNote": "B-3(2026-09-27) — 부대원 15명 중 **어느 이벤트에도 안 나오던 둘**(`MEM_XO` 오승표 「원칙대로 간다」 · `MEM_PLT_LDR` 신동주 「아직 서툴다」)에게 장면 하나씩 붙였다(`MIL_DAY_XO_BY_THE_BOOK` · `MIL_DAY_PLT_LDR_FIRST`). 실측: 두 id 는 `members.json` 말고는 저장소 어디에도 없었다. 나머지 13명은 이미 장면이 있어 **안 늘렸다** — 억지로 붙이면 장면이 성격을 못 따라간다. 성격은 여기서도 장면으로 드러낸다(`{member.trait}` 는 B-7 몫)"
 }
