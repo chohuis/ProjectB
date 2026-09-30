@@ -93,6 +93,15 @@ function runWorker() {
   check("이벤트id 칸이 찬다(계측 모드에서 워커가 이었다)", 이벤트id있는줄.length > 0,
     `이벤트id 있는 줄 ${이벤트id있는줄.length}/${ys.length}`);
 
+  // 🔴 드래프트 칸(SIM_103_PITCH_DRAFT_2026-09-27.md §3-3 꼬리 · D 2026-09-30).
+  //   이 씨앗(777·safe/power)은 고교 3학년에서 실제로 드래프트 판정이 난다
+  //   (stderr 의 `[진로산식]` 줄로 이미 확인됨) — 그 해 줄에 `드래프트점수` 가
+  //   차는지를 여기서 다진다. 안 차면 `perfEntry.ts simYearRow` 의 감지
+  //   조건(recentOutcomes kind drafted/undrafted)이 이 세이브 구조와 어긋난 것이다.
+  const 드래프트있는줄 = ys.filter((y) => y.드래프트점수 !== undefined);
+  check("드래프트 해에 draft_score 칸이 찬다(SIM_103_PITCH_DRAFT §3 꼬리)", 드래프트있는줄.length > 0,
+    `드래프트 줄 ${드래프트있는줄.length}/${ys.length}`);
+
   log("");
   if (failed) { log(`🔴 ${failed}건 실패`); process.exit(1); }
   log("전부 통과");

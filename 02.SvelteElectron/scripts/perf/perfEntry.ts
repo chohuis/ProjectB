@@ -447,7 +447,29 @@ export interface SimYearRow {
   // 군 루프엔 없다). 군 무대가 아닌 해는 항상 0.
   군캘린더: number; 군뽑기: number;
   일: string[];
+  // 드래프트 해에만 찬다(SIM_103_PITCH_DRAFT §3 꼬리 — "다음에 이걸 재려면
+  // 판 보고서에 draft_score 를 남겨야 한다" · 2026-09-30 · D). 그 전 해는
+  // 전부 undefined — `report-simruns.cjs` 가 `!== undefined` 로 가른다.
+  드래프트여부?: boolean;
+  드래프트라운드?: number | null;
+  드래프트픽?: number | null;
+  드래프트팀?: string | null;
+  드래프트점수?: number;
+  // ⚠ **문턱은 거울 값이다.** 정본은 `packages/engine-native/src/npc_sim.rs`
+  //   `const UNDRAFTED_SCORE: f64`(지금 68.0) 하나다 — napi 로 안 나가 있어
+  //   계측 스크립트에서 다시 적었다(`UNDRAFTED_SCORE_MIRROR` 아래). Rust 값이
+  //   바뀌면 이 거울도 같이 고친다 — 안 고치면 "문턱과의 거리"가 거짓말한다.
+  드래프트문턱?: number;
+  // 산식 내역(percentile·ovrNorm·base·aceBonus·tourAdj·awardAdj·scoutAdj·
+  // injuryPen·total) — `determine_protagonist_draft`(Rust)가 낸 그대로다.
+  // 미지명이면 어느 항이 깎았는지가 "사유"다 — 표를 새로 안 만든다.
+  드래프트내역?: Record<string, number>;
 }
+
+// ⚠ **위 주석 참고** — Rust `npc_sim.rs:3921 const UNDRAFTED_SCORE: f64 = 68.0`
+//   의 거울이다. 정본이 둘이 되는 걸 알면서도 여기 둔다: napi export를 새로
+//   추가하는 건 Rust 층 변경이라 이 워크트리(계측·도구 전용) 권한 밖이다.
+const UNDRAFTED_SCORE_MIRROR = 68.0;
 
 /**
  * **그해를 한 줄로 접는다.** 시즌이 끝나는 자리(롤오버 직전)에서 부른다.
@@ -482,7 +504,7 @@ export function simYearRow(
     ...(p.careerEvents ?? []).filter((e) => e.year === s.seasonYear)
       .map((e) => String(e.eventType)),
   ];
-  return {
+  const row: SimYearRow = {
     연도: s.seasonYear, 나이: at?.나이 ?? p.age,
     무대: at?.무대 ?? p.careerStage, 소속: at?.소속 ?? p.teamId ?? "",
     연봉: p.contract?.salary ?? 0,
@@ -495,6 +517,41 @@ export function simYearRow(
     군캘린더: milDelta?.캘린더 ?? 0, 군뽑기: milDelta?.뽑기 ?? 0,
     일,
   };
+
+  // 🔴 **드래프트가 갈린 해에만 찬다.** 감지는 `recentOutcomes`(kind
+  //   "drafted"/"undrafted") 로 한다 — `careerEvents` 의 `draft_picked` 는
+  //   **지명됐을 때만** 남는다(`gameStore/npcDraft.ts` — 미지명은 애초에
+  //   그 블록을 안 탄다). `recordOutcome` 은 두 갈래 다 한 번씩 부르므로
+  //   (`advanceWeek.ts`) 이게 유일하게 둘 다 잡는 신호다.
+  const 드래프트결과 = (p.recentOutcomes ?? []).find(
+    (o) => o.year === s.seasonYear && (o.kind === "drafted" || o.kind === "undrafted"),
+  );
+  if (드래프트결과) {
+    row.드래프트여부 = 드래프트결과.kind === "drafted";
+    const cr = g.schoolState.careerResults;
+    if (cr) {
+      row.드래프트라운드 = cr.draftRound ?? null;
+      row.드래프트픽 = cr.draftPick ?? null;
+      row.드래프트팀 = cr.draftTeamId ?? null;
+    }
+    // ⚠ **전역 변수 한 칸이다** (`advanceWeek.ts` `__lastDraftBreakdown` —
+    //   계측 전용, 세이브에는 안 쓴다). 드래프트는 커리어에 한 번(또는
+    //   대학 재도전으로 한 번 더)뿐이라, 이 해에 찍힌 결과와 지금 든
+    //   값이 어긋날 자리가 없다 — 드래프트 판정 자체가 이 결과를 낳은
+    //   그 호출 하나뿐이다.
+    const bd = (globalThis as Record<string, unknown>).__lastDraftBreakdown as
+      | { total?: number; [k: string]: unknown }
+      | null
+      | undefined;
+    if (bd) {
+      row.드래프트점수 = Math.round((bd.total ?? 0) * 100) / 100;
+      row.드래프트문턱 = UNDRAFTED_SCORE_MIRROR;
+      row.드래프트내역 = Object.fromEntries(
+        Object.entries(bd).map(([k, v]) => [k, Math.round(Number(v) * 100) / 100]),
+      );
+    }
+  }
+  return row;
 }
 
 /** 지금까지 발동한 등급 수 — `simYearRow` 의 그해 차를 내려고 호출부가 쓴다 */
