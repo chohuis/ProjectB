@@ -45,6 +45,8 @@ import { processAllLeaguesSeasonEnd as processAllLeaguesSeasonEndChunk } from ".
 import { pushMailbox } from "../usecases/gameStore/mailbox";
 import * as injuryTreatment from "../usecases/gameStore/injuryTreatment";
 import * as weekEnd from "../usecases/gameStore/weekEnd";
+import * as academics from "../usecases/gameStore/academics";
+import * as careerDecision from "../usecases/gameStore/careerDecision";
 import * as contracts from "../usecases/gameStore/contracts";
 import * as military from "../usecases/gameStore/military";
 import { applyEffectToProtagonist } from "../usecases/gameStore/rewards";
@@ -1646,118 +1648,34 @@ function createGameStore() {
     },
 
     // 주간 학업 선택 모드 저장
+    // ── 학사 (고교 시험 · 대학 학점 · 출전 자격) ────────────────
+    //
+    // 실제 처리는 `usecases/gameStore/academics.ts` 다 — store 는 넘기기만 한다.
+    // 이름·인자·돌려주는 값은 그대로다(호출부 불변).
     setStudyMode(mode: import("../types/save").StudyMode) {
-      update((s) => ({ ...s, schoolState: { ...s.schoolState, weeklyStudyMode: mode } }));
+      academics.setStudyMode({ update }, mode);
     },
-
-    // advanceWeek에서 주간 학업 효과 반영
     applyWeeklyStudyResult(result: import("../utils/academicsEngine").WeeklyStudyResult) {
-      update((s) => ({
-        ...s,
-        schoolState: {
-          ...s.schoolState,
-          examAccumScore:  Math.min(100, s.schoolState.examAccumScore + result.examAccumDelta),
-          warningCount:    s.schoolState.warningCount + result.warningCountDelta,
-          subjectScores:   result.updatedSubjectScores,
-        },
-      }));
+      academics.applyWeeklyStudyResult({ update }, result);
     },
-
-    // 시험 결과 반영
     applyExamResult(result: import("../utils/academicsEngine").ExamResult) {
-      update((s) => {
-        const clamp = (v: number) => Math.max(0, Math.min(100, v));
-        const p = s.protagonist;
-        return {
-          ...s,
-          protagonist: {
-            ...p,
-            morale: clamp(p.morale + result.moraleDelta),
-          },
-          player: toPlayerCompat({ ...p, morale: clamp(p.morale + result.moraleDelta) }),
-          schoolState: {
-            ...s.schoolState,
-            lastGrade:          result.grade,
-            lastGradeRisk:      result.riskLevel,
-            eligibilityBlocked: result.eligibilityBlocked,
-            examAccumScore:     0,   // 시험 후 리셋
-            warningCount:       result.eligibilityBlocked
-              ? s.schoolState.warningCount
-              : Math.max(0, s.schoolState.warningCount - 1), // 경고 1감소(자연 회복)
-          },
-        };
-      });
+      academics.applyExamResult({ update }, result);
     },
-
-    /**
-     * 대학 학기 성적 확정 (Phase 9-C).
-     *
-     * ⚠ 고교의 `applyExamResult`와 **다른 경로다.** 고교는 석차 9등급으로
-     * 대학 입학 티어를 정하고, 대학은 학점으로 졸업 자격을 정한다.
-     * 유급은 `universityWeek`을 **안 올리는 방식**으로 낸다 — 학년 계수기가
-     * 거기 하나뿐이라 그래야 정본이 갈라지지 않는다.
-     */
     applySemesterResult(
       r: import("../utils/academicsEngine").SemesterResult,
       term: "midterm" | "final",
       seasonYear: number,
     ) {
-      update((s) => {
-        const sc = s.schoolState;
-        return {
-          ...s,
-          schoolState: {
-            ...sc,
-            universityGpa: r.cumulativeGpa,
-            semesterGpaHistory: [...(sc.semesterGpaHistory ?? []), { year: seasonYear, term, gpa: r.gpa }],
-            academicWarningLevel: r.newWarningLevel,
-            repeatedYears: (sc.repeatedYears ?? 0) + (r.repeats ? 1 : 0),
-            // 2단계 이상이면 다음 학기 출전 정지
-            eligibilityBlocked: r.newWarningLevel >= 2,
-            // 유급하면 학년 계수기를 한 해(52주) 되돌린다.
-            //
-            // ⚠ **하한을 뺐다** (2026-09-01). 예전엔 `Math.max(0, …)`였는데,
-            // 축 원점을 시즌 경계로 옮기면서 **0 이하가 정상 값**이 됐다
-            // (입학 전 위상). 1학년이 유급하면 uw가 음수로 가는 게 맞다 —
-            // 다음 시즌 W1에 정확히 1이 되어 1학년을 다시 시작한다.
-            // 0에 붙잡아 두면 그 시즌이 한 주씩 밀려 축이 또 어긋난다.
-            universityWeek: r.repeats ? sc.universityWeek - 52 : sc.universityWeek,
-            // 다음 학기를 위해 누적기를 비운다
-            semesterQualityAccum: 0,
-            semesterWeeks: 0,
-          },
-        };
-      });
+      academics.applySemesterResult({ update }, r, term, seasonYear);
     },
-
-    /** 졸업 확정 — 미지명이어도 여기서 취업 경로가 갈린다 (Phase 11 엔딩) */
     markGraduated() {
-      update((s) => ({ ...s, schoolState: { ...s.schoolState, graduated: true } }));
+      academics.markGraduated({ update });
     },
-
-    /**
-     * 주간 학업 품질 누적 (대학 전용).
-     *
-     * ⚠ **고교의 `examAccumScore`를 쓰지 않는다.** 거기엔 `applyWeeklyStudy`가
-     * 주당 4씩 더하고 있어서 섞이면 학점이 상한으로 튄다(실측 4.50).
-     */
     addWeeklyGpa(quality: number) {
-      update((s) => ({
-        ...s,
-        schoolState: {
-          ...s.schoolState,
-          semesterQualityAccum: (s.schoolState.semesterQualityAccum ?? 0) + quality,
-          semesterWeeks: (s.schoolState.semesterWeeks ?? 0) + 1,
-        },
-      }));
+      academics.addWeeklyGpa({ update }, quality);
     },
-
-    // 출전 정지 해제 (1주 후 자동)
     clearEligibilityBlock() {
-      update((s) => ({
-        ...s,
-        schoolState: { ...s.schoolState, eligibilityBlocked: false },
-      }));
+      academics.clearEligibilityBlock({ update });
     },
 
     // ⚠ **`setCareerStage`를 지웠다** (2026-09-01). 호출부가 **0건**이었다 —
@@ -1891,36 +1809,13 @@ function createGameStore() {
 
     // 대학 전공 선택 확정
     selectMajor(major: string) {
-      update((s) => ({
-        ...s,
-        schoolState: { ...s.schoolState, universityMajor: major, majorSelected: true },
-      }));
+      academics.selectMajor({ update }, major);
     },
 
-    // 대학 진행 주차 증가 (advanceWeek에서 호출)
-    //
-    // 🔴 **`grade` 를 여기서 같이 맞춘다** (2026-09-27 · `BALANCE_BACKLOG`
-    //   「`protagonist.grade` 가 대학에서 한 해 뒤처진다」 · 제안 ㉯).
-    //
-    //   예전엔 `processSeasonEnd` 가 적었다. 그 블록은 시즌 **끝**에 도는데
-    //   그때 `universityWeek` 은 정확히 52 이고 `universityGradeOf(52)` 는 1 이라
-    //   **직전 시즌의 학년**이 남았다(판 #6·#12 의 `[진로점수]` 줄이 2029·2030
-    //   둘 다 `grade=1` · 2030 의 진짜 학년은 2).
-    //
-    // ⚠ **축을 하나로 둔다.** 「+1 을 더해서 다음 주 학년을 적는」 쪽(제안 ㉮)은
-    //   왜 +1 인지가 또 하나의 축이 된다. 계수기가 **움직이는 자리**에서 같이
-    //   비추면 어긋날 틈이 없다 — `universityWeek` 이 정본이고 `grade` 는 거울이다
-    //   (`careerTransition.universityGradeOf` 머리말).
+    // 실제 처리는 `usecases/gameStore/academics.ts` 다 — store 는 넘기기만 한다.
+    // 🔴 `grade` 는 계수기가 **움직이는 자리**에서 같이 비춘다(그 파일 머리말).
     incrementUniversityWeek() {
-      update((s) => {
-        const universityWeek = s.schoolState.universityWeek + 1;
-        const grade = universityGradeOf(undefined, universityWeek) as 1 | 2 | 3 | 4;
-        return {
-          ...s,
-          schoolState: { ...s.schoolState, universityWeek },
-          protagonist: { ...s.protagonist, grade },
-        };
-      });
+      academics.incrementUniversityWeek({ update });
     },
 
     /**
@@ -2019,6 +1914,8 @@ function createGameStore() {
       }));
     },
 
+    // 실제 처리는 `usecases/gameStore/careerDecision.ts` 다 — store 는 넘기기만
+    // 한다. 진로 전이의 **정본이 그 한 자리**다(그 파일 머리말).
     applyDraftDecision(payload: {
       stage: import("../types/save").CareerStage;
       leagueId?: string;
@@ -2035,94 +1932,7 @@ function createGameStore() {
        */
       enrollWeekInYear?: number;
     }) {
-      update((s) => {
-        // 학적은 되돌릴 수 없다 — 고교 재입학·대학 두 번 입학·프로에서 학교 복귀 거부.
-        // 여기가 없어서 `isUnivResultWeek`가 대학 재학생에도 발동하며 대학 재입학이
-        // 실제로 성립했다 (careerTransition.ts 주석 참고).
-        const reason = transitionReason(s.protagonist.careerStage, payload.stage);
-        if (reason) {
-          console.error(`[applyDraftDecision] 전이 거부: ${reason}`);
-          return s;   // 상태를 건드리지 않는다
-        }
-        const protagonist: ProtagonistSave = {
-          ...s.protagonist,
-          careerStage: payload.stage,
-          leagueId: payload.leagueId ?? s.protagonist.leagueId,
-          teamId: payload.teamId ?? s.protagonist.teamId,
-          money: Math.max(0, s.protagonist.money + (payload.signingBonus ?? 0)),
-          // ⚠ **대학도 학년이 있다** (1~4). 예전엔 고교만 남기고 나머지를 전부
-          // 지워서, 대학에 진학하면 `grade`가 undefined가 됐다. 그러면
-          // `processSeasonEnd`의 `isStudentProto`(grade != null 검사)가 거짓이라
-          // `advanceProtagonistGrade`가 **한 번도 안 불린다** — 학년이 안 오르고
-          // 졸업이 영영 안 온다. 실측: 2032 진학 → 2038까지 7년째 대학생(29세),
-          // 매년 W42 진로 허브만 반복.
-          // 프로·독립·군은 학년이 없는 게 맞다.
-          grade:
-            payload.stage === "highschool" ? s.protagonist.grade :
-            payload.stage === "university" ? 1 :
-            undefined,
-        };
-        // 🔴 **대학 학년 계수기의 원점을 시즌 경계로 맞춘다** (2026-09-01).
-        //
-        // 진학은 `CAREER_RESULT_WEEK`(W32)에 확정되는데 예전엔 `universityWeek`
-        // 을 안 세워서 초기값 0에서 시작했다. 그러면 계수기가 **진학한 주부터**
-        // 세므로 학년이 매 시즌 W33에 오른다 — 시즌과 20주 어긋난다.
-        //
-        // 그래서 진학 시 `weekInYear - 52`로 세운다. 진학 첫 해의 남은 주는
-        // 음수(입학 전)이고, **다음 시즌 W1에 정확히 1**이 된다:
-        //
-        // ```
-        //          예전                     지금
-        //   시즌A W33   uw   1            uw -19       합격했으나 학기 전
-        //   시즌B W1    uw  21   1학년    uw   1       1학년
-        //   시즌B W50   uw  70   2학년★  uw  50       1학년
-        //   시즌C W1    uw  73   2학년    uw  53       2학년
-        // ```
-        //
-        // ★ 여기가 결함이었다. `universityGradeOf`가 `(uw-1)/52+1`이라
-        // uw 53부터 2학년인데, 시즌B는 아직 1학년 시즌이다.
-        //
-        // 이벤트가 `week_eq` + `school.universityWeek` 창을 **같이** 걸어서
-        // 어긋나면 창 밖으로 밀린다. 실측으로 넷이 죽어 있었다 —
-        // `UNIV_Y1_W50_YEAR_WRAP`(uw 70, 창 ≤52) · `UNIV_Y2_W50_YEAR_WRAP` ·
-        // `UNIV_Y3_W34_DRAFT_TRACK`(uw 158, 창 ≤156) · `UNIV_Y3_W50_YEAR_WRAP`.
-        //
-        // ⚠ **던진다.** `serde(default)`류의 조용한 0은 여기서 제일 나쁘다 —
-        // 학년이 어긋나도 게임은 돌고 이벤트만 사라진다(CLAUDE.md가 적은
-        // "데이터가 코드와 어긋나도 아무도 안 죽는다"가 이 형태다).
-        if (payload.stage === "university" && payload.enrollWeekInYear == null) {
-          throw new Error(
-            "[applyDraftDecision] 대학 진학인데 enrollWeekInYear가 없다 — "
-            + "학년 계수기의 원점을 못 잡는다",
-          );
-        }
-        const schoolState: SchoolState = {
-          ...s.schoolState,
-          attendsUniversity: payload.stage === "university",
-          ...(payload.stage === "university"
-            ? { universityWeek: universityWeekOnEnroll(payload.enrollWeekInYear as number) }
-            : {}),
-          careerApplicationsSubmitted: false,
-          careerApplications: null,
-          careerResults: null,
-          careerChoicePopupOpened: false,
-          careerChoiceMode: "none",
-          careerChoiceConfirmed: false,
-          careerDraftPickLog: [],
-          careerFinalChoice: "none",
-          draftTriggered: payload.resetDraftTrigger ? false : s.schoolState.draftTriggered,
-        };
-        const logs = payload.teamName
-          ? [`드래프트: ${payload.teamName} 지명`, ...s.logs].slice(0, 30)
-          : s.logs;
-        return {
-          ...s,
-          protagonist,
-          player: toPlayerCompat(protagonist),
-          schoolState,
-          logs,
-        };
-      });
+      careerDecision.applyDraftDecision({ update }, payload);
     },
 
 
