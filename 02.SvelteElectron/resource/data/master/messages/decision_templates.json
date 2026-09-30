@@ -15921,7 +15921,8 @@
           "effectHint": "구종 습득",
           "effects": {
             "pitchGrant": {
-              "id": "PITCH_CHANGEUP"
+              "id": "PITCH_CHANGEUP",
+              "grade": 2
             }
           }
         },
