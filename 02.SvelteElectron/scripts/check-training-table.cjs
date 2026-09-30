@@ -19,6 +19,7 @@
 // 설계: docs/design/training.md §3-1
 
 const fs = require("node:fs");
+const { weekPathFlat } = require("./week-path.cjs");
 const path = require("node:path");
 
 const ROOT = process.cwd();
@@ -87,7 +88,10 @@ check("화면이 쓰는 id가 전부 정본에 있다", unknown.length === 0,
   `정본에 없는 id: ${unknown.join(", ")}`);
 
 // ── ④ 배선이 이어지는가 ──────────────────────────────────────
-const advanceWeek = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+// ⚠ **눌러서 · 경로 전체를 읽는다** (2026-09-30 · Ⅱ-1). 엔진 호출이
+//   `weekPhases/weeklyTraining.ts` 로 갔고, 그 파일은 `.prettierignore` 밖이라
+//   훅이 인자를 줄마다 접었다. 정본은 `scripts/week-path.cjs`
+const advanceWeek = weekPathFlat();
 check("엔진 호출에 프로그램 표를 넘긴다",
   /calcTrainingGrowth\([\s\S]{0,200}trainingPrograms/.test(advanceWeek),
   "표를 안 넘기면 Rust 역직렬화가 실패한다");

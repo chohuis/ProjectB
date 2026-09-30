@@ -9,6 +9,7 @@
 // 실행: ELECTRON_RUN_AS_NODE=1 ./node_modules/electron/dist/electron.exe scripts/test-sentencebank.cjs
 
 const fs = require("node:fs");
+const { weekPathSrc } = require("./week-path.cjs");
 const path = require("node:path");
 const ROOT = path.resolve(__dirname, "..");
 const tmpl = require(path.join(ROOT, "resource/data/master/messages/templates.json"));
@@ -99,9 +100,12 @@ ok(/sentenceMemory/.test(read("apps/ui/src/shared/types/season.ts")),
    "SeasonState에 sentenceMemory가 있다");
 ok(/recordSentencePicks/.test(read("apps/ui/src/shared/stores/season.ts")),
    "season store에 패처가 있다");
-ok(/recordSentencePicks\(evResult\.sentencePicks\)/.test(read("apps/ui/src/shared/usecases/advanceWeek.ts")),
+// ⚠ 주간 진행 경로 **전체**를 읽는다 (2026-09-30 · Ⅱ-1) — 이벤트 절이
+//   `weekPhases/eventLane.ts` 로 갔다. 정본은 `scripts/week-path.cjs`
+const WEEK_PATH = weekPathSrc();
+ok(/recordSentencePicks\(evResult\.sentencePicks\)/.test(WEEK_PATH),
    "advanceWeek이 매주 기록한다");
-ok(/sentenceMemory: s\.sentenceMemory/.test(read("apps/ui/src/shared/usecases/advanceWeek.ts")),
+ok(/sentenceMemory: s\.sentenceMemory/.test(WEEK_PATH),
    "advanceWeek이 직전 기억을 엔진에 넘긴다");
 
 // ══ 6. Math.random이 안 샌다 ═════════════════════════════════════

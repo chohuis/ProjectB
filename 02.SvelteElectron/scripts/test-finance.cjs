@@ -7,6 +7,7 @@
 // 실행: ELECTRON_RUN_AS_NODE=1 ./node_modules/electron/dist/electron.exe scripts/test-finance.cjs
 
 const path = require("node:path");
+const { weekPathSrc } = require("./week-path.cjs");
 const fs = require("node:fs");
 const ROOT = path.resolve(__dirname, "..");
 const native = require(path.join(ROOT, "packages/engine-native/index.js"));
@@ -46,7 +47,9 @@ ok(amounts.every((v) => v < 100000),
    `재정 규칙의 금액이 전부 10억 미만이다 (최대 ${Math.max(...amounts)}) — 원 단위가 섞이면 여기서 튄다`);
 
 // 치료비도 같은 단위 (F-0에서 고친 것 — 회귀 방지)
-const aw = fs.readFileSync(path.join(ROOT, "apps/ui/src/shared/usecases/advanceWeek.ts"), "utf-8");
+// ⚠ 주간 진행 경로 **전체**를 읽는다 (2026-09-30 · Ⅱ-1) — 치료비 표가
+//   `weekPhases/weeklyTraining.ts` 로 갔다. 정본은 `scripts/week-path.cjs`
+const aw = weekPathSrc();
 const block = aw.slice(aw.indexOf("weeklyTreatmentCost"), aw.indexOf("weeklyTreatmentCost") + 400);
 const treat = [...block.matchAll(/:\s*(\d[\d_]*)/g)].map((m) => Number(m[1].replace(/_/g, "")));
 ok(treat.length > 0 && treat.every((v) => v < 1000),
