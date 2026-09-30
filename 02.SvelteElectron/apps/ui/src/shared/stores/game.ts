@@ -43,6 +43,8 @@ import { masterStore } from "./master";
 import { processNpcDraft as processNpcDraftChunk } from "../usecases/gameStore/npcDraft";
 import { processAllLeaguesSeasonEnd as processAllLeaguesSeasonEndChunk } from "../usecases/gameStore/seasonEndLeagues";
 import { pushMailbox } from "../usecases/gameStore/mailbox";
+import * as injuryTreatment from "../usecases/gameStore/injuryTreatment";
+import * as weekEnd from "../usecases/gameStore/weekEnd";
 import * as contracts from "../usecases/gameStore/contracts";
 import * as military from "../usecases/gameStore/military";
 import { applyEffectToProtagonist } from "../usecases/gameStore/rewards";
@@ -934,7 +936,7 @@ export {
 const OUTCOME_KEEP = 24;
 
 
-function updateAchievementProgress(
+export function updateAchievementProgress(
   current: AchievementRuntime[],
   metrics: AchievementMetrics,
 ): AchievementRuntime[] {
@@ -1165,50 +1167,10 @@ function createGameStore() {
       });
     },
 
+    // 실제 처리는 `usecases/gameStore/injuryTreatment.ts` 다 — store 는 넘기기만
+    // 한다. 이름·인자·돌려주는 값은 그대로다(호출부 불변).
     applyInjuryTreatment(choice: import("../types/save").InjuryTreatment) {
-      update((s) => {
-        const inj = s.protagonist.injury;
-        if (!inj) return s;
-
-        let updatedInj = { ...inj, treatmentChoice: choice };
-
-        let moneyDelta = 0;
-        if (choice === "steroid") {
-          const reduced = Math.max(1, updatedInj.recoveryWeeksLeft - 3);
-          updatedInj = { ...updatedInj, recoveryWeeksLeft: reduced, totalRecoveryWeeks: reduced, steroidUsed: true };
-          moneyDelta = -2_000_000;
-        } else if (choice === "prp") {
-          const reduced = Math.max(1, updatedInj.recoveryWeeksLeft - 5);
-          updatedInj = { ...updatedInj, recoveryWeeksLeft: reduced, totalRecoveryWeeks: reduced };
-          moneyDelta = -5_000_000;
-        } else if (choice === "counseling") {
-          // YIPS 심리 상담: 8~12주로 단축 (기존이 그보다 길면)
-          const reduced = Math.min(updatedInj.recoveryWeeksLeft, 10);
-          updatedInj = { ...updatedInj, recoveryWeeksLeft: reduced, totalRecoveryWeeks: reduced };
-          // 주당 비용은 advanceWeek에서 매주 차감
-        } else if (choice === "surgery") {
-          // 중증 → 수술 전환: UCL_PARTIAL→UCL_FULL, ROTATOR_STRAIN→ROTATOR_FULL
-          const surgeryType = inj.type === "UCL_PARTIAL" ? "UCL_FULL"
-            : inj.type === "ROTATOR_STRAIN" ? "ROTATOR_FULL"
-            : "UCL_FULL";
-          // 수술 회복 주수: UCL_FULL 기준 65주, ROTATOR_FULL 58주
-          const surgeryWeeks = surgeryType === "UCL_FULL" ? 65 : 58;
-          updatedInj = {
-            ...updatedInj,
-            type:               surgeryType as import("../types/save").InjuryType,
-            severity:           "surgery",
-            recoveryWeeksLeft:  surgeryWeeks,
-            totalRecoveryWeeks: surgeryWeeks,
-            rehabPhase:         1,
-          };
-        }
-
-        const newMoney = Math.max(0, (s.protagonist.money ?? 0) + moneyDelta);
-        return {
-          ...s,
-          protagonist: { ...s.protagonist, injury: updatedInj, money: newMoney },
-        };
-      });
+      injuryTreatment.applyInjuryTreatment({ update }, choice);
     },
 
     markMessageRead(id: string) {
@@ -1600,6 +1562,8 @@ function createGameStore() {
       update((s) => ({ ...s, mailbox: pushMailbox(msgs, s.mailbox) }));
     },
 
+    // 실제 처리는 `usecases/gameStore/weekEnd.ts` 다 — store 는 넘기기만 한다.
+    // 접는 **순서에 뜻이 있다**(사기 회귀 위에 TOP10 보상) — 그 파일 머리말.
     applyWeekEndBatch(batch: {
       protagonistPatch: Partial<ProtagonistSave>;
       logs: string[];
@@ -1612,43 +1576,7 @@ function createGameStore() {
       moraleDelta?: number;
       messages?: MessageItem[];
     }) {
-      update((s) => {
-        const nextMetrics: AchievementMetrics = {
-          ...s.achievementMetrics,
-          trainingWeeksTotal: s.achievementMetrics.trainingWeeksTotal + 1,
-        };
-        let p = { ...s.protagonist, ...batch.protagonistPatch };
-        if (batch.scoutScoreDelta && batch.scoutScoreDelta > 0)
-          p = { ...p, scoutScore: Math.max(0, Math.min(100, p.scoutScore + batch.scoutScoreDelta)) };
-        if (batch.popularityDelta && batch.popularityDelta > 0)
-          p = { ...p, popularity: Math.max(0, Math.min(100, p.popularity + batch.popularityDelta)) };
-        if (batch.scoutScoreDelta2 && batch.scoutScoreDelta2 > 0)
-          p = { ...p, scoutScore: Math.max(0, Math.min(100, p.scoutScore + batch.scoutScoreDelta2)) };
-        if (batch.moraleDelta && batch.moraleDelta > 0)
-          p = { ...p, morale: Math.max(0, Math.min(100, p.morale + batch.moraleDelta)) };
-        let mailbox = s.mailbox;
-        if (batch.messages?.length) mailbox = pushMailbox(batch.messages, s.mailbox);
-        let lastTop10Pitcher = s.lastTop10Pitcher;
-        let lastTop10Batter  = s.lastTop10Batter;
-        if (batch.top10Snapshot) {
-          if (batch.top10Snapshot.type === "pitcher") lastTop10Pitcher = batch.top10Snapshot;
-          else lastTop10Batter = batch.top10Snapshot;
-        }
-        return {
-          ...s,
-          protagonist:        p,
-          dayLabel:           computeWeekLabel(batch.weekNum, batch.seasonYear),
-          logs:               [...batch.logs, ...s.logs].slice(0, 30),
-          upcoming:           [],
-          player:             toPlayerCompat(p),
-          school:             toSchoolCompat(p.careerStage, s.schoolState),
-          achievementMetrics: nextMetrics,
-          achievements:       updateAchievementProgress(s.achievements, nextMetrics),
-          mailbox,
-          lastTop10Pitcher,
-          lastTop10Batter,
-        };
-      });
+      weekEnd.applyWeekEndBatch({ update }, batch);
     },
 
     setCurrentRole(role: import("../types/save").PitcherRole) {
